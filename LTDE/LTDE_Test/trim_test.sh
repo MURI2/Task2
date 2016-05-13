@@ -14,40 +14,89 @@ module load vcftools
 
 # So I'm running the whole thing fresh to make sure it works right.
 
-cd /N/dc2/projects/muri2/Task2/LTDE_Test
+REF=/N/dc2/projects/muri2/Task2/LTDE/data/2015_SoilGenomes_Annotate/G-Chr1.fna
+
+
+cd /N/dc2/projects/muri2/Task2/LTDE/data/LTDE_Test
 # Remove adaptors and quality trim with a Phred score of 30
-cutadapt -q 30 -a GTCGTAGAAGATCTCG \
+cutadapt -q 30 -a GATCGGAAGAGCACACGTCTGAACTCCAGTCACGTCGTAGAATCTCGTAT \
+    -a GATCGGAAGAGCACACGTCTGAACTCCAGTCACGTCGTAGAATCGCGTAT \
+    -a GATCGGAAGAGCACACGTCTGAACTCCAGTCACGTCGTAGAATCGGGGTT \
+    -a GATCGGAAGAGCACACGTCTGAACTCCAGTCACGTCGTAGAATCTCGTTT \
+    -a GATCGGAAGAGCACACGTCTGAACTCCAGTCACGTCGTAGAATCGCGGAT \
     -o ./GSF1018-Lennon_S57_R1_001_NOadapt.fastq.gz \
     ./GSF1018-Lennon_S57_R1_001.fastq.gz
 
 
-#cutadapt -q 30 -a GATCGGAAGAGCACACGTCTGAACTCCAGTCACGTCGTAGAATCTCGTAT \
-#    -o ./GSF1018-Lennon_S57_R1_001_NOadapt.fastq.gz \
-#    ./GSF1018-Lennon_S57_R1_001_NOadapt.fastq.gz
-
-#cutadapt -q 30 -a GATCGGAAGAGCACACGTCTGAACTCCAGTCACGTCGTAGAATCGCGTAT \
-#    -o ./GSF1018-Lennon_S57_R1_001_NOadapt.fastq.gz \
-#    ./GSF1018-Lennon_S57_R1_001_NOadapt.fastq.gz
-
-
-#cutadapt -q 30 -a GATCGGAAGAGCACACGTCTGAACTCCAGTCACGTCGTAGAATCGGGGTT \
-#    -o ./GSF1018-Lennon_S57_R1_001_NOadapt.fastq.gz \
-#    ./GSF1018-Lennon_S57_R1_001_NOadapt.fastq.gz
-
-#cutadapt -q 30 -a GATCGGAAGAGCACACGTCTGAACTCCAGTCACGTCGTAGAATCTCGTTT \
-#    -o ./GSF1018-Lennon_S57_R1_001_NOadapt.fastq.gz \
-#    ./GSF1018-Lennon_S57_R1_001_NOadapt.fastq.gz
-
-#cutadapt -q 30 -a GATCGGAAGAGCACACGTCTGAACTCCAGTCACGTCGTAGAATCGCGGAT \
-#    -o ./GSF1018-Lennon_S57_R1_001_NOadapt.fastq.gz \
-#    ./GSF1018-Lennon_S57_R1_001_NOadapt.fastq.gz
-
-
-
-cutadapt -q 30 -a GTCGTAGAAGATCTCG -A GTCGTAGAAGATCTCG \
+cutadapt -q 30 -a GATCGGAAGAGCACACGTCTGAACTCCAGTCACGTCGTAGAATCTCGTAT \
+    -A GATCGGAAGAGCACACGTCTGAACTCCAGTCACGTCGTAGAATCTCGTAT \
+    -a GATCGGAAGAGCACACGTCTGAACTCCAGTCACGTCGTAGAATCGCGTAT \
+    -A GATCGGAAGAGCACACGTCTGAACTCCAGTCACGTCGTAGAATCGCGTAT \
     -o ./GSF1018-Lennon_S97_R1_001_NOadapt.fastq.gz -p ./GSF1018-Lennon_S97_R2_001_NOadapt.fastq.gz \
     ./GSF1018-Lennon_S97_R1_001.fastq.gz ./GSF1018-Lennon_S97_R2_001.fastq.gz
 
-#cutadapt -q 30 -a GATCGGAAGAGCACACGTCTGAACTCCAGTCACGTCGTAGAATCTCGTAT -A GATCGGAAGAGCACACGTCTGAACTCCAGTCACGTCGTAGAATCGCGTAT \
-#    -o ./GSF1018-Lennon_S97_R1_001_NOadapt.fastq.gz -p ./GSF1018-Lennon_S97_R2_001_NOadapt.fastq.gz \
-#    ./GSF1018-Lennon_S97_R1_001_NOadapt.fastq.gz ./GSF1018-Lennon_S97_R2_001_NOadapt.fastq.gz
+bwa index $REF
+
+-F 4 -bT $REF
+
+bwa mem -t 4 $REF ./GSF1018-Lennon_S57_R1_001_NOadapt.fastq.gz \
+    > ./GSF1018-Lennon_S57_001_NOadapt.sam
+
+bwa mem -t 4 $REF \
+    ./GSF1018-Lennon_S97_R1_001_NOadapt.fastq.gz \
+    ./GSF1018-Lennon_S97_R2_001_NOadapt.fastq.gz \
+    > ./GSF1018-Lennon_S97_001_NOadapt.sam
+
+# SAM to BAM mapped
+
+samtools faidx $REF
+
+samtools view -F 4 -bT $REF ./GSF1018-Lennon_S57_001_NOadapt.sam \
+    >  ./GSF1018-Lennon_S57_001_NOadapt_mapped.bam
+
+samtools view -F 4 -bT $REF ./GSF1018-Lennon_S97_001_NOadapt.sam \
+    >  ./GSF1018-Lennon_S97_001_NOadapt_mapped.bam
+
+
+samtools sort ./GSF1018-Lennon_S57_001_NOadapt_mapped.bam ./GSF1018-Lennon_S57_001_NOadapt_mapped_sort
+samtools index ./GSF1018-Lennon_S57_001_NOadapt_mapped_sort.bam
+samtools rmdup ./GSF1018-Lennon_S57_001_NOadapt_mapped_sort.bam ./GSF1018-Lennon_S57_001_NOadapt_mapped_sort_NOdup.bam
+samtools index ./GSF1018-Lennon_S57_001_NOadapt_mapped_sort_NOdup.bam
+samtools sort ./GSF1018-Lennon_S57_001_NOadapt_mapped_sort_NOdup.bam  ./GSF1018-Lennon_S57_001_NOadapt_mapped_sort_NOdup_sort
+samtools index ./GSF1018-Lennon_S57_001_NOadapt_mapped_sort_NOdup_sort.bam
+
+samtools sort ./GSF1018-Lennon_S97_001_NOadapt_mapped.bam ./GSF1018-Lennon_S97_001_NOadapt_mapped_sort
+samtools index ./GSF1018-Lennon_S97_001_NOadapt_mapped_sort.bam
+samtools rmdup ./GSF1018-Lennon_S97_001_NOadapt_mapped_sort.bam ./GSF1018-Lennon_S97_001_NOadapt_mapped_sort_NOdup.bam
+samtools index ./GSF1018-Lennon_S97_001_NOadapt_mapped_sort_NOdup.bam
+samtools sort ./GSF1018-Lennon_S97_001_NOadapt_mapped_sort_NOdup.bam  ./GSF1018-Lennon_S97_001_NOadapt_mapped_sort_NOdup_sort
+samtools index ./GSF1018-Lennon_S97_001_NOadapt_mapped_sort_NOdup_sort.bam
+
+# merge and move a copy
+samtools merge ./GSF1018-Lennon_S97_001_NOadapt_mapped_sort_NOdup_sort.bam \
+    ./GSF1018-Lennon_S57_001_NOadapt_mapped_sort_NOdup_sort.bam \
+    ./GSF1018-Lennon_S97_S57_001_NOadapt_mapped_sort_NOdup_sort.bam -f
+
+cp ./GSF1018-Lennon_S97_S57_001_NOadapt_mapped_sort_NOdup_sort.bam \
+    /N/dc2/projects/muri2/Task2/LTDE/data/map_results/KBS0711/GSF1018-Lennon_S97_S57_001_NOadapt_mapped_sort_NOdup_sort.bam
+
+# SAM to BAM unmapped
+samtools view -f 4 -bT $REF ./GSF1018-Lennon_S97_001_NOadapt.sam \
+    >  ./GSF1018-Lennon_S97_001_NOadapt_unmapped.bam
+
+samtools view -f 4 -bT $REF ./GSF1018-Lennon_S97_001_NOadapt.sam \
+    >  ./GSF1018-Lennon_S97_001_NOadapt_unmapped.bam
+
+samtools sort ./GSF1018-Lennon_S57_001_NOadapt_unmapped.bam ./GSF1018-Lennon_S57_001_NOadapt_unmapped_sort
+samtools index ./GSF1018-Lennon_S57_001_NOadapt_unmapped_sort.bam
+samtools rmdup ./GSF1018-Lennon_S57_001_NOadapt_unmapped_sort.bam ./GSF1018-Lennon_S57_001_NOadapt_unmapped_sort_NOdup.bam
+samtools index ./GSF1018-Lennon_S57_001_NOadapt_unmapped_sort_NOdup.bam
+samtools sort ./GSF1018-Lennon_S57_001_NOadapt_unmapped_sort_NOdup.bam  ./GSF1018-Lennon_S57_001_NOadapt_unmapped_sort_NOdup_sort
+samtools index ./GSF1018-Lennon_S57_001_NOadapt_unmapped_sort_NOdup_sort.bam
+
+samtools sort ./GSF1018-Lennon_S97_001_NOadapt_unmapped.bam ./GSF1018-Lennon_S97_001_NOadapt_unmapped_sort
+samtools index ./GSF1018-Lennon_S97_001_NOadapt_unmapped_sort.bam
+samtools rmdup ./GSF1018-Lennon_S97_001_NOadapt_unmapped_sort.bam ./GSF1018-Lennon_S97_001_NOadapt_unmapped_sort_NOdup.bam
+samtools index ./GSF1018-Lennon_S97_001_NOadapt_unmapped_sort_NOdup.bam
+samtools sort ./GSF1018-Lennon_S97_001_NOadapt_unmapped_sort_NOdup.bam  ./GSF1018-Lennon_S97_001_NOadapt_unmapped_sort_NOdup_sort
+samtools index ./GSF1018-Lennon_S97_001_NOadapt_unmapped_sort_NOdup_sort.bam
