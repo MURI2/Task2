@@ -22,15 +22,3 @@ do
     | /N/dc2/projects/muri2/Task2/LTDE/MAPGD-master/bin/mapgd proview -H "${dType}/${dType}_MAPGD/${dType}_merged.header" \
     | /N/dc2/projects/muri2/Task2/LTDE/MAPGD-master/bin/mapgd pool -a 22 -o "${dType}/${dType}_MAPGD/${dType}_merged"
 done
-
-
-dType="$(echo "KBS0706" | cut -d "/" -f1-1)"
-#mkdir -p "${dType}/${dType}_MAPGD"
-samtools merge "./KBS0802/KBS0802_MAPGD/KBS0802_merged.bam" "./KBS0802/"*"_mapped_sort_NOdup_sort.bam" -f
-
-
-samtools view -H "KBS0802/GSF1046-KBS0802-D_S42_mapped_sort_NOdup_sort.bam" > "KBS0802/KBS0802_MAPGD/KBS0802_test.header"
-
-samtools mpileup -q 25 -Q 25 -B "KBS0802/GSF1046-KBS0802-D_S42_mapped_sort_NOdup_sort.bam" \
-| /N/dc2/projects/muri2/Task2/LTDE/MAPGD-master/bin/mapgd proview -H "KBS0802/KBS0802_MAPGD/KBS0802_test.header" \
-| /N/dc2/projects/muri2/Task2/LTDE/MAPGD-master/bin/mapgd pool -a 22 -o "KBS0802/KBS0708_MAPGD/KBS0802_test"
