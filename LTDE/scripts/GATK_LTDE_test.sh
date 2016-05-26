@@ -88,9 +88,17 @@ do
           -rf BadCigar \
           -o "${NoExt}_fixed_realigned_mapped.vcf"
 
+      java -Xmx2g -classpath /N/soft/rhel6/picard/picard-tools-1.107/ \
+        -jar /N/soft/rhel6/gatk/3.4-0/GenomeAnalysisTK.jar \
+        -R "${REF}.fna" \
+        -T VariantsToTable \
+        -V "${NoExt}_fixed_realigned_mapped.vcf" \
+        -F CHROM -F POS -F ID -F REF -F ALT -F QUAL -F AC \
+        -o "${NoExt}_fixed_realigned_mapped.txt"
+
       subDir="$(echo "$file" | cut -d "_" -f1-1)"
       mkdir -p $subDir
-      cp -v $subDir* $subDir/
+      mv -v $subDir* $subDir/
     else
       continue
     fi
