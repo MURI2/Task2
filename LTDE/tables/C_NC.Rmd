@@ -1,0 +1,16 @@
+---
+output: pdf_document
+---
+
+| Strain  | $$\mu_{C}$$   | $$\sigma_{C}$$  | $$\mu_{NC}$$  |  $$\sigma_{NC}$$ |
+|---|---|---|---|---|
+| $$Arthrobacter\, sp. \; \textup{KBS0703}$$  | 3.6  | 0.94  |103.7   | 14.5  |
+| $$Psuedomonas\, sp. \; \textup{KBS0710}$$  | 3.0  | 2.2  | 91.7  | 11.3  |
+| $$Janthinobacterium\, sp. \;\textup{KBS0711}$$  | 5.9  |  6.1 | 89.6  |  59.1 |
+| $$Yersinia\, sp.\; \textup{KBS0713}$$  | 5.0  | 2.0  |19.5   | 7.5  |
+| $$Curtobacterium\, sp. \; \textup{KBS0715}$$  |  3.6 |   0.94 | 14.0  | 2.5  |
+| $$Flavobacterium\, sp. \; \textup{KBS0721}$$  |  0.0 | 0.0  |66.7   | 13.2  |
+| $$Oerskovia\, sp. \;\textup{KBS0722}$$  | 1.7  |  0.47 | 49.3  | 6.7  |
+| $$Rhodococcus\, sp. \;\textup{KBS0724}$$  | 2.7  | 0.47  | 79.0  |  1.4 |
+| $$Comamonas\, sp. \; \textup{KBS0727}$$  | 4.0  | 0.0  | 62.0  | 2.2  |
+| $$Psuedomonas\, sp. \; \textup{KBS0802}$$  | 5.0  | 0.0  |  96.0 | 3.3  |

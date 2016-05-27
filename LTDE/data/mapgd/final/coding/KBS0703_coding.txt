@@ -1,0 +1,4 @@
+	Scaffold	Pos	Major	Minor	Coverage	Error	Gene	AA-change	Sample_1	Sample_2	Sample_3	Sample_4
+15	gnl|I|G_contig000013	9942	G	A	280	0.001	hpsN:P426S	N	0.846385	0.80973	0.733489	1.0
+16	gnl|I|G_contig000013	9946	T	A	275	0.001	hpsN:P424P	S	0.880254	1.0	1.0	1.0
+123	gnl|I|G_contig000089	246507	C	G	199	0.001	nagB:F83S	N	0.765802	1.0	1.0	1.0
