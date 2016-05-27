@@ -4,13 +4,13 @@ output: pdf_document
 
 | Strain  | $$\overline{\widehat{\theta_{\pi}}}$$   | $$\overline{\sigma^{2}\widehat{(\theta_{\pi}})}$$  | 
 |---|---|---|
-| $$Arthrobacter\, sp. \; \textup{KBS0703}$$  | 0.164  | 0.0617  |
+| $$Arthrobacter\, sp. \; \textup{KBS0703}$$  | 0.329  | 0.136  |
 | $$Psuedomonas\, sp. \; \textup{KBS0710}$$  | 0.0  |0.0  | 
-| $$Janthinobacterium\, sp. \;\textup{KBS0711}$$  | 0.608  |  0.297 | 
-| $$Yersinia\, sp.\; \textup{KBS0713}$$  | 0.578  | 0.282  |
-| $$Curtobacterium\, sp. \; \textup{KBS0715}$$  |  0.291 |   0.119 | 
+| $$Janthinobacterium\, sp. \;\textup{KBS0711}$$  | 1.22  |  0.780 | 
+| $$Yersinia\, sp.\; \textup{KBS0713}$$  | 1.16 | 0.739  |
+| $$Curtobacterium\, sp. \; \textup{KBS0715}$$  |  0.581 |  0.281 | 
 | $$Flavobacterium\, sp. \; \textup{KBS0721}$$  |  0.0 | 0.0  |
-| $$Oerskovia\, sp. \;\textup{KBS0722}$$  | 0.199 |  0.0807 | 
-| $$Rhodococcus\, sp. \;\textup{KBS0724}$$  | 0.328  | 0.136  | 
-| $$Comamonas\, sp. \; \textup{KBS0727}$$  | 0.246  | 0.0962  |
-| $$Psuedomonas\, sp. \; \textup{KBS0802}$$  | 0.496 | 0.222  |
+| $$Oerskovia\, sp. \;\textup{KBS0722}$$  | 0.399 |  0.189 | 
+| $$Rhodococcus\, sp. \;\textup{KBS0724}$$  | 0.655  | 0.323  | 
+| $$Comamonas\, sp. \; \textup{KBS0727}$$  | 0.492  | 0.220  |
+| $$Psuedomonas\, sp. \; \textup{KBS0802}$$  | 0.991 | 0.553  |
