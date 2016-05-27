@@ -111,7 +111,7 @@ def getPi(strains):
                 p = value[1]
                 q = 1- p
                 N = value[0]
-                pi_value = (N / (N-1) ) * p * q
+                pi_value = (N / (N-1) ) * p * q * 2
                 pi_x.append(pi_value)
                 N_x.append(N)
             # sum over pi
