@@ -1,9 +1,9 @@
 from __future__ import division
 import pandas as pd
-import os
+import os, math
 import numpy as np
 import scipy.stats as st
-
+import csv
 mydir = os.path.expanduser("~/github/Task2/LTDE")
 
 taxa = ['KBS0703', 'KBS0710', 'KBS0711', 'KBS0713', 'KBS0715', 'KBS0721', 'KBS0722', 'KBS0724', 'KBS0727', 'KBS0802']
@@ -86,9 +86,66 @@ def getPolyTable(strains):
 
     #print df
 
+class popGenStats:
+    '''
+    A class to estimate Tajima's D using pi (Tajima's theta), S,
+    and N (in this case mean coverage)
+    '''
+
+    def __init__(self, pi, S, n):
+        self.pi = float(pi)
+        self.S = int(S)
+        self.n = int(n)
+
+    def a1(self):
+        '''Given n, this function returns the (n-1)th harmonic number'''
+        return sum((1.0/d) for d in range(1,self.n))
+
+    def a2(self):
+        '''Given n, this function returns the (n-1)th squared harmonic number'''
+        return sum((1.0/(d**2)) for d in range(1,self.n))
+
+    def b1(self):
+        '''Creates b1 for the variance of Tajima's theta'''
+        return ((self.n+1) /  (3*(self.n-1)))
+
+    def b2(self):
+        '''Creates b2 for the variance of Tajima's theta'''
+        num = ((self.n**2) + self.n + 3) * 2
+        den = 9 * self.n * (self.n-1)
+        return num / den
+
+    def c1(self):
+        '''Creates c1 for the variance of Tajima's theta'''
+        return self.b1() - (1 / self.a1())
+
+    def c2(self):
+        '''Creates c2 for the variance of Tajima's theta'''
+        return self.b2() - ((self.n+2) / (self.a1() * self.n)) + (self.a2() / (self.a1() ** 2 ))
+
+    def e1(self):
+        return self.c1() / self.a1()
+
+    def e2(self):
+        return self.c2() / ( (self.a1() ** 2) + self.a2() )
+
+    def W_theta(self):
+        if self.S == 0:
+            theta = int(0)
+        else:
+            theta = self.S / self.a1()
+        return theta
+
+    def tajimas_D(self):
+        Wattersons = self.W_theta()
+        num = self.pi - Wattersons
+        den = math.sqrt( (self.e1() * self.S) + (self.e2() * self.S * (self.S-1)) )
+        T_D = num / den
+        return T_D
 
 def getPi(strains):
     piDict = {}
+    OUT = open(mydir + '/data/mapgd/final/mapgd_TD.txt', 'w')
     for strain in strains:
         IN = pd.read_csv(mydir + '/data/mapgd/annotate/' + strain + '_merged_annotate.pol', delimiter = '\t', \
             header = None)
@@ -98,16 +155,25 @@ def getPi(strains):
         C_S_count = IN[IN.apply(lambda x:  (x.iloc[7] == 'S'), axis=1 )]
         pi = []
         piVar = []
+        W_theta = []
+        T_D = []
         for x in range(1, IN_samples + 1):
+            if strain == 'KBS0711' and x == 1:
+                '''We're ignoring this sample because it has odd levels of polymorphism
+                and I'm unsure how to interpret it.
+                '''
+                continue
             sample_column = 'Sample_' + str(x)
             pi_subset_names = ['Coverage', sample_column]
             pi_subset = C_S_count[pi_subset_names]
             pi_subset_tuples = [tuple(x) for x in pi_subset.values]
             pi_x = []
             N_x = []
+            S = 0
             for value in pi_subset_tuples:
-                if len(value) == 0 or value[1] == float(1) or value[1] == float(0):
-                    continue
+                #if len(value) == 0 or value[1] == float(1) or value[1] == float(0):
+                #    continue
+                S += 1
                 p = value[1]
                 q = 1- p
                 N = value[0]
@@ -116,20 +182,39 @@ def getPi(strains):
                 N_x.append(N)
             # sum over pi
             pi_x_sum = sum(pi_x)
+            if pi_x_sum == float(0) and S == int(0):
+                T_D.append(0)
+                pi.append(0)
+                piVar.append(0)
+                W_theta.append(0)
             # calculate mean N for the variance of pi
-            N_x_mean = np.mean(N_x)
-            pi_x_var = getPiVar(pi_x_sum, N_x_mean)
-            pi.append(pi_x_sum)
-            piVar.append(pi_x_var)
+            else:
+                N_x_mean = np.mean(N_x)
+                W_theta_x = popGenStats(pi_x_sum, S, N_x_mean).W_theta()
+                T_D_x = popGenStats(pi_x_sum, S, N_x_mean).tajimas_D()
+                pi_x_var = getPiVar(pi_x_sum, N_x_mean)
+                T_D.append(T_D_x)
+                pi.append(pi_x_sum)
+                piVar.append(pi_x_var)
+                W_theta.append(W_theta_x)
+
         pi_mean = np.mean(pi)
         pi_var = np.mean(piVar)
-        piDict[strain] = [pi_mean, pi_var]
-
+        W_theta_mean = np.mean(W_theta)
+        T_D_mean = np.mean(T_D)
+        T_D_SD = np.std(T_D)
+        piDict[strain] = [pi_mean, pi_var, W_theta_mean, T_D_mean, T_D_SD]
+        T_D.insert(0, strain)
+        #OUT.write(str(T_D) + '\n')
+        writer = csv.writer(OUT)
+        writer.writerow(T_D)
+        #print>> OUT, T_D
+    OUT.close()
     df = pd.DataFrame(piDict, index=None)
     df = df.transpose()
     df.reset_index(level=0, inplace=True)
-    df.columns = ['strain', 'pi_mean', 'pi_var']
-    df_path = mydir + '/data/mapgd/final/mapgd_pi.txt'
+    df.columns = ['strain', 'pi_mean', 'pi_var', 'W_theta_mean', 'T_D_mean', 'T_D_SD']
+    df_path = mydir + '/data/mapgd/final/mapgd_summary.txt'
     df.to_csv(df_path,sep='\t')
 
 
