@@ -58,6 +58,11 @@ class popGenStats:
             theta = self.S / self.a1()
         return theta
 
+    def W_theta_variance(self):
+        term1 = self.W_theta() / self.a1()
+        term2 = (self.a2() / ( self.a1() ** 2))  * (self.W_theta() ** 2 )
+        return term1 + term2
+
     def tajimas_D(self):
         Wattersons = self.W_theta()
         num = self.pi - Wattersons
@@ -85,8 +90,7 @@ def func(x):
         if y != float(0) or y != float(1):
             count += 1
 
-def mapgdPI(row):
-    print row
+
 
 def getPiVar(pi, n):
     '''
@@ -148,7 +152,7 @@ def getPolyTable(taxa):
 
 def getPi(strains):
     piDict = {}
-    OUT = open(mydir + '/data/mapgd/final/mapgd_TD.txt', 'w')
+    OUT = open(mydir + '/data/mapgd/final/PopGenStats.txt', 'w')
     for strain in strains:
         IN = pd.read_csv(mydir + '/data/mapgd/annotate/' + strain + '_merged_annotate.pol', delimiter = '\t', \
             header = None)
@@ -160,6 +164,7 @@ def getPi(strains):
         piVar = []
         W_theta = []
         T_D = []
+        W_theta_var = []
         for x in range(1, IN_samples + 1):
             if strain == 'KBS0711' and x == 1:
                 '''We're ignoring this sample because it has odd levels of polymorphism
@@ -169,13 +174,12 @@ def getPi(strains):
             sample_column = 'Sample_' + str(x)
             pi_subset_names = ['Coverage', sample_column]
             pi_subset = C_S_count[pi_subset_names]
-            pi_subset_tuples = [tuple(x) for x in pi_subset.values]
+            pi_subset_tuples = [tuple(y) for y in pi_subset.values]
             pi_x = []
             N_x = []
             S = 0
             for value in pi_subset_tuples:
-                #if len(value) == 0 or value[1] == float(1) or value[1] == float(0):
-                #    continue
+
                 S += 1
                 p = value[1]
                 q = 1- p
@@ -194,22 +198,22 @@ def getPi(strains):
             else:
                 N_x_mean = np.mean(N_x)
                 W_theta_x = popGenStats(pi_x_sum, S, N_x_mean).W_theta()
+                W_theta_var_x = popGenStats(pi_x_sum, S, N_x_mean).W_theta_variance()
                 T_D_x = popGenStats(pi_x_sum, S, N_x_mean).tajimas_D()
                 pi_x_var = getPiVar(pi_x_sum, N_x_mean)
                 T_D.append(T_D_x)
                 pi.append(pi_x_sum)
                 piVar.append(pi_x_var)
                 W_theta.append(W_theta_x)
-
+                W_theta_var.append(W_theta_var_x)
+                print>> OUT, strain, x, pi_x_sum, pi_x_var, W_theta_x, W_theta_var_x, \
+                    T_D_x
         pi_mean = np.mean(pi)
         pi_var = np.mean(piVar)
         W_theta_mean = np.mean(W_theta)
         T_D_mean = np.mean(T_D)
         T_D_SD = np.std(T_D)
         piDict[strain] = [pi_mean, pi_var, W_theta_mean, T_D_mean, T_D_SD]
-        T_D.insert(0, strain)
-        writer = csv.writer(OUT)
-        writer.writerow(T_D)
     OUT.close()
     df = pd.DataFrame(piDict, index=None)
     df = df.transpose()
@@ -239,5 +243,5 @@ def getMutations(strains):
 
 
 #getPolyTable(taxa)
-#getPi(taxa)
-getMutations(taxa)
+getPi(taxa)
+#getMutations(taxa)
