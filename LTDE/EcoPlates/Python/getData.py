@@ -41,8 +41,7 @@ def rawToLabelles(strains):
                 data_labelled.to_csv(OUT, sep='\t', index = False)
 
 
-strains = ['KBS0711']
-#rawToLabelles(strains)
+
 
 def normalizeData(strains):
     'Removes background using water and normalizes the data'
@@ -66,4 +65,6 @@ def normalizeData(strains):
                 OUT = OUT_path + '/' + name + '.txt'
                 IN_read_sub_noW.to_csv(OUT, sep='\t', index = False)
 
+strains = ['KBS0711']
+rawToLabelles(strains)
 normalizeData(strains)
