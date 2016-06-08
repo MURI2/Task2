@@ -8,84 +8,6 @@ mydir = os.path.expanduser("~/github/Task2/LTDE")
 
 taxa = ['KBS0703', 'KBS0710', 'KBS0711', 'KBS0713', 'KBS0715', 'KBS0721', 'KBS0722', 'KBS0724', 'KBS0727', 'KBS0802']
 
-def pandasNames(df):
-    names = ['Scaffold', 'Pos', 'Major', 'Minor', 'Coverage', 'Error', \
-        'Gene', 'AA-change']
-    samples = len(df.columns) - len(names)
-    for x in range(samples):
-        name = 'Sample_' + str(x+1)
-        names.append(name)
-    df.columns = names
-    #df.iloc[:,8:] = pd.to_numeric(df.iloc[:,8:], errors='coerce')
-    df.iloc[:,8:] = df.iloc[:,8:].convert_objects(convert_numeric=True)
-    #df.iloc[:,8:] = df.iloc[:,8:].astype(float)
-    return (df, samples)
-
-def func(x):
-    count = 0
-    for y in x:
-        if y != float(0) or y != float(1):
-            count += 1
-
-def mapgdPI(row):
-    print row
-
-def getPiVar(pi, n):
-    '''
-    returns the variance for pi
-    got here: http://genapps.uchicago.edu/slider/index.html
-    Also in Walsh & Lynch 201?
-    '''
-    if pi == 0:
-        return 0
-    else:
-        x1 = ((n+1) / (3* (n-1))) * pi
-        x2 = ((( (n**2) + n +3 ) * 2 ) / (9*n * (n-1)) ) * (pi**2)
-        return x1 + x2
-
-
-
-def getPolyTable(strains):
-    polyDict = {}
-    for taxon in taxa:
-        IN = pd.read_csv(mydir + '/data/mapgd/annotate/' + taxon + '_merged_annotate.pol', delimiter = '\t', \
-            header = None)
-        names_IN = pandasNames(IN)
-        IN = names_IN[0]
-        IN_samples = names_IN[1]
-        # count polymorphisms in coding vs noncoding
-
-        # non coding and coding subsets
-        NC_count = IN[IN.apply(lambda x: (x.iloc[6] == 'NC'), axis=1 )]
-        C_count = IN[IN.apply(lambda x: (x.iloc[6] != 'NC'), axis=1 )]
-        C_S_count = IN[IN.apply(lambda x:  (x.iloc[7] == 'S'), axis=1 )]
-        samples_NC = []
-        samples_C = []
-        for x in range(1, IN_samples):
-            sample_column = 'Sample_' + str(x)
-            NC_x =  sum(sum([(NC_count[sample_column] > (float(0))) & (NC_count[sample_column]< (float(1)))]))
-            #NC_x = (NC_count[sample_column]  > (float(0))) and  (NC_count[sample_column]  < (float(1)))
-            C_x =  sum(sum([(C_count[sample_column] > (float(0))) & (C_count[sample_column]< (float(1)))]))
-            #C_x = (C_count[sample_column]  != (float(0)  or float(1))).count()
-            samples_NC.append(NC_x)
-            samples_C.append(C_x)
-        NC_mean = np.mean(samples_NC)
-        NC_std = np.std(samples_NC)
-        C_mean = np.mean(samples_C)
-        C_std = np.std(samples_C)
-        polyDict[taxon] = [NC_mean, NC_std, C_mean, C_std]
-        #ones_and_zeroes = IN[IN.apply(lambda x: ((x.iloc[8:]==float(1)).sum() !=0 \
-        #        or (x.iloc[8:]==float(0)).sum() !=0) and  x.iloc[6] != 'NC', axis=1) ]
-        #ones_and_zeroes_path = mydir + '/data/mapgd/final/coding/' + taxon + '_coding.txt'
-        #ones_and_zeroes.to_csv(ones_and_zeroes_path,sep='\t')
-    df = pd.DataFrame(polyDict)
-    df = df.transpose()
-    df.columns = ['NC_mean', 'NC_std', 'C_mean', 'C_std']
-    latex_path = mydir + '/tables/test.tex'
-    df.to_latex(latex_path)
-
-    #print df
-
 class popGenStats:
     '''
     A class to estimate Tajima's D using pi (Tajima's theta), S,
@@ -142,6 +64,87 @@ class popGenStats:
         den = math.sqrt( (self.e1() * self.S) + (self.e2() * self.S * (self.S-1)) )
         T_D = num / den
         return T_D
+
+
+def pandasNames(df):
+    names = ['Scaffold', 'Pos', 'Major', 'Minor', 'Coverage', 'Error', \
+        'Gene', 'AA-change']
+    samples = len(df.columns) - len(names)
+    for x in range(samples):
+        name = 'Sample_' + str(x+1)
+        names.append(name)
+    df.columns = names
+    #df.iloc[:,8:] = pd.to_numeric(df.iloc[:,8:], errors='coerce')
+    df.iloc[:,8:] = df.iloc[:,8:].convert_objects(convert_numeric=True)
+    #df.iloc[:,8:] = df.iloc[:,8:].astype(float)
+    return (df, samples)
+
+def func(x):
+    count = 0
+    for y in x:
+        if y != float(0) or y != float(1):
+            count += 1
+
+def mapgdPI(row):
+    print row
+
+def getPiVar(pi, n):
+    '''
+    returns the variance for pi
+    got here: http://genapps.uchicago.edu/slider/index.html
+    Also in Walsh & Lynch 201?
+    '''
+    if pi == 0:
+        return 0
+    else:
+        x1 = ((n+1) / (3* (n-1))) * pi
+        x2 = ((( (n**2) + n +3 ) * 2 ) / (9*n * (n-1)) ) * (pi**2)
+        return x1 + x2
+
+
+
+def getPolyTable(taxa):
+    polyDict = {}
+    for taxon in taxa:
+        IN = pd.read_csv(mydir + '/data/mapgd/annotate/' + taxon + '_merged_annotate.pol', delimiter = '\t', \
+            header = None)
+        names_IN = pandasNames(IN)
+        IN = names_IN[0]
+        IN_samples = names_IN[1]
+        # count polymorphisms in coding vs noncoding
+
+        # non coding and coding subsets
+        NC_count = IN[IN.apply(lambda x: (x.iloc[6] == 'NC'), axis=1 )]
+        C_count = IN[IN.apply(lambda x: (x.iloc[6] != 'NC'), axis=1 )]
+        C_S_count = IN[IN.apply(lambda x:  (x.iloc[7] == 'S'), axis=1 )]
+        samples_NC = []
+        samples_C = []
+        for x in range(1, IN_samples):
+            sample_column = 'Sample_' + str(x)
+            NC_x =  sum(sum([(NC_count[sample_column] > (float(0))) & (NC_count[sample_column]< (float(1)))]))
+            #NC_x = (NC_count[sample_column]  > (float(0))) and  (NC_count[sample_column]  < (float(1)))
+            C_x =  sum(sum([(C_count[sample_column] > (float(0))) & (C_count[sample_column]< (float(1)))]))
+            #C_x = (C_count[sample_column]  != (float(0)  or float(1))).count()
+            samples_NC.append(NC_x)
+            samples_C.append(C_x)
+        NC_mean = np.mean(samples_NC)
+        NC_std = np.std(samples_NC)
+        C_mean = np.mean(samples_C)
+        C_std = np.std(samples_C)
+        polyDict[taxon] = [NC_mean, NC_std, C_mean, C_std]
+        #ones_and_zeroes = IN[IN.apply(lambda x: ((x.iloc[8:]==float(1)).sum() !=0 \
+        #        or (x.iloc[8:]==float(0)).sum() !=0) and  x.iloc[6] != 'NC', axis=1) ]
+        #ones_and_zeroes_path = mydir + '/data/mapgd/final/coding/' + taxon + '_coding.txt'
+        #ones_and_zeroes.to_csv(ones_and_zeroes_path,sep='\t')
+    df = pd.DataFrame(polyDict)
+    df = df.transpose()
+    df.columns = ['NC_mean', 'NC_std', 'C_mean', 'C_std']
+    latex_path = mydir + '/tables/test.tex'
+    df.to_latex(latex_path)
+
+    #print df
+
+
 
 def getPi(strains):
     piDict = {}
@@ -205,10 +208,8 @@ def getPi(strains):
         T_D_SD = np.std(T_D)
         piDict[strain] = [pi_mean, pi_var, W_theta_mean, T_D_mean, T_D_SD]
         T_D.insert(0, strain)
-        #OUT.write(str(T_D) + '\n')
         writer = csv.writer(OUT)
         writer.writerow(T_D)
-        #print>> OUT, T_D
     OUT.close()
     df = pd.DataFrame(piDict, index=None)
     df = df.transpose()
@@ -218,8 +219,25 @@ def getPi(strains):
     df.to_csv(df_path,sep='\t')
 
 
+def getMutations(strains):
+    for strain in strains:
+        IN = pd.read_csv(mydir + '/data/mapgd/annotate/' + strain + '_merged_annotate.pol', delimiter = '\t', \
+            header = None)
+        names_IN = pandasNames(IN)
+        IN = names_IN[0]
+        IN_samples = names_IN[1]
+        #NC_count = IN[IN.apply(lambda x: (x.iloc[6] == 'NC'), axis=1 )]
+        #C_count = IN[IN.apply(lambda x: (x.iloc[6] != 'NC'), axis=1 )]
+        #C_S_count = IN[IN.apply(lambda x:  (x.iloc[7] == 'S'), axis=1 )]
+        #print IN_samples
+        # for just the samples IN.iloc[:, 8:]
+        # remove cases where they're all equal
+        #print IN
+        #print  IN[IN.apply(lambda x: (x.iloc[ 8:] == float(1)), axis=0 )]
+
 
 
 
 #getPolyTable(taxa)
-getPi(taxa)
+#getPi(taxa)
+getMutations(taxa)
