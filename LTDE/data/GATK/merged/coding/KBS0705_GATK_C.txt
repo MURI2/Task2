@@ -1,0 +1,5 @@
+Scaffold	Pos	Ref	Gene	Alt_A	Coding_A	Qual_A	Alt_B	Coding_B	Qual_B	Alt_C	Coding_C	Qual_C	Alt_D	Coding_D	Qual_D
+gnl|I|G_contig000004	1974358	T	dnaE2_3:F386L	C	N	301.77	C	N	326.77	C	N	85.9	C	N	219.77
+gnl|I|G_contig000004	1974385	C	dnaE2_3:P377P	G	S	287.77	G	S	232.77	G	S	86.9	G	S	223.77
+gnl|I|G_contig000004	1974388	A	dnaE2_3:L376F	G	N	316.77	G	N	230.77	G	N	89.9	G	N	227.77
+gnl|I|G_contig000004	1974394	A	dnaE2_3:V374V	G	S	290.77	G	S	228.77	G	S	70.03	G	S	204.77

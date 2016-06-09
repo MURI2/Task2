@@ -1,0 +1,10 @@
+Scaffold	Pos	Ref	Gene	Alt_A	Coding_A	Qual_A	Alt_B	Coding_B	Qual_B	Alt_C	Coding_C	Qual_C	Alt_D	Coding_D	Qual_D
+gnl|I|G_contig000001	8418	G	yecS_1:W186*	T	N	54.77	T	N	42.77				T	N	95.77
+gnl|I|G_contig000012	115444	A	dapF:R167R	C	S	38.77									
+gnl|I|G_contig000067	267773	G	glfT1:D142D				A	S	637.77				A	S	970.77
+gnl|I|G_contig000067	267781	G	glfT1:S145S				T	S	385.77				T	S	971.77
+gnl|I|G_contig000067	267799	C	glfT1:A151T				A	N	51.77				A	N	256.77
+gnl|I|G_contig000067	268566	T	tagA_2:L157W				C	N	42.77						
+gnl|I|G_contig000045	261557	G	atpA:N245D										C	N	65.77
+gnl|I|G_contig000067	267808	A	glfT1:C154G										G	N	79.77
+gnl|I|G_contig000067	268578	A	tagA_2:T153S										C	N	34.77

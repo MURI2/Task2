@@ -1,0 +1,29 @@
+Scaffold	Pos	Ref	Gene	Alt_A	Coding_A	Qual_A	Alt_B	Coding_B	Qual_B	Alt_C	Coding_C	Qual_C	Alt_D	Coding_D	Qual_D
+gnl|I|G_contig000001	18240	C	dasR:R152S	A	N	56.77									
+gnl|I|G_contig000007	60900	A	pyrC_1:F191F	G	S	718.77									
+gnl|I|G_contig000007	61402	T	pyrC_1:A24A	G	S	2995.77									
+gnl|I|G_contig000009	103287	C	pgk:R336R	A	S	114.77									
+gnl|I|G_contig000009	103291	C	pgk:A338T	A	N	114.77									
+gnl|I|G_contig000009	212472	A	alsS:A474A	G	S	1412.77	G	S	1264.84	G	S	1116.77	G	S	1677.77
+gnl|I|G_contig000009	212643	G	alsS:G417G	A	S	928.77	A	S	810.77	A	S	803.77	A	S	950.77
+gnl|I|G_contig000009	213297	A	alsS:W199C	G	N	888.77	G	N	874.77	G	N	1039.77	G	N	1086.77
+gnl|I|G_contig000009	213318	C	alsS:T192T	T	S	664.77	T	S	1047.77	T	S	1113.77	T	S	963.77
+gnl|I|G_contig000032	437350	C	accA1:C216S	A	N	79.77							A	N	78.77
+gnl|I|G_contig000032	455745	C	hcpA:A87E	A	N	609.77	A	N	663.77	A	N	632.77	A	N	208.77
+gnl|I|G_contig000032	455764	A	hcpA:V93V	G	S	538.77	G	S	416.77	G	S	380.77	G	S	233.77
+gnl|I|G_contig000032	456024	G	hcpA:A180D	A	N	603.77	A	N	852.77	A	N	1130.77	A	N	919.77
+gnl|I|G_contig000032	456948	G	atpD:L445L	A	S	127.77	A	S	101.77				A	S	113.77
+gnl|I|G_contig000032	457244	T	atpD:S347P	G	N	227.77	G	N	318.77	G	N	291.77	G	N	472.77
+gnl|I|G_contig000001	86612	G	metF:L193M				T	N	103.77				T	N	50.77
+gnl|I|G_contig000001	86618	C	metF:G191C				A	N	141.77						
+gnl|I|G_contig000021	219728	G	cpxA_1:F197Y				T	N	33.77						
+gnl|I|G_contig000032	457070	C	atpD:R405W				A	N	98.77						
+gnl|I|G_contig000038	462482	C	atpB:R217R				A	S	51.77						
+gnl|I|G_contig000038	462485	G	atpB:P216P				A	S	31.77						
+gnl|I|G_contig000038	462488	C	atpB:E215D				A	N	50.77						
+gnl|I|G_contig000001	96860	G	metK:D313D							T	S	66.77			
+gnl|I|G_contig000026	286180	G	ppsD:R193R							C	S	77.77			
+gnl|I|G_contig000032	455791	C	hcpA:L102L							G	S	32.77	G	S	70.77
+gnl|I|G_contig000001	181548	G	motB_1:V30M										A	N	235.77
+gnl|I|G_contig000032	437344	G	accA1:R214C										T	N	99.77
+gnl|I|G_contig000032	456672	A	atpC:P64R										C	N	62.77

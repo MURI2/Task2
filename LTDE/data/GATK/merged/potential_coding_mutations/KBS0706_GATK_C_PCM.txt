@@ -1,0 +1,45 @@
+Scaffold	Pos	Ref	Gene	Alt_A	Coding_A	Qual_A	Alt_B	Coding_B	Qual_B	Alt_C	Coding_C	Qual_C	Alt_D	Coding_D	Qual_D
+gnl|I|G_contig000012	21340	C	fabG_1:S32T	T	N	39.28									
+gnl|I|G_contig000012	21353	C	fabG_1:W27C	G	N	38.28									
+gnl|I|G_contig000117	160459	C	dgoD_2:G324R	G	N	104.84				G	N	127.8	G	N	80.9
+gnl|I|G_contig000117	160484	T	dgoD_2:Y315Y	A	S	63.03							A	S	84.9
+gnl|I|G_contig000117	185484	A	yecS_3:N209D	G	N	146.77	G	N	30.77						
+gnl|I|G_contig000117	185495	C	yecS_3:L212L	G	S	158.77				G	S	143.77	G	S	50.77
+gnl|I|G_contig000168	253231	C	ugpC_6:P91P	G	S	38.28							G	S	79.9
+gnl|I|G_contig000003	6180	G	mdtC_1:P351P				C	S	129.8	C	S	62.03	C	S	149.78
+gnl|I|G_contig000003	6225	C	mdtC_1:V366V				G	S	60.03						
+gnl|I|G_contig000012	80386	C	gsiA_1:T178T				T	S	182.78	T	S	289.77	T	S	84.9
+gnl|I|G_contig000012	80392	G	gsiA_1:T176T				C	S	200.77	C	S	217.77			
+gnl|I|G_contig000012	80402	G	gsiA_1:S173L				A	N	206.77	A	N	268.77	A	N	84.9
+gnl|I|G_contig000012	80410	C	gsiA_1:R170S				A	N	210.77	A	N	288.77	A	N	82.9
+gnl|I|G_contig000117	185450	C	yecS_3:Q197Q				G	S	37.28						
+gnl|I|G_contig000168	253279	C	ugpC_6:G75G				G	S	192.77				G	S	63.03
+gnl|I|G_contig000168	304817	G	coxN_1:S108S				C	S	41.28	C	S	113.84	C	S	88.9
+gnl|I|G_contig000168	325519	T	ftsH_2:S418S				G	S	40.28	G	S	88.9	G	S	113.84
+gnl|I|G_contig000168	325526	G	ftsH_2:A416V				A	N	40.28	A	N	64.03	A	N	111.84
+gnl|I|G_contig000168	325641	C	ftsH_2:W378R				T	N	81.9	T	N	39.28	T	N	43.28
+gnl|I|G_contig000168	325969	G	ftsH_2:G268G				C	S	39.28				C	S	37.28
+gnl|I|G_contig000168	325972	A	ftsH_2:R267R				G	S	151.78				G	S	61.03
+gnl|I|G_contig000168	325978	A	ftsH_2:R265R				C	S	154.78	C	S	60.03	C	S	66.03
+gnl|I|G_contig000168	325981	G	ftsH_2:C264C				A	S	155.78	A	S	59.03	A	S	66.03
+gnl|I|G_contig000168	325990	C	ftsH_2:R261R				G	S	200.77	G	S	144.78	G	S	41.28
+gnl|I|G_contig000168	326007	T	ftsH_2:G256G				C	S	155.78	C	S	128.8			
+gnl|I|G_contig000168	326024	G	ftsH_2:S250C				C	N	38.28	C	N	39.28			
+gnl|I|G_contig000168	326025	C	ftsH_2:S250T				T	N	38.28	T	N	40.28			
+gnl|I|G_contig000168	326032	C	ftsH_2:R247R				T	S	38.28	T	S	40.28			
+gnl|I|G_contig000012	79546	A	gsiA_1:S458R							C	N	37.28			
+gnl|I|G_contig000012	79567	C	gsiA_1:S451S							T	S	69.03			
+gnl|I|G_contig000012	79570	G	gsiA_1:H450H							A	S	67.03			
+gnl|I|G_contig000012	79582	G	gsiA_1:S446R							C	N	63.03			
+gnl|I|G_contig000079	90359	G	yabI_1:R313G							C	N	62.03			
+gnl|I|G_contig000117	160422	T	dgoD_2:P336R							C	N	37.28	C	N	41.28
+gnl|I|G_contig000117	160426	C	dgoD_2:C335R							G	N	38.28			
+gnl|I|G_contig000117	160427	G	dgoD_2:R334R							C	S	42.28			
+gnl|I|G_contig000117	184261	C	argH:A280G							G	N	37.28			
+gnl|I|G_contig000117	185517	A	yecS_3:A220S							T	N	183.78	T	N	43.28
+gnl|I|G_contig000117	185519	C	yecS_3:A220A							G	S	79.9			
+gnl|I|G_contig000168	325858	A	ftsH_2:A305A							C	S	39.28			
+gnl|I|G_contig000168	326031	T	ftsH_2:R248R							G	S	40.28			
+gnl|I|G_contig000168	326036	C	ftsH_2:R246P							G	N	189.77			
+gnl|I|G_contig000168	253284	C	ugpC_6:S74P										G	N	38.28
+gnl|I|G_contig000168	325891	A	ftsH_2:A294A										G	S	274.77

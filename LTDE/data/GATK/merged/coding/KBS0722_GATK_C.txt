@@ -1,0 +1,92 @@
+Scaffold	Pos	Ref	Gene	Alt_A	Coding_A	Qual_A	Alt_B	Coding_B	Qual_B	Alt_C	Coding_C	Qual_C	Alt_D	Coding_D	Qual_D
+gnl|I|G_contig000001	169	C	vanYB_1:V156V	G	S	36.77				G	S	130.77	G	S	153.77
+gnl|I|G_contig000001	313	C	vanYB_1:T108T	A	S	177.77	A	S	79.77	A	S	170.77	A	S	254.77
+gnl|I|G_contig000006	100834	C	dinG:L298S	G	N	69.77	G	N	63.77						
+gnl|I|G_contig000006	224360	C	rutR_1:R103R	A	S	396.77	A	S	75.77	A	S	351.77	A	S	387.77
+gnl|I|G_contig000013	265760	G	gutB:H328H	T	S	1452.77	T	S	1110.77	T	S	1997.77	T	S	2113.77
+gnl|I|G_contig000020	369059	G	glbO:V158V	C	S	111.77				C	S	130.77	C	S	48.77
+gnl|I|G_contig000020	518126	C	mprA:P133P	G	S	63.77							G	S	130.77
+gnl|I|G_contig000020	579183	A	yesO_1:N400N	C	S	34.77				C	S	57.77			
+gnl|I|G_contig000020	608368	C	epsJ:G30R	G	N	2379.77	G	N	2096.77	G	N	2568.77	G	N	2591.77
+gnl|I|G_contig000020	648925	C	dop:C105R	G	N	82.77	G	N	47.77	G	N	83.77	G	N	63.77
+gnl|I|G_contig000005	95	G	vanYB_1:R181R				C	S	96.77						
+gnl|I|G_contig000006	197834	C	ffh:A327P				G	N	41.77						
+gnl|I|G_contig000020	387459	T	etfB_1:G91G				G	S	121.77	G	S	81.77	G	S	103.77
+gnl|I|G_contig000006	14751	A	dnaE2:E507E							C	S	53.77			
+gnl|I|G_contig000006	110971	T	inhA_1:R241R							G	S	43.77	G	S	34.77
+gnl|I|G_contig000006	214562	T	fgs:Q411P							G	N	50.77	G	N	56.77
+gnl|I|G_contig000020	583308	C	bamB_2:W340S							G	N	30.77			
+gnl|I|G_contig000006	19894	A	thiD:T168S										C	N	36.77
+gnl|I|G_contig000013	239806	C	sigE_2:A111S										A	N	67.77
+gnl|I|G_contig000020	276779	G	ccrA2:A217A										C	S	104.77
+gnl|I|G_contig000020	674056	T	rop:V-224496G										C	N	94.77
+gnl|I|G_contig000027	61436	A	rop:A-20289A										C	S	79.77
+gnl|I|G_contig000027	137111	G	rop:P-45514P										A	S	1347.77
+gnl|I|G_contig000027	155915	G	rop:R-51782R										T	S	37.77
+gnl|I|G_contig000027	174117	G	rop:A-57849A										C	S	31.77
+gnl|I|G_contig000027	194180	A	rop:G-64537G										C	S	97.77
+gnl|I|G_contig000027	211511	G	rop:R-70314R										T	S	382.77
+gnl|I|G_contig000027	235015	G	rop:A-78149E										T	N	63.77
+gnl|I|G_contig000027	238868	A	rop:E-79433E										C	S	62.77
+gnl|I|G_contig000027	263652	G	rop:V-87694L										A	N	43.77
+gnl|I|G_contig000027	263656	G	rop:N-87696S										C	N	244.77
+gnl|I|G_contig000028	47657	C	rop:P-15696P										G	S	86.28
+gnl|I|G_contig000028	71029	G	rop:A-23487V										A	N	2954.77
+gnl|I|G_contig000028	80535	C	rop:L-26655L										G	S	61.77
+gnl|I|G_contig000028	108222	T	rop:D-35884H										G	N	33.77
+gnl|I|G_contig000028	134694	G	rop:R-44708G										C	N	71.77
+gnl|I|G_contig000028	184884	G	rop:E-61438*										A	N	735.77
+gnl|I|G_contig000028	184886	G	rop:R-61439R										C	S	1115.77
+gnl|I|G_contig000028	184955	T	rop:A-61462A										C	S	846.77
+gnl|I|G_contig000028	184959	C	rop:G-61463R										G	N	611.77
+gnl|I|G_contig000028	194611	G	rop:A-64681G										C	N	203.77
+gnl|I|G_contig000028	213479	T	rop:G-70970G										G	S	3028.77
+gnl|I|G_contig000028	260404	G	rop:R-86612Q										T	N	1225.77
+gnl|I|G_contig000028	275700	C	rop:G-91710R										G	N	210.77
+gnl|I|G_contig000028	314108	G	rop:A-104513A										T	S	111.77
+gnl|I|G_contig000029	104846	G	rop:R-34759R										T	S	66.77
+gnl|I|G_contig000029	230069	T	rop:A-76500A										C	S	268.77
+gnl|I|G_contig000029	230072	C	rop:P-76501P										A	S	179.77
+gnl|I|G_contig000029	230078	T	rop:R-76503R										C	S	641.77
+gnl|I|G_contig000029	230081	G	rop:P-76504P										A	S	506.77
+gnl|I|G_contig000029	230855	A	rop:G-76762G										T	S	464.77
+gnl|I|G_contig000029	231004	G	rop:S-76812L										A	N	1390.77
+gnl|I|G_contig000029	231033	T	rop:R-76821C										A	N	2940.77
+gnl|I|G_contig000030	77747	G	rop:R-25726R										C	S	31.77
+gnl|I|G_contig000032	14658	C	rop:V-4696L										G	N	235.8
+gnl|I|G_contig000032	34821	T	rop:G-11417R										G	N	48.77
+gnl|I|G_contig000032	34833	T	rop:T-11421P										G	N	152.77
+gnl|I|G_contig000032	105659	G	rop:R-35030R										C	S	30.77
+gnl|I|G_contig000032	105755	A	rop:R-35062R										C	S	52.77
+gnl|I|G_contig000032	149001	G	rop:L-49477V										C	N	125.77
+gnl|I|G_contig000032	167366	C	rop:R-55599R										G	S	73.77
+gnl|I|G_contig000032	242540	G	rop:P-80657P										C	S	284.77
+gnl|I|G_contig000032	264492	A	rop:G-87974G										C	S	30.77
+gnl|I|G_contig000032	267574	G	rop:S-89002W										C	N	90.77
+gnl|I|G_contig000033	71495	A	rop:P-23642P										C	S	143.77
+gnl|I|G_contig000033	71841	G	rop:D-23757D										C	S	158.9
+gnl|I|G_contig000033	82195	A	rop:G-27209A										G	N	2567.77
+gnl|I|G_contig000036	1760	C	rop:R-397R										T	S	1379.77
+gnl|I|G_contig000036	4109	T	rop:D-1180E										C	N	1339.77
+gnl|I|G_contig000036	4149	G	rop:Q-1193*										A	N	744.77
+gnl|I|G_contig000036	4363	G	rop:F-1265C										C	N	121.77
+gnl|I|G_contig000036	28174	G	rop:S-9202Y										T	N	2665.77
+gnl|I|G_contig000037	55447	T	rop:E-18293A										G	N	88.77
+gnl|I|G_contig000037	124399	C	rop:P-41277L										A	N	112.77
+gnl|I|G_contig000037	192289	T	rop:R-63907P										G	N	52.77
+gnl|I|G_contig000037	193309	G	rop:V-64247D										T	N	63.77
+gnl|I|G_contig000037	193319	C	rop:L-64250L										A	S	160.77
+gnl|I|G_contig000038	16460	G	rop:R-5297R										T	S	1885.77
+gnl|I|G_contig000038	27197	G	rop:R-8876R										T	S	2639.77
+gnl|I|G_contig000038	27225	C	rop:V-8885L										A	N	2140.77
+gnl|I|G_contig000038	27265	C	rop:S-8899L										A	N	2913.77
+gnl|I|G_contig000063	605	T	rop:A-12A										C	S	172.77
+gnl|I|G_contig000063	2520	C	rop:D-650H										G	N	78.77
+gnl|I|G_contig000063	55262	G	rop:G-18231G										C	S	66.77
+gnl|I|G_contig000063	65899	C	rop:A-21777A										G	S	167.77
+gnl|I|G_contig000063	87448	C	rop:S-28960S										G	S	37.77
+gnl|I|G_contig000063	193078	G	rop:S-64170W										C	N	48.77
+gnl|I|G_contig000063	197934	C	rop:D-65788N										T	N	139.77
+gnl|I|G_contig000063	267820	T	rop:T-89084T										G	S	155.77
+gnl|I|G_contig000091	50856	C	rop:E-16762Q										G	N	63.77
+gnl|I|G_contig000091	52732	G	rop:A-17388G										C	N	42.77

@@ -84,14 +84,6 @@ def pandasNames(df):
     #df.iloc[:,8:] = df.iloc[:,8:].astype(float)
     return (df, samples)
 
-def func(x):
-    count = 0
-    for y in x:
-        if y != float(0) or y != float(1):
-            count += 1
-
-
-
 def getPiVar(pi, n):
     '''
     returns the variance for pi
@@ -179,6 +171,8 @@ def getPi(strains):
             N_x = []
             S = 0
             for value in pi_subset_tuples:
+                if value[1] == 1.0:
+                    continue
 
                 S += 1
                 p = value[1]
