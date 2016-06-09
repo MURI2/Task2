@@ -1,0 +1,1 @@
+Scaffold	Pos	Ref	Gene	Alt_A	Coding_A	Qual_A	Alt_B	Coding_B	Qual_B	Alt_C	Coding_C	Qual_C	Alt_D	Coding_D	Qual_D

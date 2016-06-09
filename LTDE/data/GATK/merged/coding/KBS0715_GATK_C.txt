@@ -1,0 +1,21 @@
+Scaffold	Pos	Ref	Gene	Alt_A	Coding_A	Qual_A	Alt_B	Coding_B	Qual_B	Alt_C	Coding_C	Qual_C	Alt_D	Coding_D	Qual_D
+gnl|I|G_contig000010	436463	G	ada:A85T	T	N	91.77	T	N	98.77	T	N	152.77			
+gnl|I|G_contig000010	447410	C	fabG3:V102V	A	S	53.77									
+gnl|I|G_contig000010	502109	C	opuCB_1:D48A	G	N	194.77				G	N	134.77	G	N	41.77
+gnl|I|G_contig000010	834293	G	mntB:A280A	C	S	37.77									
+gnl|I|G_contig000018	925260	G	xerC:M280V	C	N	152.77	C	N	85.77	C	N	70.77	C	N	123.77
+gnl|I|G_contig000004	37951	A	fdm_1:P33P				C	S	50.77	C	S	63.77			
+gnl|I|G_contig000004	192735	G	neo:W195*				T	N	120.77						
+gnl|I|G_contig000010	780041	C	clpC1:T287S				T	N	33.77				T	N	41.77
+gnl|I|G_contig000018	836441	G	nepI:*236L				A	N	1098.77				A	N	961.77
+gnl|I|G_contig000018	836558	C	nepI:F197Y				T	N	227.77				T	N	258.77
+gnl|I|G_contig000018	836562	C	nepI:G196C				A	N	166.77				A	N	141.77
+gnl|I|G_contig000018	836568	C	nepI:A194P				G	N	161.77				G	N	240.77
+gnl|I|G_contig000018	836574	G	nepI:S192S				A	S	104.77				A	S	45.77
+gnl|I|G_contig000004	16441	C	mmpL8:P253R							G	N	37.77			
+gnl|I|G_contig000010	840376	A	nagC_2:T104R							C	N	38.77			
+gnl|I|G_contig000018	845368	G	gsiA_3:R220R							A	S	68.77	A	S	46.77
+gnl|I|G_contig000010	380875	C	rpsL:G94G										A	S	31.77
+gnl|I|G_contig000010	435790	C	relG:V43A										G	N	59.77
+gnl|I|G_contig000010	463159	G	kdpA:C341Y										T	N	92.77
+gnl|I|G_contig000010	779314	C	clpC1:A44A										G	S	45.77

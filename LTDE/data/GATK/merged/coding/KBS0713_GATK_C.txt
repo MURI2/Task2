@@ -1,0 +1,7 @@
+Scaffold	Pos	Ref	Gene	Alt_A	Coding_A	Qual_A	Alt_B	Coding_B	Qual_B	Alt_C	Coding_C	Qual_C
+gnl|I|G_contig000003	157588	C	ydhP_1:G470D	T	N	144.77	T	N	1438.77	T	N	650.77
+gnl|I|G_contig000003	157824	G	ydhP_1:*391*	T	S	453.77	T	S	1446.77	T	S	1084.77
+gnl|I|G_contig000003	158180	A	ydhP_1:C273R	G	N	753.77	G	N	1530.77	G	N	1794.77
+gnl|I|G_contig000003	158407	C	ydhP_1:*197*	T	S	345.77	T	S	663.77	T	S	991.77
+gnl|I|G_contig000003	158417	T	ydhP_1:I194V	C	N	379.77	C	N	624.77	C	N	920.77
+gnl|I|G_contig000017	313744	C	atpG:I98F	A	N	692.77	A	N	2311.77	A	N	1912.77
