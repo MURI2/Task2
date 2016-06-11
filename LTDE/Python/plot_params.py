@@ -6,6 +6,7 @@ import csv, collections
 from itertools import chain
 from scipy import stats
 import  matplotlib.pyplot as plt
+from operator import itemgetter
 
 mydir = os.path.expanduser("~/github/Task2/LTDE")
 
@@ -15,8 +16,8 @@ def plotPopGenStats():
     #strains = []
     T_D = []
     params = ['Pi', 'W', 'T_D']
-    strains = IN.Strain.unique()
     for param in params:
+        strains = IN.Strain.unique()
         param_values = []
         for strain in strains:
             #IN[['Pi']]surveys_df[surveys_df.year == 2002]
@@ -26,29 +27,35 @@ def plotPopGenStats():
         ax = fig.add_subplot(111)
         ax.axhline(linewidth=2, color='darkgrey',ls='--')
         # Create the boxplot
-        bp = ax.boxplot(param_values)
+        bp = ax.boxplot(param_values, patch_artist=True)
+        colors = ['cyan', 'lightblue', 'lightgreen', 'tan', 'pink', 'darkgreen', \
+            'maroon', 'blueviolet']
+        for patch, color in zip(bp['boxes'], colors):
+            patch.set_facecolor(color)
+            patch.set_alpha(0.3)
+
         ax.set_xticklabels(strains)
         ax.get_xaxis().tick_bottom()
         ax.get_yaxis().tick_left()
         if param == 'T_D':
             ax.set_ylabel('Tajimas D')
-            ax.set_ylim(-3.5, 3.5)
+            ax.set_ylim(-0.1, 3.5)
         elif param == 'W':
             ax.set_ylabel('Wattersons theta')
-            print param_values
-            ax.set_ylim(0, 3.5)
+            ax.set_ylim(0, 1)
         elif param == 'pi':
             ax.set_ylabel('nucleotide diversity (pi)')
             ax.set_ylim(0, 3.5)
         # Save the figure
-        fig.savefig(mydir + '/figs/' + param + '.png', bbox_inches='tight')
+        ax.set_title('Strains')
+        fig.savefig(mydir + '/figs/' + param + '.png', bbox_inches='tight',  dpi = 600)
         plt.close()
 
 
-#plotTD()
+plotPopGenStats()
 
-strain_list = ['KBS0722', 'KBS0724', 'KBS0727', 'KBS0715', 'KBS0703', 'KBS0711', \
-            'KBS0713', 'KBS0802']
+strain_list = [ 'KBS0703','KBS0711', 'KBS0713', 'KBS0715', 'KBS0722', 'KBS0724', \
+            'KBS0727', 'KBS0802']
 
 def TDvsEvolData():
     IN_TD = (mydir + '/data/mapgd/final/PopGenStats.txt')
@@ -107,20 +114,29 @@ def get_list(d):
     return_list  =[]
     for key, value in d.iteritems():
         for nested_key, nested_value in value.iteritems():
-            #nested_tuple = (key, nested_value)
-            return_list.append( nested_value)
+            nested_tuple = (key, nested_value)
+            return_list.append( nested_tuple)
+            #return_list.append( nested_value)
     return return_list
 
 def TDvsEvolPlot():
     data = TDvsEvolData()
     nested_list =get_list(data)
-    x = np.asarray([z[0] for z in nested_list ])
-    y = np.asarray([z[1] for z in nested_list ])
-    evol = [abs(z[2]) for z in nested_list ]
-
+    x = np.asarray([z[1][0] for z in nested_list ])
+    y = np.asarray([z[1][1] for z in nested_list ])
+    evol = [abs(z[1][2]) for z in nested_list ]
+    names = np.asarray([z[0] for z in nested_list ])
+    names_count = collections.Counter(names)
+    names_count_sorted  = sorted(names_count.items(), key=itemgetter(0))
+    colors = ['cyan', 'lightblue', 'lightgreen', 'tan', 'pink', 'darkgreen', \
+        'maroon', 'blueviolet']
+    colors_count = []
+    for enum, value in enumerate(names_count_sorted):
+        color = colors[enum]
+        colors_count.extend([color for i in range(value[1])])
     fig = plt.figure()
     ax1 = fig.add_subplot(111)
-    ax1.scatter(x, y, color='blue', edgecolor='none')
+    ax1.scatter(x, y, c= colors_count, alpha = 0.8, s = 48,edgecolor='black')
     slope, intercept, r_value, p_value, std_err = stats.linregress(x,y)
     print "slope = " + str(slope)
     print "r2 = " + str(r_value**2)
@@ -132,7 +148,8 @@ def TDvsEvolPlot():
     plt.plot(x, predict_y, 'k-')
     plt.axhline(linewidth=2, color='darkgrey',ls='--')
     plt.tick_params(axis='both', which='major', labelsize=10)
-    plt.xlim([0,4])
+    plt.xlim([0.5,3.5])
+    plt.ylim([-0.005,0.020])
     plt.xlabel('Tajimas D', fontsize=20)
     plt.ylabel('Slope', fontsize=20)
     fig.savefig(mydir + '/figs/test.png',  bbox_inches = "tight", pad_inches = 0.4, dpi = 600)
