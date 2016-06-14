@@ -2,8 +2,9 @@ import sys, os, copy
 
 mydir = os.path.expanduser("~/github/Task2/LTDE")
 
-strains = ['KBS0703', 'KBS0705', 'KBS0706', 'KBS0710', 'KBS071', 'KBS0713', \
-    'KBS0715', 'KBS0721', 'KBS0722', 'KBS0724', 'KBS0727', 'KBS0802']
+#strains = ['KBS0703', 'KBS0705', 'KBS0706', 'KBS0710', 'KBS071', 'KBS0713', \
+#    'KBS0715', 'KBS0721', 'KBS0722', 'KBS0724', 'KBS0727', 'KBS0802', 'KBS0812']
+
 
 codon_list={
 "TTT":"F", "TCT":"S", "TAT":"Y", "TGT":"C",
@@ -81,8 +82,12 @@ def issynrev(start, bp, seq, mut):
     return codon_list[rcomp(seq[A-3:A])]==codon_list[rcomp(seq[A-3:B-1]+mut+seq[B:A])]
 
 def annotateGATK(species, isopen=False, CUTOFF=25.0, start=3, stop=4, name=8, strand=6):
-    GFF = open(mydir + '/data/2015_SoilGenomes_Annotate/' + str(species) + '/G-Chr1.gff')
-    FFN = open(mydir + '/data/2015_SoilGenomes_Annotate/' + str(species) + '/G-Chr1.ffn')
+    if species == 'KBS0812':
+        GFF = open(mydir + '/data/Bacillus_test/AL009126.3.gff')
+        FFN = open(mydir + '/data/Bacillus_test/AL009126.fa')
+    else:
+        GFF = open(mydir + '/data/2015_SoilGenomes_Annotate/' + str(species) + '/G-Chr1.gff')
+        FFN = open(mydir + '/data/2015_SoilGenomes_Annotate/' + str(species) + '/G-Chr1.ffn')
     content_list = []
     for content in os.listdir(mydir + '/data/GATK/raw/' + species): # "." means current directory
         content_list.append(content)
@@ -139,7 +144,6 @@ def annotateGATK(species, isopen=False, CUTOFF=25.0, start=3, stop=4, name=8, st
                 elif this_gene_copy.strand=='-':
                     if (pos>this_gene_copy.start):
                         kind=getrev(this_gene_copy.stop, pos, seq, alt)
-                        print kind
                         hit=(this_gene_copy.name+":"+kind)
                         if kind[0]==kind[-1]:
                             kind='S'
@@ -157,8 +161,9 @@ def annotateGATK(species, isopen=False, CUTOFF=25.0, start=3, stop=4, name=8, st
 
         OUT.close()
 
-strains = ['KBS0703', 'KBS0705', 'KBS0706', 'KBS0710', 'KBS0711', 'KBS0713', \
-    'KBS0715', 'KBS0721', 'KBS0722', 'KBS0724', 'KBS0727', 'KBS0802']
+#strains = ['KBS0703', 'KBS0705', 'KBS0706', 'KBS0710', 'KBS0711', 'KBS0713', \
+#    'KBS0715', 'KBS0721', 'KBS0722', 'KBS0724', 'KBS0727', 'KBS0802']
+strains = ['KBS0812']
 
 for x in strains:
     annotateGATK(x)
