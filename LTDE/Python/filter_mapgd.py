@@ -6,7 +6,8 @@ import scipy.stats as st
 import csv
 mydir = os.path.expanduser("~/github/Task2/LTDE")
 
-taxa = ['KBS0703', 'KBS0710', 'KBS0711', 'KBS0713', 'KBS0715', 'KBS0721', 'KBS0722', 'KBS0724', 'KBS0727', 'KBS0802']
+taxa = ['KBS0703', 'KBS0710', 'KBS0711', 'KBS0713', 'KBS0715', 'KBS0721', \
+    'KBS0722', 'KBS0724', 'KBS0727', 'KBS0802', 'KBS0812']
 
 class popGenStats:
     '''
@@ -236,6 +237,6 @@ def getMutations(strains):
 
 
 
-#getPolyTable(taxa)
+getPolyTable(taxa)
 getPi(taxa)
 #getMutations(taxa)

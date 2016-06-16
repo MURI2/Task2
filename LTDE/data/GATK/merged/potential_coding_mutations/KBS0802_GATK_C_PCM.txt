@@ -1,21 +1,21 @@
 Scaffold	Pos	Ref	Gene	Alt_A	Coding_A	Qual_A	Alt_B	Coding_B	Qual_B	Alt_C	Coding_C	Qual_C	Alt_D	Coding_D	Qual_D
-gnl|I|G_contig000001	18240	C	dasR:R152S	A	N	56.77									
-gnl|I|G_contig000007	60900	A	pyrC_1:F191F	G	S	718.77									
-gnl|I|G_contig000007	61402	T	pyrC_1:A24A	G	S	2995.77									
-gnl|I|G_contig000009	103287	C	pgk:R336R	A	S	114.77									
-gnl|I|G_contig000009	103291	C	pgk:A338T	A	N	114.77									
-gnl|I|G_contig000032	437350	C	accA1:C216S	A	N	79.77							A	N	78.77
-gnl|I|G_contig000032	456948	G	atpD:L445L	A	S	127.77	A	S	101.77				A	S	113.77
-gnl|I|G_contig000001	86612	G	metF:L193M				T	N	103.77				T	N	50.77
-gnl|I|G_contig000001	86618	C	metF:G191C				A	N	141.77						
-gnl|I|G_contig000021	219728	G	cpxA_1:F197Y				T	N	33.77						
-gnl|I|G_contig000032	457070	C	atpD:R405W				A	N	98.77						
-gnl|I|G_contig000038	462482	C	atpB:R217R				A	S	51.77						
-gnl|I|G_contig000038	462485	G	atpB:P216P				A	S	31.77						
-gnl|I|G_contig000038	462488	C	atpB:E215D				A	N	50.77						
-gnl|I|G_contig000001	96860	G	metK:D313D							T	S	66.77			
-gnl|I|G_contig000026	286180	G	ppsD:R193R							C	S	77.77			
-gnl|I|G_contig000032	455791	C	hcpA:L102L							G	S	32.77	G	S	70.77
-gnl|I|G_contig000001	181548	G	motB_1:V30M										A	N	235.77
-gnl|I|G_contig000032	437344	G	accA1:R214C										T	N	99.77
-gnl|I|G_contig000032	456672	A	atpC:P64R										C	N	62.77
+gnl|I|G_contig000001	18240	C	dasR:Q152.0K	A	N	56.77									
+gnl|I|G_contig000007	60900	A	pyrC_1:L191.666666667L	G	S	718.77									
+gnl|I|G_contig000007	61402	T	pyrC_1:H24.3333333333P	G	N	2995.77									
+gnl|I|G_contig000009	103287	C	pgk:S336.666666667S	A	S	114.77									
+gnl|I|G_contig000009	103291	C	pgk:A338.0T	A	N	114.77									
+gnl|I|G_contig000032	437350	C	accA1:L216.0M	A	N	79.77							A	N	78.77
+gnl|I|G_contig000032	456948	G	atpD:G445.666666667G	A	S	127.77	A	S	101.77				A	S	113.77
+gnl|I|G_contig000001	86612	G	metF:P193.0T				T	N	103.77				T	N	50.77
+gnl|I|G_contig000001	86618	C	metF:E191.0*				A	N	141.77						
+gnl|I|G_contig000021	219728	G	cpxA_1:F197.333333333Y				T	N	33.77						
+gnl|I|G_contig000032	457070	C	atpD:S405.0S				A	S	98.77						
+gnl|I|G_contig000038	462482	C	atpB:A217.666666667A				A	S	51.77						
+gnl|I|G_contig000038	462485	G	atpB:S216.666666667S				A	S	31.77						
+gnl|I|G_contig000038	462488	C	atpB:S215.666666667S				A	S	50.77						
+gnl|I|G_contig000001	96860	G	metK:S313.333333333*							T	N	66.77			
+gnl|I|G_contig000026	286180	G	ppsD:T193.0P							C	N	77.77			
+gnl|I|G_contig000032	455791	C	hcpA:S102.666666667S							G	S	32.77	G	S	70.77
+gnl|I|G_contig000001	181548	G	motB_1:D30.0N										A	N	235.77
+gnl|I|G_contig000032	437344	G	accA1:P214.0S										T	N	99.77
+gnl|I|G_contig000032	456672	A	atpC:L64.3333333333W										C	N	62.77

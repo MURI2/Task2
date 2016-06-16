@@ -22,6 +22,7 @@ def plotPopGenStats():
         for strain in strains:
             #IN[['Pi']]surveys_df[surveys_df.year == 2002]
             param_values.append( IN[IN.Strain == strain][param].values)
+
         fig = plt.figure(1, figsize=(9, 6))
         # Create an axes instance
         ax = fig.add_subplot(111)
@@ -29,7 +30,7 @@ def plotPopGenStats():
         # Create the boxplot
         bp = ax.boxplot(param_values, patch_artist=True)
         colors = ['cyan', 'lightblue', 'lightgreen', 'tan', 'pink', 'darkgreen', \
-            'maroon', 'blueviolet']
+            'maroon', 'blueviolet', 'indigo']
         for patch, color in zip(bp['boxes'], colors):
             patch.set_facecolor(color)
             patch.set_alpha(0.3)
@@ -39,23 +40,19 @@ def plotPopGenStats():
         ax.get_yaxis().tick_left()
         if param == 'T_D':
             ax.set_ylabel('Tajimas D')
-            ax.set_ylim(-0.1, 3.5)
+            ax.set_ylim(0, 4)
         elif param == 'W':
             ax.set_ylabel('Wattersons theta')
-            ax.set_ylim(0, 1)
+            ax.set_ylim(0, 4)
         elif param == 'pi':
-            ax.set_ylabel('nucleotide diversity (pi)')
-            ax.set_ylim(0, 3.5)
+            ax.set_ylabel('pi')
+            #plt.ylabel('ppiiii')
+            ax.set_ylim(0, 4)
         # Save the figure
         ax.set_title('Strains')
         fig.savefig(mydir + '/figs/' + param + '.png', bbox_inches='tight',  dpi = 600)
         plt.close()
 
-
-plotPopGenStats()
-
-strain_list = [ 'KBS0703','KBS0711', 'KBS0713', 'KBS0715', 'KBS0722', 'KBS0724', \
-            'KBS0727', 'KBS0802']
 
 def TDvsEvolData():
     IN_TD = (mydir + '/data/mapgd/final/PopGenStats.txt')
@@ -129,7 +126,7 @@ def TDvsEvolPlot():
     names_count = collections.Counter(names)
     names_count_sorted  = sorted(names_count.items(), key=itemgetter(0))
     colors = ['cyan', 'lightblue', 'lightgreen', 'tan', 'pink', 'darkgreen', \
-        'maroon', 'blueviolet']
+        'maroon', 'blueviolet', 'indigo']
     colors_count = []
     for enum, value in enumerate(names_count_sorted):
         color = colors[enum]
@@ -154,4 +151,7 @@ def TDvsEvolPlot():
     plt.ylabel('Slope', fontsize=20)
     fig.savefig(mydir + '/figs/test.png',  bbox_inches = "tight", pad_inches = 0.4, dpi = 600)
 
-TDvsEvolPlot()
+plotPopGenStats()
+
+#TDvsEvolData()
+#TDvsEvolPlot()

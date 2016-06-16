@@ -1,6 +1,6 @@
 from __future__ import division
 import pandas as pd
-import os
+import os, re
 # read it in, reshape to a 3 x 32 matrix and spit out as a .txt file
 mydir = os.path.expanduser("~/github/Task2/LTDE/EcoPlates/")
 
@@ -65,6 +65,32 @@ def normalizeData(strains):
                 OUT = OUT_path + '/' + name + '.txt'
                 IN_read_sub_noW.to_csv(OUT, sep='\t', index = False)
 
-strains = ['KBS0711']
+def mergeData(strains):
+    '''
+    Merges individual population files into a single file for each strain
+    '''
+    OUT_path =  mydir + 'data/merged/'
+    for strain in strains:
+        IN_path = mydir + 'data/cleaned/' + strain
+        df = pd.DataFrame()
+        if not os.path.exists(OUT_path):
+            os.makedirs(OUT_path)
+        for txt in os.listdir(IN_path):
+            if txt.endswith(".txt"):
+                name = re.split(r'[._]+', txt)
+                IN = IN_path + '/' + txt
+                IN_read = pd.read_csv(IN, sep = '\t', index_col= False)
+                mean = IN_read.mean(axis = 0)
+                mean.name = name[1]
+                toAppend = pd.Series([name[1]]).append(mean)
+                df = df.append(toAppend, ignore_index=True)
+        df=df.rename(columns = {0:'Line'})
+        OUT = OUT_path + strain+ '_EcoPlate' + '.txt'
+        df.to_csv(OUT, sep='\t', index = False)
+
+
+
+strains = ['KBS0711', 'KBS0701']
 rawToLabelles(strains)
 normalizeData(strains)
+mergeData(strains)
