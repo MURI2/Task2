@@ -201,7 +201,6 @@ class annotate:
     			alt=fields[3]
     			pos=int(fields[1])
     			if len(alt)==1:
-    				#while (pos>min(this_gene.stop, this_gene.start) ):
     				while (pos>max(this_gene.start, this_gene.stop ) ):
     					this_gene=genes.pop(0)
 
@@ -237,23 +236,27 @@ class annotate:
     				self.isopen=True
     	OUT.close
 
-class filter:
+class formatSNPs:
 
-    def __init__(self, pathIN, pathOUT):
-        self.pathIN = pathIN
-        self.pathOUT = pathOUT
+    def __init__(self, strain):
+        #self.pathIN = pathIN
+        #self.pathOUT = pathOUT
+        self.strain = strain
+        self.mydir = os.path.expanduser("~/github/Task2/LTDE")
 
     def getSNPTable(self):
         dfs = []
         samples = []
-        for i in os.listdir(self.pathIN):
+        pathIN = self.mydir + '/data/GATK/annotate/' + self.strain
+        pathOUT = self.mydir + '/data/GATK/merged/all/'  + self.strain
+        for i in os.listdir(pathIN):
             if i.endswith(".txt"):
                 sample_name = i.split('.')[0]
                 sample = re.split(r'[-_]+', sample_name)[2]
                 samples.append(sample)
                 names = ['Scaffold', 'Pos', 'Ref', 'Alt', 'Gene', \
                     'Coding', 'Qual', 'AC']
-                IN = pd.read_csv(self.pathIN + '/' + i, delimiter = ' ', header = None)
+                IN = pd.read_csv(pathIN + '/' + i, delimiter = ' ', header = None)
                 IN.columns = names
                 # remove original header and AC column
                 IN = IN.iloc[1:,:-1]
@@ -276,5 +279,46 @@ class filter:
         to_move_values = merged_df.loc[:,to_move]
         merged_df.drop(to_move, axis=1, inplace=True)
         merged_df.insert(4, to_move, to_move_values)
-        merged_df.to_csv(self.pathOUT +'_GATK.txt' ,sep='\t', \
+        merged_df.to_csv(pathOUT +'_GATK.txt' ,sep='\t', \
             index = False)
+
+    def filterSNPTable(self, coding_to_csv=False):
+        pathIN = self.mydir + '/data/GATK/merged/all/'  + self.strain
+        IN = pd.read_csv(pathIN + '_GATK.txt', delimiter = '\t', header = 'infer')
+        IN_coding = IN[IN['Gene'] != 'NC']
+        if coding_to_csv == True:
+            IN_coding.to_csv(self.mydir + '/data/GATK/merged/coding/' + self.strain +'_GATK_C.txt' ,sep='\t', \
+                index = False)
+        NAN_counts = IN_coding.isnull().sum(axis=1)
+        toKeep = NAN_counts[NAN_counts != 0].index
+        toKeep_df = IN_coding.ix[toKeep]
+        toKeep_df.to_csv(self.mydir + '/data/GATK/merged/potential_coding_mutations/' + self.strain +'_GATK_C_PCM.txt' ,sep='\t', \
+            index = False)
+
+
+def annotateStrains():
+    mydir = os.path.expanduser("~/github/Task2/LTDE")
+    strains = ['KBS0703', 'KBS0705', 'KBS0706', 'KBS0710', 'KBS0711', 'KBS0713', \
+        'KBS0715', 'KBS0721', 'KBS0722', 'KBS0724', 'KBS0727', 'KBS0802']
+    for strain in strains:
+        content_list = []
+        for content in os.listdir(mydir + '/data/GATK/raw/' + strain): # "." means current directory
+            content_list.append(content)
+        if strain == 'KBS0812':
+            GFF = mydir + '/data/Bacillus_test/AL009126.3.gff'
+            FFN = mydir + '/data/Bacillus_test/AL009126.fa'
+        else:
+            GFF = mydir + '/data/2015_SoilGenomes_Annotate/' + strain + '/G-Chr1.gff'
+            FFN = mydir + '/data/2015_SoilGenomes_Annotate/' + strain + '/G-Chr1.fna'
+        mapgd=mydir + '/data/mapgd/raw/' + str(strain) + '_merged.pol'
+        mapgsOUT =  mydir+'/data/mapgd/annotate/' + str(strain) +  '_merged_annotate.pol'
+        annotate(GFF, FFN).annotateMAPGD(mapgd, mapgsOUT)
+        for x in content_list:
+            IN = mydir + '/data/GATK/raw/' +  strain + '/' + x
+            OUT =  mydir + '/data/GATK/annotate/' + str(strain) + '/' + x.split('.')[0] + '_annotate.txt'
+            annotate(GFF, FFN).annotateGATK(IN, OUT)
+
+        formatSNPs(strain).getSNPTable()
+        formatSNPs(strain).filterSNPTable(coding_to_csv=True)
+
+annotateStrains()
