@@ -74,7 +74,7 @@ class popGenStats:
 
 def pandasNames(df):
     names = ['Scaffold', 'Pos', 'Major', 'Minor', 'Coverage', 'Error', \
-        'Gene', 'AA-change']
+        'Gene', 'AA-change', 'Fourfold']
     samples = len(df.columns) - len(names)
     for x in range(samples):
         name = 'Sample_' + str(x+1)
@@ -103,7 +103,7 @@ def getPiVar(pi, n):
 def getPolyTable(taxa):
     polyDict = {}
     for taxon in taxa:
-        IN = pd.read_csv(mydir + '/data/mapgd/annotate/' + taxon + '_merged_annotate.pol', delimiter = '\t', \
+        IN = pd.read_csv(mydir + '/data/mapgd/annotate/' + taxon + '_merged_annotate.txt', delimiter = '\t', \
             header = None)
         names_IN = pandasNames(IN)
         IN = names_IN[0]
@@ -139,42 +139,41 @@ def getPolyTable(taxa):
     latex_path = mydir + '/tables/test.tex'
     df.to_latex(latex_path)
 
-    #print df
 
-
-
-def getPi(strains):
+def getPi(strains, folded = True):
     piDict = {}
     OUT = open(mydir + '/data/mapgd/final/PopGenStats.txt', 'w')
     for strain in strains:
-        IN = pd.read_csv(mydir + '/data/mapgd/annotate/' + strain + '_merged_annotate.pol', delimiter = '\t', \
+        IN = pd.read_csv(mydir + '/data/mapgd/annotate/' + strain + '_merged_annotate.txt', delimiter = '\t', \
             header = None)
         names_IN = pandasNames(IN)
         IN = names_IN[0]
         IN_samples = names_IN[1]
-        C_S_count = IN[IN.apply(lambda x:  (x.iloc[7] == 'S'), axis=1 )]
+        C_S_count = IN[IN.apply(lambda x:  (x.iloc[7] == 'S') and(x.iloc[8] == 'Y'), axis=1 )]
         pi = []
         piVar = []
         W_theta = []
         T_D = []
         W_theta_var = []
         for x in range(1, IN_samples + 1):
-            if strain == 'KBS0711' and x == 1:
-                '''We're ignoring this sample because it has odd levels of polymorphism
-                and I'm unsure how to interpret it.
-                '''
-                continue
+
+            #if strain == 'KBS0711' and x == 1:
+            #    '''We're ignoring this sample because it has odd levels of polymorphism
+            #    and I'm unsure how to interpret it.
+            #    '''
+            #    continue
+
             sample_column = 'Sample_' + str(x)
             pi_subset_names = ['Coverage', sample_column]
             pi_subset = C_S_count[pi_subset_names]
+
             pi_subset_tuples = [tuple(y) for y in pi_subset.values]
             pi_x = []
             N_x = []
             S = 0
             for value in pi_subset_tuples:
-                if value[1] == 1.0:
+                if folded == True and value[1] == float(1.0):
                     continue
-
                 S += 1
                 p = value[1]
                 q = 1- p
@@ -220,7 +219,7 @@ def getPi(strains):
 
 def getMutations(strains):
     for strain in strains:
-        IN = pd.read_csv(mydir + '/data/mapgd/annotate/' + strain + '_merged_annotate.pol', delimiter = '\t', \
+        IN = pd.read_csv(mydir + '/data/mapgd/annotate/' + strain + '_merged_annotate.txt', delimiter = '\t', \
             header = None)
         names_IN = pandasNames(IN)
         IN = names_IN[0]
@@ -228,15 +227,13 @@ def getMutations(strains):
         #NC_count = IN[IN.apply(lambda x: (x.iloc[6] == 'NC'), axis=1 )]
         #C_count = IN[IN.apply(lambda x: (x.iloc[6] != 'NC'), axis=1 )]
         #C_S_count = IN[IN.apply(lambda x:  (x.iloc[7] == 'S'), axis=1 )]
-        #print IN_samples
         # for just the samples IN.iloc[:, 8:]
         # remove cases where they're all equal
-        #print IN
         #print  IN[IN.apply(lambda x: (x.iloc[ 8:] == float(1)), axis=0 )]
 
 
 
 
-getPolyTable(taxa)
+#getPolyTable(taxa)
 getPi(taxa)
 #getMutations(taxa)

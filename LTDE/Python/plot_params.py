@@ -13,16 +13,15 @@ mydir = os.path.expanduser("~/github/Task2/LTDE")
 def plotPopGenStats():
     IN = pd.read_csv(mydir + '/data/mapgd/final/PopGenStats.txt', sep = ' ', header = None)
     IN.columns = ['Strain', 'Rep', 'Pi', 'Pi_Var', 'W', 'W_Var', 'T_D']
-    #strains = []
     T_D = []
     params = ['Pi', 'W', 'T_D']
     for param in params:
-        strains = IN.Strain.unique()
+        strains = list(IN.Strain.unique())
+        strains.remove('KBS0715')
+        strains.remove('KBS0722')
         param_values = []
         for strain in strains:
-            #IN[['Pi']]surveys_df[surveys_df.year == 2002]
             param_values.append( IN[IN.Strain == strain][param].values)
-
         fig = plt.figure(1, figsize=(9, 6))
         # Create an axes instance
         ax = fig.add_subplot(111)
@@ -30,7 +29,8 @@ def plotPopGenStats():
         # Create the boxplot
         bp = ax.boxplot(param_values, patch_artist=True)
         colors = ['cyan', 'lightblue', 'lightgreen', 'tan', 'pink', 'darkgreen', \
-            'maroon', 'blueviolet', 'indigo']
+            'indigo']
+        #'maroon', 'blueviolet'
         for patch, color in zip(bp['boxes'], colors):
             patch.set_facecolor(color)
             patch.set_alpha(0.3)
@@ -40,13 +40,13 @@ def plotPopGenStats():
         ax.get_yaxis().tick_left()
         if param == 'T_D':
             ax.set_ylabel('Tajimas D')
-            ax.set_ylim(0, 4)
+            ax.set_ylim(-2, 4)
+            plt.axhline(linewidth=2, color='darkgrey',ls='--')
         elif param == 'W':
             ax.set_ylabel('Wattersons theta')
             ax.set_ylim(0, 4)
         elif param == 'pi':
             ax.set_ylabel('pi')
-            #plt.ylabel('ppiiii')
             ax.set_ylim(0, 4)
         # Save the figure
         ax.set_title('Strains')
@@ -57,6 +57,8 @@ def plotPopGenStats():
 def TDvsEvolData():
     IN_TD = (mydir + '/data/mapgd/final/PopGenStats.txt')
     IN_Evol = (mydir + '/data/perRepDeathCurveTraits.txt')
+    strain_list = ['KBS0703', 'KBS0711', 'KBS0713', \
+         'KBS0724', 'KBS0727', 'KBS0802', 'KBS0812']
     strains = []
     data = []
     test_dict = {}
@@ -85,16 +87,14 @@ def TDvsEvolData():
                 x[3] = float(x[3])
                 if x[0] != 'KBS0711' and x[0] != 'KBS0711W':
                     if int(x[1]) in test_dict[x[0]].keys():
-                        #print test_dict[x[0]][int(x[1])]
                         test_dict[x[0]][int(x[1])].extend([x[2], x[3]])
-                        #print test_dict[x[0]][int(x[1])]
                 elif x[0] == 'KBS0711':
                     if x[1] == '10':
                         test_dict[x[0]][4].extend([x[2], x[3]])
                     elif x[1] == '11':
                         test_dict[x[0]][5].extend([x[2], x[3]])
-                    #elif x[1] == '1':
-                    #    test_dict[x[0]][].extend([x[2], x[3]])
+                    elif x[1] == '1':
+                        test_dict[x[0]][1].extend([x[2], x[3]])
                     elif x[1] == '3':
                         test_dict[x[0]][2].extend([x[2], x[3]])
                     elif x[1] == '4':
@@ -102,7 +102,10 @@ def TDvsEvolData():
                     else:
                         continue
                 else:
-                    test_dict['KBS0711'][int(x[1]) + 5].extend([x[2], x[3]])
+                    if int(x[1]) != 2:
+                        test_dict['KBS0711'][int(x[1]) + 5].extend([x[2], x[3]])
+                    else:
+                        test_dict['KBS0711'][int(x[1]) + 6].extend([x[2], x[3]])
     return test_dict
 
 
@@ -119,8 +122,11 @@ def get_list(d):
 def TDvsEvolPlot():
     data = TDvsEvolData()
     nested_list =get_list(data)
+    for what in nested_list:
+        print what
     x = np.asarray([z[1][0] for z in nested_list ])
     y = np.asarray([z[1][1] for z in nested_list ])
+
     evol = [abs(z[1][2]) for z in nested_list ]
     names = np.asarray([z[0] for z in nested_list ])
     names_count = collections.Counter(names)
@@ -152,6 +158,5 @@ def TDvsEvolPlot():
     fig.savefig(mydir + '/figs/test.png',  bbox_inches = "tight", pad_inches = 0.4, dpi = 600)
 
 plotPopGenStats()
-
 #TDvsEvolData()
 #TDvsEvolPlot()

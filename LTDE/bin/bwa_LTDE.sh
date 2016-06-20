@@ -76,6 +76,7 @@ do
     samtools index "${OUT1}/${j}_mapped_sort_NOdup.bam"
     samtools sort "${OUT1}/${j}_mapped_sort_NOdup.bam" "${OUT1}/${j}_mapped_sort_NOdup_sort"
     samtools index "${OUT1}/${j}_mapped_sort_NOdup_sort.bam"
+    samtools view -h -o "${OUT1}/${j}_mapped_sort_NOdup_sort.sam" "${OUT1}/${j}_mapped_sort_NOdup_sort.bam"
     # same thing for unmapped reads
     samtools sort "${OUT1}/${j}_unmapped.bam" "${OUT1}/${j}_unmapped_sort"
     samtools index "${OUT1}/${j}_unmapped_sort.bam"
@@ -83,6 +84,7 @@ do
     samtools index "${OUT1}/${j}_unmapped_sort_NOdup.bam"
     samtools sort "${OUT1}/${j}_unmapped_sort_NOdup.bam" "${OUT1}/${j}_unmapped_sort_NOdup_sort"
     samtools index "${OUT1}/${j}_unmapped_sort_NOdup_sort.bam"
+
   else
     continue
   fi

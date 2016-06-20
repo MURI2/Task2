@@ -1,149 +1,149 @@
-Scaffold	Pos	Ref	Gene	Alt_L	Coding_L	Qual_L	Alt_A	Coding_A	Qual_A	Alt_C	Coding_C	Qual_C	Alt_D	Coding_D	Qual_D	Alt_K	Coding_K	Qual_K	Alt_WA	Coding_WA	Qual_WA	Alt_WB	Coding_WB	Qual_WB	Alt_WC	Coding_WC	Qual_WC	Alt_WD	Coding_WD	Qual_WD
-gnl|I|G_contig000003	61901	T	ccoP:T169.666666667T	A	S	66.77																								
-gnl|I|G_contig000009	185744	C	speE_1:A444.666666667A	A	S	223.77																								
-gnl|I|G_contig000017	264481	A	minD:R148.333333333R	C	S	1224.77																								
-gnl|I|G_contig000017	264489	G	minD:R145.666666667R	A	S	1452.77																A	S	49.77						
-gnl|I|G_contig000017	264508	G	minD:P139.333333333R	C	N	178.77																								
-gnl|I|G_contig000017	264511	A	minD:T138.333333333R	C	N	32.77																								
-gnl|I|G_contig000017	264521	C	minD:F135.0L	G	N	75.77																								
-gnl|I|G_contig000017	264677	G	minD:C83.0C	A	S	2294.77				A	S	1462.77	A	S	1589.77	A	S	1942.77	A	S	1100.77	A	S	825.77	A	S	1180.77	A	S	566.77
-gnl|I|G_contig000017	264687	T	minD:A79.6666666667A	A	S	1213.77																								
-gnl|I|G_contig000017	264688	G	minD:A79.3333333333V	A	N	1162.77																								
-gnl|I|G_contig000017	264690	A	minD:G78.6666666667G	G	S	3556.77				G	S	1112.77	G	S	1608.77	G	S	2121.77	G	S	1015.77	G	S	669.77	G	S	1015.77	G	S	544.77
-gnl|I|G_contig000017	264710	T	minD:N72.0H	G	N	55.77																								
-gnl|I|G_contig000017	264737	A	minD:G63.0G	C	S	4922.77				C	S	1438.77	C	S	1974.77	C	S	3944.77	C	S	1223.77	C	S	1029.77	C	S	1438.77	C	S	978.77
-gnl|I|G_contig000017	264738	C	minD:P62.6666666667P	T	S	4470.77				T	S	1328.77	T	S	1992.77	T	S	3557.77	T	S	1164.77	T	S	974.77	T	S	1360.77	T	S	910.77
-gnl|I|G_contig000017	264739	A	minD:P62.3333333333P	G	S	5475.77				G	S	1597.77	G	S	2243.77	G	S	4204.77	G	S	1363.77	G	S	1224.77	G	S	1676.77	G	S	1009.77
-gnl|I|G_contig000017	264783	T	minD:R47.6666666667R	C	S	2716.77				C	S	3851.77	C	S	3645.77	C	S	3200.06	C	S	3432.77	C	S	3764.77	C	S	3646.77	C	S	2657.77
-gnl|I|G_contig000017	266149	A	metE_1:S704.666666667S	C	S	922.77				C	S	229.77	C	S	340.77	C	S	734.77	C	S	673.77	C	S	494.77	C	S	321.77	C	S	176.77
-gnl|I|G_contig000017	266151	T	metE_1:S704.0A	C	N	809.77							C	N	55.77	C	N	417.77	C	N	427.77	C	N	354.77				C	N	59.77
-gnl|I|G_contig000017	266154	A	metE_1:S703.0P	G	N	704.77										G	N	384.77	G	N	324.77	G	N	300.77				G	N	30.77
-gnl|I|G_contig000017	266156	T	metE_1:N702.333333333T	G	N	646.77				G	N	43.77	G	N	81.77	G	N	451.77	G	N	494.77	G	N	361.77						
-gnl|I|G_contig000017	266165	T	metE_1:R699.333333333R	C	S	5867.77				C	S	3945.77	C	S	3063.77	C	S	4821.77	C	S	3934.77	C	S	3638.77	C	S	3136.77	C	S	1847.77
-gnl|I|G_contig000017	266168	A	metE_1:R698.333333333K	T	N	5219.77				T	N	3675.77	T	N	2859.77	T	N	4525.77	T	N	3510.77	T	N	3327.77	T	N	2871.77	T	N	1602.77
-gnl|I|G_contig000017	266214	C	metE_1:W683.0W	A	S	3472.77				A	S	422.77	A	S	406.77	A	S	560.77	A	S	245.77	A	S	229.77	A	S	152.77	A	S	49.77
-gnl|I|G_contig000017	266217	A	metE_1:L682.0L	G	S	3529.77				G	S	67.77	G	S	234.77	G	S	229.77	G	S	43.77									
-gnl|I|G_contig000017	266222	C	metE_1:P680.333333333Q	T	N	3353.77																								
-gnl|I|G_contig000017	266223	A	metE_1:P680.0P	G	S	3634.77																								
-gnl|I|G_contig000017	266238	T	metE_1:L675.0V	C	N	3230.05				C	N	178.77	C	N	105.77	C	N	77.77	C	N	93.77	C	N	126.77	C	N	69.77	C	N	30.77
-gnl|I|G_contig000017	266239	G	metE_1:W674.666666667C	A	N	2934.77				A	N	187.77	A	N	117.77	A	N	92.77	A	N	108.77	A	N	142.77	A	N	81.77	A	N	33.77
-gnl|I|G_contig000023	658406	G	hxuA_2:A1407.66666667A	T	S	291.77																								
-gnl|I|G_contig000023	658415	C	hxuA_2:K1410.66666667K	G	S	423.77																								
-gnl|I|G_contig000023	658436	C	hxuA_2:F1417.66666667F	T	S	96.77																								
-gnl|I|G_contig000023	658959	G	hxuA_2:H1592.0N	A	N	287.77																								
-gnl|I|G_contig000023	762203	A	estA:P128.666666667P	G	S	163.77																								
-gnl|I|G_contig000023	762227	T	estA:Q136.666666667H	C	N	885.77																								
-gnl|I|G_contig000023	762242	G	estA:G141.666666667G	C	S	1424.77							C	S	60.77															
-gnl|I|G_contig000023	762431	T	estA:G204.666666667G	C	S	1010.77																								
-gnl|I|G_contig000023	762449	C	estA:L210.666666667L	G	S	596.77																								
-gnl|I|G_contig000023	1620668	C	mdtN_2:V108.0L	A	N	31.78																								
-gnl|I|G_contig000023	1961242	G	ams:R549.333333333R	C	S	37.74																								
-gnl|I|G_contig000003	187785	C	xylH_1:R349.666666667R				G	S	59.77																					
-gnl|I|G_contig000003	187788	G	xylH_1:R348.666666667R				C	S	65.77																					
-gnl|I|G_contig000003	187794	G	xylH_1:G346.666666667G				A	S	41.77																					
-gnl|I|G_contig000003	187815	G	xylH_1:P339.666666667P				C	S	53.77																					
-gnl|I|G_contig000003	187827	C	xylH_1:S335.666666667S				G	S	37.77																					
-gnl|I|G_contig000003	207988	C	davD_1:G160.666666667G				G	S	106.77																					
-gnl|I|G_contig000003	208018	G	davD_1:P170.666666667P				C	S	111.77																					
-gnl|I|G_contig000003	208021	C	davD_1:A171.666666667A				G	S	105.77																					
-gnl|I|G_contig000003	267307	G	metE_1:R318.666666667R				T	S	57.77																					
-gnl|I|G_contig000003	267316	A	metE_1:S315.666666667S				G	S	79.77																					
-gnl|I|G_contig000003	267340	G	metE_1:I307.666666667I				T	S	39.77																					
-gnl|I|G_contig000003	267352	A	metE_1:V303.666666667V				G	S	85.77																					
-gnl|I|G_contig000003	410221	C	gpmA_1:L12.6666666667L				G	S	35.77																					
-gnl|I|G_contig000003	410245	T	gpmA_1:I20.6666666667I				C	S	59.77																					
-gnl|I|G_contig000003	410266	T	gpmA_1:S27.6666666667S				C	S	51.77																					
-gnl|I|G_contig000003	442229	C	metK:L94.0M				A	N	43.77																					
-gnl|I|G_contig000023	485304	C	kdgK_1:P306.666666667P				G	S	39.77																					
-gnl|I|G_contig000023	510650	G	lifO:G262.666666667G				C	S	49.77																					
-gnl|I|G_contig000023	510662	C	lifO:A266.666666667A				G	S	78.77																					
-gnl|I|G_contig000023	510664	A	lifO:S267.333333333S				C	S	80.77																					
-gnl|I|G_contig000023	510677	A	lifO:L271.666666667L				G	S	66.77																					
-gnl|I|G_contig000023	537109	C	rluD:P122.666666667P				G	S	100.77				G	S	110.77				G	S	100.77									
-gnl|I|G_contig000023	788526	G	mdh:K143.666666667K				C	S	133.77																					
-gnl|I|G_contig000023	788550	A	mdh:I135.666666667I				G	S	142.77																					
-gnl|I|G_contig000023	788559	G	mdh:N132.666666667K				C	N	136.77																					
-gnl|I|G_contig000023	804265	T	lpd:*326.666666667Y				C	N	86.77																					
-gnl|I|G_contig000023	804319	T	lpd:G344.666666667G				C	S	73.77																					
-gnl|I|G_contig000023	1142626	G	trg_4:H366.666666667Q				C	N	38.77																					
-gnl|I|G_contig000023	1182657	G	amiC_2:P175.666666667P				C	S	94.77																					
-gnl|I|G_contig000023	1182660	T	amiC_2:G176.666666667G				C	S	70.77																					
-gnl|I|G_contig000023	1182669	T	amiC_2:S179.666666667S				C	S	81.77																					
-gnl|I|G_contig000023	1183137	A	amiC_2:T335.666666667T				G	S	30.77																					
-gnl|I|G_contig000023	1183143	G	amiC_2:P337.666666667P				C	S	33.77																					
-gnl|I|G_contig000023	1183146	A	amiC_2:A338.666666667A				G	S	54.77																					
-gnl|I|G_contig000023	1183149	A	amiC_2:W339.666666667W				G	S	54.77																					
-gnl|I|G_contig000023	1183161	G	amiC_2:R343.666666667R				C	S	69.77																					
-gnl|I|G_contig000023	1183167	G	amiC_2:A345.666666667A				C	S	60.77																					
-gnl|I|G_contig000023	1183172	G	amiC_2:C347.333333333Y				A	N	63.77																					
-gnl|I|G_contig000023	1217017	T	nasD_1:S740.666666667S				C	S	150.77																					
-gnl|I|G_contig000023	1217054	G	nasD_1:L753.0I				A	N	70.77																					
-gnl|I|G_contig000023	1217055	T	nasD_1:L753.333333333P				C	N	86.77																					
-gnl|I|G_contig000023	1217056	G	nasD_1:L753.666666667L				C	S	85.77																					
-gnl|I|G_contig000023	1447569	G	davD_2:A262.666666667A				C	S	34.77																					
-gnl|I|G_contig000023	1447586	A	davD_2:S257.0P				G	N	86.77																					
-gnl|I|G_contig000023	1546003	C	nrdB_2:G106.666666667G				G	S	46.77																					
-gnl|I|G_contig000023	1546020	T	nrdB_2:S101.0G				C	N	133.77																					
-gnl|I|G_contig000023	1546029	G	nrdB_2:L98.0L				A	S	128.77																					
-gnl|I|G_contig000023	1546031	T	nrdB_2:V97.3333333333A				G	N	147.77																					
-gnl|I|G_contig000023	1546036	A	nrdB_2:L95.6666666667L				G	S	136.77																					
-gnl|I|G_contig000023	1546043	T	nrdB_2:L93.3333333333P				G	N	151.77																					
-gnl|I|G_contig000023	1546044	G	nrdB_2:L93.0M				T	N	109.77																					
-gnl|I|G_contig000023	1568888	C	proS:E156.666666667D				G	N	35.77																					
-gnl|I|G_contig000023	1568933	A	proS:N141.666666667N				G	S	59.77																					
-gnl|I|G_contig000023	1590587	A	kdpE:R217.0R				G	S	51.77																					
-gnl|I|G_contig000023	1590590	G	kdpE:L216.0M				T	N	36.77																					
-gnl|I|G_contig000023	1590609	T	kdpE:G209.666666667G				C	S	51.77																					
-gnl|I|G_contig000023	1590621	G	kdpE:T205.666666667T				C	S	50.77																					
-gnl|I|G_contig000023	1590627	A	kdpE:G203.666666667G				G	S	40.77																					
-gnl|I|G_contig000023	1590648	A	kdpE:Q196.666666667H				G	N	46.77																					
-gnl|I|G_contig000023	1600220	T	parE:L340.333333333Q				A	N	34.77																					
-gnl|I|G_contig000023	1600225	T	parE:Q342.0Q				C	S	51.77																					
-gnl|I|G_contig000023	1600228	T	parE:H343.0N				A	N	51.77																					
-gnl|I|G_contig000023	1600229	C	parE:H343.333333333R				G	N	54.77																					
-gnl|I|G_contig000023	1600230	G	parE:H343.666666667H				C	S	46.77																					
-gnl|I|G_contig000023	1600242	G	parE:L347.666666667L				C	S	38.77																					
-gnl|I|G_contig000023	1600245	C	parE:P348.666666667P				T	S	45.77																					
-gnl|I|G_contig000023	1772956	G	fda:A270.666666667A				A	S	34.77																					
-gnl|I|G_contig000023	1772963	C	fda:T268.333333333K				T	N	68.77																					
-gnl|I|G_contig000023	1772964	G	fda:T268.0T				T	S	63.77																					
-gnl|I|G_contig000023	1772969	C	fda:A266.333333333A				G	S	88.77																					
-gnl|I|G_contig000023	1772989	T	fda:S259.666666667S				G	S	98.77																					
-gnl|I|G_contig000023	1785799	T	sucC:R283.666666667R				C	S	146.77																					
-gnl|I|G_contig000023	1785823	A	sucC:R275.666666667R				G	S	178.77																					
-gnl|I|G_contig000023	1785853	G	sucC:L265.666666667L				A	S	85.77																					
-gnl|I|G_contig000023	1791918	T	tctD_2:T216.666666667T				C	S	43.77																					
-gnl|I|G_contig000023	1836858	T	dnaK_3:K231.666666667K				C	S	249.77																					
-gnl|I|G_contig000023	1855108	G	recQ_2:G45.6666666667G				C	S	126.77																					
-gnl|I|G_contig000023	1903520	A	mmgC_7:R215.0G				G	N	48.77																					
-gnl|I|G_contig000010	132836	C	hsdR:L37.3333333333*							T	N	48.77																		
-gnl|I|G_contig000010	132888	C	hsdR:R20.0C							A	N	81.77																		
-gnl|I|G_contig000010	255001	C	ypdB_1:T91.6666666667T							G	S	243.77	G	S	64.77													G	S	114.77
-gnl|I|G_contig000017	266183	C	metE_1:P693.333333333Q							T	N	293.77	T	N	110.77										T	N	83.77	T	N	118.77
-gnl|I|G_contig000017	266184	G	metE_1:P693.0S							A	N	269.77	A	N	130.77				A	N	117.77				A	N	80.77	A	N	182.77
-gnl|I|G_contig000017	266419	T	metE_1:A614.666666667A							C	S	79.77	C	S	270.77	C	S	156.77	C	S	132.77	C	S	134.77	C	S	315.77	C	S	208.77
-gnl|I|G_contig000018	546131	G	outD:R252.333333333Q							T	N	31.77																		
-gnl|I|G_contig000023	762641	G	estA:E274.666666667E							A	S	81.77	A	S	129.77	A	S	297.77	A	S	149.77	A	S	35.77	A	S	73.77			
-gnl|I|G_contig000023	1875505	G	epsH:V106.333333333D							T	N	33.77																		
-gnl|I|G_contig000010	132720	G	hsdR:Q76.0K										T	N	79.77	T	N	34.77										T	N	46.77
-gnl|I|G_contig000017	266417	C	metE_1:K615.333333333K										T	S	106.77	T	S	117.77	T	S	128.77				T	S	168.77	T	S	77.77
-gnl|I|G_contig000023	330340	G	gfo:G370.0*										T	N	689.77				T	N	1058.77							T	N	747.77
-gnl|I|G_contig000023	546200	T	outD:T229.333333333T										G	S	33.77															
-gnl|I|G_contig000023	1966662	A	yibF_2:L166.333333333R										C	N	136.77															
-gnl|I|G_contig000018	306830	C	ytfQ:Q158.0E													G	N	37.77												
-gnl|I|G_contig000018	460091	G	cirA_1:*473.0R													C	N	107.77				C	N	80.77	C	N	159.77			
-gnl|I|G_contig000023	639779	C	purF:G402.0S													A	N	34.77												
-gnl|I|G_contig000023	1719412	G	rpmE2:G48.0C													T	N	59.77							T	N	140.77	T	N	44.77
-gnl|I|G_contig000006	104924	G	bepE_1:R972.333333333P																C	N	81.28				C	N	38.74	C	N	115.03
-gnl|I|G_contig000017	198685	A	xylH_2:C47.0G																G	N	1579.77				G	N	1253.77			
-gnl|I|G_contig000017	202896	G	araC_3:Y39.6666666667Y																C	S	43.77				C	S	119.77			
-gnl|I|G_contig000017	228758	C	livF_2:M125.0L																A	N	907.77	A	N	947.77	A	N	1084.77			
-gnl|I|G_contig000023	328786	G	iolE_1:R206.0*																T	N	30.77									
-gnl|I|G_contig000023	1592424	C	kdpD_2:T519.333333333T																G	S	1839.77	G	S	1123.77	G	S	1852.77	G	S	713.77
-gnl|I|G_contig000023	1966640	G	yibF_2:T173.666666667T																C	S	63.77									
-gnl|I|G_contig000010	138766	A	glmS_1:S140.0T																			T	N	46.77						
-gnl|I|G_contig000013	202914	T	araC_3:L45.6666666667F																			C	N	34.77						
-gnl|I|G_contig000023	1369456	C	ywaD:R99.3333333333L																			T	N	94.77						
-gnl|I|G_contig000023	1281666	G	oprM_5:R55.0R																						C	S	40.77			
-gnl|I|G_contig000006	104927	G	bepE_1:A973.333333333A																									C	S	41.74
-gnl|I|G_contig000018	306823	C	ytfQ:R155.666666667R																									G	S	34.77
+Scaffold	Pos	Ref	Gene	Alt_L	Coding_L	Fourfold_L	Qual_L	Alt_A	Coding_A	Fourfold_A	Qual_A	Alt_C	Coding_C	Fourfold_C	Qual_C	Alt_D	Coding_D	Fourfold_D	Qual_D	Alt_K	Coding_K	Fourfold_K	Qual_K	Alt_WA	Coding_WA	Fourfold_WA	Qual_WA	Alt_WB	Coding_WB	Fourfold_WB	Qual_WB	Alt_WC	Coding_WC	Fourfold_WC	Qual_WC	Alt_WD	Coding_WD	Fourfold_WD	Qual_WD
+gnl|I|G_contig000003	61901	T	ccoP:T169.666666667T	A	S	Y	66.77																																
+gnl|I|G_contig000009	185744	C	speE_1:A444.666666667A	A	S	Y	223.77																																
+gnl|I|G_contig000017	264481	A	minD:R148.333333333R	C	S	Y	1224.77																																
+gnl|I|G_contig000017	264489	G	minD:R145.666666667R	A	S	Y	1452.77																					A	S	Y	49.77								
+gnl|I|G_contig000017	264508	G	minD:P139.333333333R	C	N	N	178.77																																
+gnl|I|G_contig000017	264511	A	minD:T138.333333333R	C	N	N	32.77																																
+gnl|I|G_contig000017	264521	C	minD:F135.0L	G	N	N	75.77																																
+gnl|I|G_contig000017	264677	G	minD:C83.0C	A	S	N	2294.77					A	S	N	1462.77	A	S	N	1589.77	A	S	N	1942.77	A	S	N	1100.77	A	S	N	825.77	A	S	N	1180.77	A	S	N	566.77
+gnl|I|G_contig000017	264687	T	minD:A79.6666666667A	A	S	Y	1213.77																																
+gnl|I|G_contig000017	264688	G	minD:A79.3333333333V	A	N	N	1162.77																																
+gnl|I|G_contig000017	264690	A	minD:G78.6666666667G	G	S	Y	3556.77					G	S	Y	1112.77	G	S	Y	1608.77	G	S	Y	2121.77	G	S	Y	1015.77	G	S	Y	669.77	G	S	Y	1015.77	G	S	Y	544.77
+gnl|I|G_contig000017	264710	T	minD:N72.0H	G	N	N	55.77																																
+gnl|I|G_contig000017	264737	A	minD:G63.0G	C	S	Y	4922.77					C	S	Y	1438.77	C	S	Y	1974.77	C	S	Y	3944.77	C	S	Y	1223.77	C	S	Y	1029.77	C	S	Y	1438.77	C	S	Y	978.77
+gnl|I|G_contig000017	264738	C	minD:P62.6666666667P	T	S	Y	4470.77					T	S	Y	1328.77	T	S	Y	1992.77	T	S	Y	3557.77	T	S	Y	1164.77	T	S	Y	974.77	T	S	Y	1360.77	T	S	Y	910.77
+gnl|I|G_contig000017	264739	A	minD:P62.3333333333P	G	S	Y	5475.77					G	S	Y	1597.77	G	S	Y	2243.77	G	S	Y	4204.77	G	S	Y	1363.77	G	S	Y	1224.77	G	S	Y	1676.77	G	S	Y	1009.77
+gnl|I|G_contig000017	264783	T	minD:R47.6666666667R	C	S	Y	2716.77					C	S	Y	3851.77	C	S	Y	3645.77	C	S	Y	3200.06	C	S	Y	3432.77	C	S	Y	3764.77	C	S	Y	3646.77	C	S	Y	2657.77
+gnl|I|G_contig000017	266149	A	metE_1:S704.666666667S	C	S	Y	922.77					C	S	Y	229.77	C	S	Y	340.77	C	S	Y	734.77	C	S	Y	673.77	C	S	Y	494.77	C	S	Y	321.77	C	S	Y	176.77
+gnl|I|G_contig000017	266151	T	metE_1:S704.0A	C	N	N	809.77									C	N	N	55.77	C	N	N	417.77	C	N	N	427.77	C	N	N	354.77					C	N	N	59.77
+gnl|I|G_contig000017	266154	A	metE_1:S703.0P	G	N	N	704.77													G	N	N	384.77	G	N	N	324.77	G	N	N	300.77					G	N	N	30.77
+gnl|I|G_contig000017	266156	T	metE_1:N702.333333333T	G	N	N	646.77					G	N	N	43.77	G	N	N	81.77	G	N	N	451.77	G	N	N	494.77	G	N	N	361.77								
+gnl|I|G_contig000017	266165	T	metE_1:R699.333333333R	C	S	Y	5867.77					C	S	Y	3945.77	C	S	Y	3063.77	C	S	Y	4821.77	C	S	Y	3934.77	C	S	Y	3638.77	C	S	Y	3136.77	C	S	Y	1847.77
+gnl|I|G_contig000017	266168	A	metE_1:R698.333333333K	T	N	N	5219.77					T	N	N	3675.77	T	N	N	2859.77	T	N	N	4525.77	T	N	N	3510.77	T	N	N	3327.77	T	N	N	2871.77	T	N	N	1602.77
+gnl|I|G_contig000017	266214	C	metE_1:W683.0W	A	S	N	3472.77					A	S	N	422.77	A	S	N	406.77	A	S	N	560.77	A	S	N	245.77	A	S	N	229.77	A	S	N	152.77	A	S	N	49.77
+gnl|I|G_contig000017	266217	A	metE_1:L682.0L	G	S	Y	3529.77					G	S	Y	67.77	G	S	Y	234.77	G	S	Y	229.77	G	S	Y	43.77												
+gnl|I|G_contig000017	266222	C	metE_1:P680.333333333Q	T	N	N	3353.77																																
+gnl|I|G_contig000017	266223	A	metE_1:P680.0P	G	S	Y	3634.77																																
+gnl|I|G_contig000017	266238	T	metE_1:L675.0V	C	N	N	3230.05					C	N	N	178.77	C	N	N	105.77	C	N	N	77.77	C	N	N	93.77	C	N	N	126.77	C	N	N	69.77	C	N	N	30.77
+gnl|I|G_contig000017	266239	G	metE_1:W674.666666667C	A	N	N	2934.77					A	N	N	187.77	A	N	N	117.77	A	N	N	92.77	A	N	N	108.77	A	N	N	142.77	A	N	N	81.77	A	N	N	33.77
+gnl|I|G_contig000023	658406	G	hxuA_2:A1407.66666667A	T	S	Y	291.77																																
+gnl|I|G_contig000023	658415	C	hxuA_2:K1410.66666667K	G	S	N	423.77																																
+gnl|I|G_contig000023	658436	C	hxuA_2:F1417.66666667F	T	S	N	96.77																																
+gnl|I|G_contig000023	658959	G	hxuA_2:H1592.0N	A	N	N	287.77																																
+gnl|I|G_contig000023	762203	A	estA:P128.666666667P	G	S	Y	163.77																																
+gnl|I|G_contig000023	762227	T	estA:Q136.666666667H	C	N	N	885.77																																
+gnl|I|G_contig000023	762242	G	estA:G141.666666667G	C	S	Y	1424.77									C	S	Y	60.77																				
+gnl|I|G_contig000023	762431	T	estA:G204.666666667G	C	S	Y	1010.77																																
+gnl|I|G_contig000023	762449	C	estA:L210.666666667L	G	S	Y	596.77																																
+gnl|I|G_contig000023	1620668	C	mdtN_2:V108.0L	A	N	N	31.78																																
+gnl|I|G_contig000023	1961242	G	ams:R549.333333333R	C	S	N	37.74																																
+gnl|I|G_contig000003	187785	C	xylH_1:R349.666666667R					G	S	Y	59.77																												
+gnl|I|G_contig000003	187788	G	xylH_1:R348.666666667R					C	S	Y	65.77																												
+gnl|I|G_contig000003	187794	G	xylH_1:G346.666666667G					A	S	Y	41.77																												
+gnl|I|G_contig000003	187815	G	xylH_1:P339.666666667P					C	S	Y	53.77																												
+gnl|I|G_contig000003	187827	C	xylH_1:S335.666666667S					G	S	Y	37.77																												
+gnl|I|G_contig000003	207988	C	davD_1:G160.666666667G					G	S	Y	106.77																												
+gnl|I|G_contig000003	208018	G	davD_1:P170.666666667P					C	S	Y	111.77																												
+gnl|I|G_contig000003	208021	C	davD_1:A171.666666667A					G	S	Y	105.77																												
+gnl|I|G_contig000003	267307	G	metE_1:R318.666666667R					T	S	Y	57.77																												
+gnl|I|G_contig000003	267316	A	metE_1:S315.666666667S					G	S	Y	79.77																												
+gnl|I|G_contig000003	267340	G	metE_1:I307.666666667I					T	S	N	39.77																												
+gnl|I|G_contig000003	267352	A	metE_1:V303.666666667V					G	S	Y	85.77																												
+gnl|I|G_contig000003	410221	C	gpmA_1:L12.6666666667L					G	S	N	35.77																												
+gnl|I|G_contig000003	410245	T	gpmA_1:I20.6666666667I					C	S	N	59.77																												
+gnl|I|G_contig000003	410266	T	gpmA_1:S27.6666666667S					C	S	Y	51.77																												
+gnl|I|G_contig000003	442229	C	metK:L94.0M					A	N	N	43.77																												
+gnl|I|G_contig000023	485304	C	kdgK_1:P306.666666667P					G	S	Y	39.77																												
+gnl|I|G_contig000023	510650	G	lifO:G262.666666667G					C	S	Y	49.77																												
+gnl|I|G_contig000023	510662	C	lifO:A266.666666667A					G	S	Y	78.77																												
+gnl|I|G_contig000023	510664	A	lifO:S267.333333333S					C	S	Y	80.77																												
+gnl|I|G_contig000023	510677	A	lifO:L271.666666667L					G	S	Y	66.77																												
+gnl|I|G_contig000023	537109	C	rluD:P122.666666667P					G	S	Y	100.77					G	S	Y	110.77					G	S	Y	100.77												
+gnl|I|G_contig000023	788526	G	mdh:K143.666666667K					C	S	N	133.77																												
+gnl|I|G_contig000023	788550	A	mdh:I135.666666667I					G	S	N	142.77																												
+gnl|I|G_contig000023	788559	G	mdh:N132.666666667K					C	N	N	136.77																												
+gnl|I|G_contig000023	804265	T	lpd:*326.666666667Y					C	N	N	86.77																												
+gnl|I|G_contig000023	804319	T	lpd:G344.666666667G					C	S	Y	73.77																												
+gnl|I|G_contig000023	1142626	G	trg_4:H366.666666667Q					C	N	N	38.77																												
+gnl|I|G_contig000023	1182657	G	amiC_2:P175.666666667P					C	S	Y	94.77																												
+gnl|I|G_contig000023	1182660	T	amiC_2:G176.666666667G					C	S	Y	70.77																												
+gnl|I|G_contig000023	1182669	T	amiC_2:S179.666666667S					C	S	N	81.77																												
+gnl|I|G_contig000023	1183137	A	amiC_2:T335.666666667T					G	S	Y	30.77																												
+gnl|I|G_contig000023	1183143	G	amiC_2:P337.666666667P					C	S	Y	33.77																												
+gnl|I|G_contig000023	1183146	A	amiC_2:A338.666666667A					G	S	Y	54.77																												
+gnl|I|G_contig000023	1183149	A	amiC_2:W339.666666667W					G	S	N	54.77																												
+gnl|I|G_contig000023	1183161	G	amiC_2:R343.666666667R					C	S	Y	69.77																												
+gnl|I|G_contig000023	1183167	G	amiC_2:A345.666666667A					C	S	Y	60.77																												
+gnl|I|G_contig000023	1183172	G	amiC_2:C347.333333333Y					A	N	N	63.77																												
+gnl|I|G_contig000023	1217017	T	nasD_1:S740.666666667S					C	S	Y	150.77																												
+gnl|I|G_contig000023	1217054	G	nasD_1:L753.0I					A	N	N	70.77																												
+gnl|I|G_contig000023	1217055	T	nasD_1:L753.333333333P					C	N	N	86.77																												
+gnl|I|G_contig000023	1217056	G	nasD_1:L753.666666667L					C	S	Y	85.77																												
+gnl|I|G_contig000023	1447569	G	davD_2:A262.666666667A					C	S	Y	34.77																												
+gnl|I|G_contig000023	1447586	A	davD_2:S257.0P					G	N	N	86.77																												
+gnl|I|G_contig000023	1546003	C	nrdB_2:G106.666666667G					G	S	Y	46.77																												
+gnl|I|G_contig000023	1546020	T	nrdB_2:S101.0G					C	N	N	133.77																												
+gnl|I|G_contig000023	1546029	G	nrdB_2:L98.0L					A	S	Y	128.77																												
+gnl|I|G_contig000023	1546031	T	nrdB_2:V97.3333333333A					G	N	N	147.77																												
+gnl|I|G_contig000023	1546036	A	nrdB_2:L95.6666666667L					G	S	Y	136.77																												
+gnl|I|G_contig000023	1546043	T	nrdB_2:L93.3333333333P					G	N	N	151.77																												
+gnl|I|G_contig000023	1546044	G	nrdB_2:L93.0M					T	N	N	109.77																												
+gnl|I|G_contig000023	1568888	C	proS:E156.666666667D					G	N	N	35.77																												
+gnl|I|G_contig000023	1568933	A	proS:N141.666666667N					G	S	N	59.77																												
+gnl|I|G_contig000023	1590587	A	kdpE:R217.0R					G	S	Y	51.77																												
+gnl|I|G_contig000023	1590590	G	kdpE:L216.0M					T	N	N	36.77																												
+gnl|I|G_contig000023	1590609	T	kdpE:G209.666666667G					C	S	Y	51.77																												
+gnl|I|G_contig000023	1590621	G	kdpE:T205.666666667T					C	S	Y	50.77																												
+gnl|I|G_contig000023	1590627	A	kdpE:G203.666666667G					G	S	Y	40.77																												
+gnl|I|G_contig000023	1590648	A	kdpE:Q196.666666667H					G	N	N	46.77																												
+gnl|I|G_contig000023	1600220	T	parE:L340.333333333Q					A	N	N	34.77																												
+gnl|I|G_contig000023	1600225	T	parE:Q342.0Q					C	S	N	51.77																												
+gnl|I|G_contig000023	1600228	T	parE:H343.0N					A	N	N	51.77																												
+gnl|I|G_contig000023	1600229	C	parE:H343.333333333R					G	N	N	54.77																												
+gnl|I|G_contig000023	1600230	G	parE:H343.666666667H					C	S	N	46.77																												
+gnl|I|G_contig000023	1600242	G	parE:L347.666666667L					C	S	Y	38.77																												
+gnl|I|G_contig000023	1600245	C	parE:P348.666666667P					T	S	Y	45.77																												
+gnl|I|G_contig000023	1772956	G	fda:A270.666666667A					A	S	Y	34.77																												
+gnl|I|G_contig000023	1772963	C	fda:T268.333333333K					T	N	N	68.77																												
+gnl|I|G_contig000023	1772964	G	fda:T268.0T					T	S	Y	63.77																												
+gnl|I|G_contig000023	1772969	C	fda:A266.333333333A					G	S	Y	88.77																												
+gnl|I|G_contig000023	1772989	T	fda:S259.666666667S					G	S	N	98.77																												
+gnl|I|G_contig000023	1785799	T	sucC:R283.666666667R					C	S	Y	146.77																												
+gnl|I|G_contig000023	1785823	A	sucC:R275.666666667R					G	S	Y	178.77																												
+gnl|I|G_contig000023	1785853	G	sucC:L265.666666667L					A	S	Y	85.77																												
+gnl|I|G_contig000023	1791918	T	tctD_2:T216.666666667T					C	S	Y	43.77																												
+gnl|I|G_contig000023	1836858	T	dnaK_3:K231.666666667K					C	S	N	249.77																												
+gnl|I|G_contig000023	1855108	G	recQ_2:G45.6666666667G					C	S	Y	126.77																												
+gnl|I|G_contig000023	1903520	A	mmgC_7:R215.0G					G	N	N	48.77																												
+gnl|I|G_contig000010	132836	C	hsdR:L37.3333333333*									T	N	N	48.77																								
+gnl|I|G_contig000010	132888	C	hsdR:R20.0C									A	N	N	81.77																								
+gnl|I|G_contig000010	255001	C	ypdB_1:T91.6666666667T									G	S	Y	243.77	G	S	Y	64.77																	G	S	Y	114.77
+gnl|I|G_contig000017	266183	C	metE_1:P693.333333333Q									T	N	N	293.77	T	N	N	110.77													T	N	N	83.77	T	N	N	118.77
+gnl|I|G_contig000017	266184	G	metE_1:P693.0S									A	N	N	269.77	A	N	N	130.77					A	N	N	117.77					A	N	N	80.77	A	N	N	182.77
+gnl|I|G_contig000017	266419	T	metE_1:A614.666666667A									C	S	Y	79.77	C	S	Y	270.77	C	S	Y	156.77	C	S	Y	132.77	C	S	Y	134.77	C	S	Y	315.77	C	S	Y	208.77
+gnl|I|G_contig000018	546131	G	outD:R252.333333333Q									T	N	N	31.77																								
+gnl|I|G_contig000023	762641	G	estA:E274.666666667E									A	S	N	81.77	A	S	N	129.77	A	S	N	297.77	A	S	N	149.77	A	S	N	35.77	A	S	N	73.77				
+gnl|I|G_contig000023	1875505	G	epsH:V106.333333333D									T	N	N	33.77																								
+gnl|I|G_contig000010	132720	G	hsdR:Q76.0K													T	N	N	79.77	T	N	N	34.77													T	N	N	46.77
+gnl|I|G_contig000017	266417	C	metE_1:K615.333333333K													T	S	N	106.77	T	S	N	117.77	T	S	N	128.77					T	S	N	168.77	T	S	N	77.77
+gnl|I|G_contig000023	330340	G	gfo:G370.0*													T	N	N	689.77					T	N	N	1058.77									T	N	N	747.77
+gnl|I|G_contig000023	546200	T	outD:T229.333333333T													G	S	Y	33.77																				
+gnl|I|G_contig000023	1966662	A	yibF_2:L166.333333333R													C	N	N	136.77																				
+gnl|I|G_contig000018	306830	C	ytfQ:Q158.0E																	G	N	N	37.77																
+gnl|I|G_contig000018	460091	G	cirA_1:*473.0R																	C	N	N	107.77					C	N	N	80.77	C	N	N	159.77				
+gnl|I|G_contig000023	639779	C	purF:G402.0S																	A	N	N	34.77																
+gnl|I|G_contig000023	1719412	G	rpmE2:G48.0C																	T	N	N	59.77									T	N	N	140.77	T	N	N	44.77
+gnl|I|G_contig000006	104924	G	bepE_1:R972.333333333P																					C	N	N	81.28					C	N	N	38.74	C	N	N	115.03
+gnl|I|G_contig000017	198685	A	xylH_2:C47.0G																					G	N	N	1579.77					G	N	N	1253.77				
+gnl|I|G_contig000017	202896	G	araC_3:Y39.6666666667Y																					C	S	N	43.77					C	S	N	119.77				
+gnl|I|G_contig000017	228758	C	livF_2:M125.0L																					A	N	N	907.77	A	N	N	947.77	A	N	N	1084.77				
+gnl|I|G_contig000023	328786	G	iolE_1:R206.0*																					T	N	N	30.77												
+gnl|I|G_contig000023	1592424	C	kdpD_2:T519.333333333T																					G	S	Y	1839.77	G	S	Y	1123.77	G	S	Y	1852.77	G	S	Y	713.77
+gnl|I|G_contig000023	1966640	G	yibF_2:T173.666666667T																					C	S	Y	63.77												
+gnl|I|G_contig000010	138766	A	glmS_1:S140.0T																									T	N	N	46.77								
+gnl|I|G_contig000013	202914	T	araC_3:L45.6666666667F																									C	N	N	34.77								
+gnl|I|G_contig000023	1369456	C	ywaD:R99.3333333333L																									T	N	N	94.77								
+gnl|I|G_contig000023	1281666	G	oprM_5:R55.0R																													C	S	Y	40.77				
+gnl|I|G_contig000006	104927	G	bepE_1:A973.333333333A																																	C	S	Y	41.74
+gnl|I|G_contig000018	306823	C	ytfQ:R155.666666667R																																	G	S	Y	34.77

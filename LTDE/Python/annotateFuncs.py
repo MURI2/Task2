@@ -55,6 +55,14 @@ class annotate:
         except:
             return False
 
+    def is_fourfold(self, test):
+        fourfold_first_two = ['CG', 'GC', 'GG', 'CT', 'CC', 'TC', 'AC', 'GT']
+        if test[:-1] in fourfold_first_two:
+            return 'Y'
+        else:
+            return 'N'
+
+
     def rcomp(self, seq):
         s=[]
         rc={'A':'T', 'T':'A', 'C':'G', 'G':'C'}
@@ -66,7 +74,8 @@ class annotate:
     def getmut(self, start, bp, seq, mut):
         A=int(bp)-(int(bp)-int(start))%3
         B=int(bp)
-        return self.codon_dict[seq[A:A+3]]+str((bp-start)/3+1)+self.codon_dict[seq[A:B]+mut+seq[B+1:A+3]]
+        return (self.codon_dict[seq[A:A+3]]+str((bp-start)/3+1)+\
+            self.codon_dict[seq[A:B]+mut+seq[B+1:A+3]], seq[A:A+3], seq[A:B]+mut+seq[B+1:A+3] )
 
     def getrev(self, start, bp, seq, mut):
         bp=int(bp)+1
@@ -74,7 +83,8 @@ class annotate:
 
         A=int(bp)+abs(int(start)-int(bp))%3
         B=int(bp)
-        return self.codon_dict[self.rcomp(seq[A-3:A])]+str((start-bp)/3+1)+self.codon_dict[self.rcomp(seq[A-3:B-1]+mut+seq[B:A])]
+        return (self.codon_dict[self.rcomp(seq[A-3:A])]+str((start-bp)/3+1)+self.codon_dict[self.rcomp(seq[A-3:B-1]+mut+seq[B:A])], \
+            self.rcomp(seq[A-3:A]), self.rcomp(seq[A-3:B-1]+mut+seq[B:A]))
 
     def getGenesAndSizes(self, GFF):
         gene_sizes={}
@@ -116,8 +126,9 @@ class annotate:
             if fields[0]=='CHROM':
                 fields.insert( 5, 'GENE')
                 fields.insert( 6, 'CODING')
+                fields.insert( 7, 'FOURFOLD')
                 print>>OUT, fields[0], fields[1], fields[3], fields[4], \
-                    fields[5], fields[6], fields[7], fields[8]
+                    fields[5], fields[6], fields[7], fields[8], fields[9]
                 continue
             ref=fields[3]
             alt=fields[4]
@@ -127,30 +138,39 @@ class annotate:
                     this_gene_copy=genes_copy.pop(0)
                 if this_gene_copy.strand=='+':
                     if (pos>this_gene_copy.start):
-                        kind=self.getmut(this_gene_copy.start, pos, seq, alt)
+                        getmut=self.getmut(this_gene_copy.start, pos, seq, alt)
+                        kind = getmut[0]
                         hit=(this_gene_copy.name+":"+kind)
                         if kind[0]==kind[-1]:
                             kind='S'
+                            fourfold = self.is_fourfold(getmut[1])
                         else:
                             kind='N'
+                            fourfold = 'N'
                     else:
                         hit='NC'
                         kind='NC'
+                        fourfold = 'NC'
                 elif this_gene_copy.strand=='-':
                     if (pos>this_gene_copy.start):
-                        kind = self.getrev(this_gene_copy.stop, pos, seq, alt)
+                        getrev = self.getrev(this_gene_copy.stop, pos, seq, alt)
+                        kind = getrev[0]
                         hit=(this_gene_copy.name+":"+kind)
                         if kind[0]==kind[-1]:
                             kind='S'
+                            fourfold = self.is_fourfold(getrev[1])
                         else:
                             kind='N'
+                            fourfold = 'N'
                     else:
                         hit='NC'
                         kind='NC'
+                        fourfold = 'NC'
                 fields.insert(5, hit)
                 fields.insert(6, kind)
+                fields.insert(7, fourfold)
                 print>>OUT, fields[0], fields[1], fields[3], fields[4], \
-                    fields[5], fields[6], fields[7], fields[8]
+                    fields[5], fields[6], fields[7], fields[8],  fields[9]
 
         OUT.close()
 
@@ -169,72 +189,80 @@ class annotate:
         genes_copy = copy.copy(genes)
         seq_copy = copy.copy(seq)
 
-    	for line in IN:
-    		if self.isopen:
-    			if line[0]=='@':
-    				print line,
-    				self.isopen=False
-    			fields=line.split('\t')
-    			ChiPoly=[]
-    			ChiFixed=[]
-    			Freq=[]
-    			for X in fields[6:]:
-    				num=X.split('/')
-    				try:
-    					ChiPoly.append(float(num[2]))
-    					ChiFixed.append(float(num[3]))
-    					P=float(num[0])
-    					cov=int(num[1])
-    					if ChiPoly[-1]<self.CUTOFF:
-    						P=round(P)
-    					if cov>0:
-    						Freq.append(P)
-    					else:
-    						Freq.append('N')
-    				except:
-    					ChiPoly.append(0)
-    					ChiFixed.append(0)
-    					Freq.append('N')
-    			if fields[0][0] == '@':
-    				continue
-    			ref=fields[2]
-    			alt=fields[3]
-    			pos=int(fields[1])
-    			if len(alt)==1:
-    				while (pos>max(this_gene.start, this_gene.stop ) ):
-    					this_gene=genes.pop(0)
+        for line in IN:
+            if self.isopen:
+                if line[0]=='@':
+                    print line,
+                    self.isopen=False
+                fields=line.split('\t')
+                ChiPoly=[]
+                ChiFixed=[]
+                Freq=[]
+                for X in fields[6:]:
+                    num=X.split('/')
+                    try:
+                        ChiPoly.append(float(num[2]))
+                        ChiFixed.append(float(num[3]))
+                        P=float(num[0])
+                        cov=int(num[1])
+                        if ChiPoly[-1]<self.CUTOFF:
+                            P=round(P)
+                        if cov>0:
+                            Freq.append(P)
+                        else:
+                            Freq.append('N')
+                    except:
+                        ChiPoly.append(0)
+                        ChiFixed.append(0)
+                        Freq.append('N')
+                if fields[0][0] == '@':
+                    continue
+                ref=fields[2]
+                alt=fields[3]
+                pos=int(fields[1])
+                if len(alt)==1:
+                    while (pos>max(this_gene.start, this_gene.stop ) ):
+                        this_gene=genes.pop(0)
 
-    				if this_gene.strand=='+':
-    					if (pos>this_gene.start):
-    						kind=self.getmut(this_gene.start, pos, seq, alt)
-    						hit=(this_gene.name+":"+kind)
-    						if kind[0]==kind[-1]:
-    							kind='S'
-    						else:
-    							kind='N'
-    					else:
-    						hit='NC'
-    						kind='NC'
-    				elif this_gene.strand=='-':
-    					if (pos>this_gene.start):
-    						kind=self.getrev(this_gene.stop, pos, seq, alt)
-    						hit=(this_gene.name+":"+kind)
-    						if kind[0]==kind[-1]:
-    							kind='S'
-    						else:
-    							kind='N'
-    					else:
-    						hit='NC'
-    						kind='NC'
-    			if max(ChiPoly)>self.CUTOFF or max(ChiFixed)>self.CUTOFF:
-    				print '\t'.join(map(str, fields[:6]))+'\t'+hit+'\t'+kind+'\t'+'\t'.join(map(str, Freq))
-    				print>> OUT, '\t'.join(map(str, fields[:6]))+'\t'+hit+'\t'+kind+'\t'+'\t'.join(map(str, Freq))
-    		else:
-    			print line,
-    			fields=line.split('\t')
-    			if fields[0]=="@SCFNAME       ":
-    				self.isopen=True
-    	OUT.close
+                    if this_gene.strand=='+':
+                        if (pos>this_gene.start):
+                            getmut=self.getmut(this_gene.start, pos, seq, alt)
+                            kind = getmut[0]
+                            hit=(this_gene.name+":"+kind)
+                            if kind[0]==kind[-1]:
+                                kind='S'
+                                fourfold = self.is_fourfold(getmut[1])
+                            else:
+                                kind='N'
+                                fourfold = 'N'
+                        else:
+                            hit='NC'
+                            kind='NC'
+                            fourfold = 'NC'
+                    elif this_gene.strand=='-':
+                        if (pos>this_gene.start):
+                            getrev=self.getrev(this_gene.stop, pos, seq, alt)
+                            kind = getrev[0]
+                            hit=(this_gene.name+":"+kind)
+                            if kind[0]==kind[-1]:
+                                kind='S'
+                                fourfold = self.is_fourfold(getrev[1])
+                            else:
+                                kind='N'
+                                fourfold = 'N'
+                        else:
+                            hit='NC'
+                            kind='NC'
+                            fourfold = 'NC'
+                if max(ChiPoly)>self.CUTOFF or max(ChiFixed)>self.CUTOFF:
+                    print '\t'.join(map(str, fields[:6]))+'\t'+hit+'\t'+kind+'\t'+ fourfold +'\t'+'\t'.join(map(str, Freq))
+                    print>> OUT, '\t'.join(map(str, fields[:6]))+'\t'+hit+'\t'+kind +'\t'+ fourfold +'\t'+'\t'.join(map(str, Freq))
+            else:
+                print line,
+                fields=line.split('\t')
+                if fields[0]=="@SCFNAME       ":
+                    self.isopen=True
+        OUT.close
 
 class formatSNPs:
 
@@ -255,7 +283,7 @@ class formatSNPs:
                 sample = re.split(r'[-_]+', sample_name)[2]
                 samples.append(sample)
                 names = ['Scaffold', 'Pos', 'Ref', 'Alt', 'Gene', \
-                    'Coding', 'Qual', 'AC']
+                    'Coding', 'Fourfold', 'Qual', 'AC']
                 IN = pd.read_csv(pathIN + '/' + i, delimiter = ' ', header = None)
                 IN.columns = names
                 # remove original header and AC column
@@ -264,7 +292,7 @@ class formatSNPs:
             else:
                 continue
         merged_df = reduce(lambda left,right: pd.merge(left,right,on=['Scaffold', 'Pos','Ref','Gene'], how='outer'), dfs)
-        toRename = ['Alt', 'Coding', 'Qual']
+        toRename = ['Alt', 'Coding', 'Fourfold','Qual']
         new_columns = ['Scaffold', 'Pos', 'Ref', 'Gene']
         to_move = ''
         for x, y in enumerate(samples):
@@ -299,7 +327,8 @@ class formatSNPs:
 def annotateStrains():
     mydir = os.path.expanduser("~/github/Task2/LTDE")
     strains = ['KBS0703', 'KBS0705', 'KBS0706', 'KBS0710', 'KBS0711', 'KBS0713', \
-        'KBS0715', 'KBS0721', 'KBS0722', 'KBS0724', 'KBS0727', 'KBS0802']
+        'KBS0715', 'KBS0721', 'KBS0722', 'KBS0724', 'KBS0727', 'KBS0802', 'KBS0812']
+    #strains = ['KBS0711']
     for strain in strains:
         content_list = []
         for content in os.listdir(mydir + '/data/GATK/raw/' + strain): # "." means current directory
@@ -311,8 +340,8 @@ def annotateStrains():
             GFF = mydir + '/data/2015_SoilGenomes_Annotate/' + strain + '/G-Chr1.gff'
             FFN = mydir + '/data/2015_SoilGenomes_Annotate/' + strain + '/G-Chr1.fna'
         mapgd=mydir + '/data/mapgd/raw/' + str(strain) + '_merged.pol'
-        mapgsOUT =  mydir+'/data/mapgd/annotate/' + str(strain) +  '_merged_annotate.pol'
-        annotate(GFF, FFN).annotateMAPGD(mapgd, mapgsOUT)
+        mapgdOUT =  mydir+'/data/mapgd/annotate/' + str(strain) +  '_merged_annotate.txt'
+        annotate(GFF, FFN).annotateMAPGD(mapgd, mapgdOUT)
         for x in content_list:
             IN = mydir + '/data/GATK/raw/' +  strain + '/' + x
             OUT =  mydir + '/data/GATK/annotate/' + str(strain) + '/' + x.split('.')[0] + '_annotate.txt'
