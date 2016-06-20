@@ -1,0 +1,24 @@
+## index of replication (iRep) - thresholds: min cov. = 5, min wins. = 0.98, min r^2 = 0.9, max fragments/Mbp = 175
+# genome	../../KBS0812/GSF1046-KBS0812-B_S28_mapped_sort_NOdup_sort.sam
+/Users/WRShoemaker/github/Task2/LTDE/data/Bacillus_test/AL009126.fa	1.52684466783
+#
+## index of replication (iRep)
+# genome	../../KBS0812/GSF1046-KBS0812-B_S28_mapped_sort_NOdup_sort.sam
+/Users/WRShoemaker/github/Task2/LTDE/data/Bacillus_test/AL009126.fa	1.52684466783
+#
+## r^2
+# genome	../../KBS0812/GSF1046-KBS0812-B_S28_mapped_sort_NOdup_sort.sam
+/Users/WRShoemaker/github/Task2/LTDE/data/Bacillus_test/AL009126.fa	0.979212151479
+#
+## coverage
+# genome	../../KBS0812/GSF1046-KBS0812-B_S28_mapped_sort_NOdup_sort.sam
+/Users/WRShoemaker/github/Task2/LTDE/data/Bacillus_test/AL009126.fa	64.9128617742
+#
+## % windows passing filter
+# genome	../../KBS0812/GSF1046-KBS0812-B_S28_mapped_sort_NOdup_sort.sam
+/Users/WRShoemaker/github/Task2/LTDE/data/Bacillus_test/AL009126.fa	100.00
+#
+## fragments/Mbp
+# genome	../../KBS0812/GSF1046-KBS0812-B_S28_mapped_sort_NOdup_sort.sam
+/Users/WRShoemaker/github/Task2/LTDE/data/Bacillus_test/AL009126.fa	0
+#

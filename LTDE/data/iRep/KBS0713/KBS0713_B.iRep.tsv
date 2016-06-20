@@ -1,0 +1,24 @@
+## index of replication (iRep) - thresholds: min cov. = 5, min wins. = 0.98, min r^2 = 0.9, max fragments/Mbp = 175
+# genome	../../KBS0713/GSF1046-KBS0713-B_S5_mapped_sort_NOdup_sort.sam
+/Users/WRShoemaker/github/Task2/LTDE/data/2015_SoilGenomes_Annotate/KBS0713/G-Chr1.fna	1.28900790394
+#
+## index of replication (iRep)
+# genome	../../KBS0713/GSF1046-KBS0713-B_S5_mapped_sort_NOdup_sort.sam
+/Users/WRShoemaker/github/Task2/LTDE/data/2015_SoilGenomes_Annotate/KBS0713/G-Chr1.fna	1.28900790394
+#
+## r^2
+# genome	../../KBS0713/GSF1046-KBS0713-B_S5_mapped_sort_NOdup_sort.sam
+/Users/WRShoemaker/github/Task2/LTDE/data/2015_SoilGenomes_Annotate/KBS0713/G-Chr1.fna	0.987587911033
+#
+## coverage
+# genome	../../KBS0713/GSF1046-KBS0713-B_S5_mapped_sort_NOdup_sort.sam
+/Users/WRShoemaker/github/Task2/LTDE/data/2015_SoilGenomes_Annotate/KBS0713/G-Chr1.fna	48.3844072993
+#
+## % windows passing filter
+# genome	../../KBS0713/GSF1046-KBS0713-B_S5_mapped_sort_NOdup_sort.sam
+/Users/WRShoemaker/github/Task2/LTDE/data/2015_SoilGenomes_Annotate/KBS0713/G-Chr1.fna	99.98
+#
+## fragments/Mbp
+# genome	../../KBS0713/GSF1046-KBS0713-B_S5_mapped_sort_NOdup_sort.sam
+/Users/WRShoemaker/github/Task2/LTDE/data/2015_SoilGenomes_Annotate/KBS0713/G-Chr1.fna	14
+#

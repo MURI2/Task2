@@ -1,20 +1,20 @@
-Scaffold	Pos	Ref	Gene	Alt_A	Coding_A	Qual_A	Alt_B	Coding_B	Qual_B	Alt_C	Coding_C	Qual_C	Alt_D	Coding_D	Qual_D
-gnl|I|G_contig000004	448	G	cheY_1:S95.0S	A	S	504.77	A	S	711.77	A	S	610.77	A	S	595.77
-gnl|I|G_contig000004	518	T	cheY_1:T118.333333333T	C	S	536.77	C	S	397.77	C	S	583.77	C	S	542.77
-gnl|I|G_contig000011	52268	G	murD:R306.666666667R	T	S	108.77									
-gnl|I|G_contig000015	74471	T	ligA:R206.333333333P	C	N	32.77									
-gnl|I|G_contig000015	80373	G	pepQ:A501.666666667A	C	S	1102.78				C	S	1260.77	C	S	1043.77
-gnl|I|G_contig000015	80433	A	pepQ:T481.666666667T	G	S	1107.77				G	S	1241.77	G	S	1267.77
-gnl|I|G_contig000015	80448	A	pepQ:P476.666666667P	G	S	1278.77				G	S	1218.77	G	S	1601.77
-gnl|I|G_contig000015	80459	T	pepQ:C473.0G	C	N	1635.77				C	N	1484.77	C	N	1691.77
-gnl|I|G_contig000015	105774	G	cya_1:Q6197.0*	T	N	36.77									
-gnl|I|G_contig000015	458031	C	lolD:T229.666666667T	G	S	71.77									
-gnl|I|G_contig000015	505172	C	moeA_1:Q292.333333333L	A	N	594.77	A	N	574.77	A	N	893.77	A	N	782.77
-gnl|I|G_contig000015	543408	G	oxyR_2:Q55.0Q	C	S	68.77				C	S	36.77	C	S	98.77
-gnl|I|G_contig000006	52086	C	murD:P246.0T				A	N	117.77						
-gnl|I|G_contig000015	277260	C	pdxJ:F158.0F				T	S	30.77				T	S	114.77
-gnl|I|G_contig000013	47649	G	murE:S174.333333333Y							A	N	155.77	A	N	159.77
-gnl|I|G_contig000015	80260	T	pepQ:P539.333333333R							C	N	37.77			
-gnl|I|G_contig000015	562827	C	mdtB_1:G702.0R							A	N	62.77			
-gnl|I|G_contig000013	64082	G	ddl:C48.3333333333F										T	N	55.77
-gnl|I|G_contig000015	279458	T	rnc:R150.0G										G	N	37.77
+Scaffold	Pos	Ref	Gene	Alt_A	Coding_A	Fourfold_A	Qual_A	Alt_B	Coding_B	Fourfold_B	Qual_B	Alt_C	Coding_C	Fourfold_C	Qual_C	Alt_D	Coding_D	Fourfold_D	Qual_D
+gnl|I|G_contig000004	448	G	cheY_1:S95.0S	A	S	N	504.77	A	S	N	711.77	A	S	N	610.77	A	S	N	595.77
+gnl|I|G_contig000004	518	T	cheY_1:T118.333333333T	C	S	Y	536.77	C	S	Y	397.77	C	S	Y	583.77	C	S	Y	542.77
+gnl|I|G_contig000011	52268	G	murD:R306.666666667R	T	S	Y	108.77												
+gnl|I|G_contig000015	74471	T	ligA:R206.333333333P	C	N	N	32.77												
+gnl|I|G_contig000015	80373	G	pepQ:A501.666666667A	C	S	Y	1102.78					C	S	Y	1260.77	C	S	Y	1043.77
+gnl|I|G_contig000015	80433	A	pepQ:T481.666666667T	G	S	Y	1107.77					G	S	Y	1241.77	G	S	Y	1267.77
+gnl|I|G_contig000015	80448	A	pepQ:P476.666666667P	G	S	Y	1278.77					G	S	Y	1218.77	G	S	Y	1601.77
+gnl|I|G_contig000015	80459	T	pepQ:C473.0G	C	N	N	1635.77					C	N	N	1484.77	C	N	N	1691.77
+gnl|I|G_contig000015	105774	G	cya_1:Q6197.0*	T	N	N	36.77												
+gnl|I|G_contig000015	458031	C	lolD:T229.666666667T	G	S	Y	71.77												
+gnl|I|G_contig000015	505172	C	moeA_1:Q292.333333333L	A	N	N	594.77	A	N	N	574.77	A	N	N	893.77	A	N	N	782.77
+gnl|I|G_contig000015	543408	G	oxyR_2:Q55.0Q	C	S	N	68.77					C	S	N	36.77	C	S	N	98.77
+gnl|I|G_contig000006	52086	C	murD:P246.0T					A	N	N	117.77								
+gnl|I|G_contig000015	277260	C	pdxJ:F158.0F					T	S	N	30.77					T	S	N	114.77
+gnl|I|G_contig000013	47649	G	murE:S174.333333333Y									A	N	N	155.77	A	N	N	159.77
+gnl|I|G_contig000015	80260	T	pepQ:P539.333333333R									C	N	N	37.77				
+gnl|I|G_contig000015	562827	C	mdtB_1:G702.0R									A	N	N	62.77				
+gnl|I|G_contig000013	64082	G	ddl:C48.3333333333F													T	N	N	55.77
+gnl|I|G_contig000015	279458	T	rnc:R150.0G													G	N	N	37.77

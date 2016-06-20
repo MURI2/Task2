@@ -1,20 +1,20 @@
-Scaffold	Pos	Ref	Gene	Alt_A	Coding_A	Qual_A	Alt_B	Coding_B	Qual_B	Alt_C	Coding_C	Qual_C	Alt_D	Coding_D	Qual_D
-gnl|I|G_contig000010	436463	G	ada:W85.0R	T	N	91.77	T	N	98.77	T	N	152.77			
-gnl|I|G_contig000010	447410	C	fabG3:C102.333333333F	A	N	53.77									
-gnl|I|G_contig000010	502109	C	opuCB_1:A48.3333333333A	G	S	194.77				G	S	134.77	G	S	41.77
-gnl|I|G_contig000010	834293	G	mntB:R280.666666667R	C	S	37.77									
-gnl|I|G_contig000004	37951	A	fdm_1:T33.3333333333T				C	S	50.77	C	S	63.77			
-gnl|I|G_contig000004	192735	G	neo:T195.333333333K				T	N	120.77						
-gnl|I|G_contig000010	780041	C	clpC1:R287.0C				T	N	33.77				T	N	41.77
-gnl|I|G_contig000018	836441	G	nepI:A236.333333333V				A	N	1098.77				A	N	961.77
-gnl|I|G_contig000018	836558	C	nepI:P197.333333333H				T	N	227.77				T	N	258.77
-gnl|I|G_contig000018	836562	C	nepI:T196.0S				A	N	166.77				A	N	141.77
-gnl|I|G_contig000018	836568	C	nepI:P194.0P				G	S	161.77				G	S	240.77
-gnl|I|G_contig000018	836574	G	nepI:T192.0S				A	N	104.77				A	N	45.77
-gnl|I|G_contig000004	16441	C	mmpL8:D253.333333333G							G	N	37.77			
-gnl|I|G_contig000010	840376	A	nagC_2:H104.333333333R							C	N	38.77			
-gnl|I|G_contig000018	845368	G	gsiA_3:G220.666666667G							A	S	68.77	A	S	46.77
-gnl|I|G_contig000010	380875	C	rpsL:T94.6666666667T										A	S	31.77
-gnl|I|G_contig000010	435790	C	relG:C43.3333333333S										G	N	59.77
-gnl|I|G_contig000010	463159	G	kdpA:G341.333333333D										T	N	92.77
-gnl|I|G_contig000010	779314	C	clpC1:D44.6666666667E										G	N	45.77
+Scaffold	Pos	Ref	Gene	Alt_A	Coding_A	Fourfold_A	Qual_A	Alt_B	Coding_B	Fourfold_B	Qual_B	Alt_C	Coding_C	Fourfold_C	Qual_C	Alt_D	Coding_D	Fourfold_D	Qual_D
+gnl|I|G_contig000010	436463	G	ada:W85.0R	T	N	N	91.77	T	N	N	98.77	T	N	N	152.77				
+gnl|I|G_contig000010	447410	C	fabG3:C102.333333333F	A	N	N	53.77												
+gnl|I|G_contig000010	502109	C	opuCB_1:A48.3333333333A	G	S	Y	194.77					G	S	Y	134.77	G	S	Y	41.77
+gnl|I|G_contig000010	834293	G	mntB:R280.666666667R	C	S	Y	37.77												
+gnl|I|G_contig000004	37951	A	fdm_1:T33.3333333333T					C	S	Y	50.77	C	S	Y	63.77				
+gnl|I|G_contig000004	192735	G	neo:T195.333333333K					T	N	N	120.77								
+gnl|I|G_contig000010	780041	C	clpC1:R287.0C					T	N	N	33.77					T	N	N	41.77
+gnl|I|G_contig000018	836441	G	nepI:A236.333333333V					A	N	N	1098.77					A	N	N	961.77
+gnl|I|G_contig000018	836558	C	nepI:P197.333333333H					T	N	N	227.77					T	N	N	258.77
+gnl|I|G_contig000018	836562	C	nepI:T196.0S					A	N	N	166.77					A	N	N	141.77
+gnl|I|G_contig000018	836568	C	nepI:P194.0P					G	S	Y	161.77					G	S	Y	240.77
+gnl|I|G_contig000018	836574	G	nepI:T192.0S					A	N	N	104.77					A	N	N	45.77
+gnl|I|G_contig000004	16441	C	mmpL8:D253.333333333G									G	N	N	37.77				
+gnl|I|G_contig000010	840376	A	nagC_2:H104.333333333R									C	N	N	38.77				
+gnl|I|G_contig000018	845368	G	gsiA_3:G220.666666667G									A	S	Y	68.77	A	S	Y	46.77
+gnl|I|G_contig000010	380875	C	rpsL:T94.6666666667T													A	S	Y	31.77
+gnl|I|G_contig000010	435790	C	relG:C43.3333333333S													G	N	N	59.77
+gnl|I|G_contig000010	463159	G	kdpA:G341.333333333D													T	N	N	92.77
+gnl|I|G_contig000010	779314	C	clpC1:D44.6666666667E													G	N	N	45.77
