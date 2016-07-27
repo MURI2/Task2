@@ -6,8 +6,13 @@ import scipy.stats as st
 import csv
 mydir = os.path.expanduser("~/github/Task2/LTDE")
 
-taxa = ['KBS0703', 'KBS0710', 'KBS0711', 'KBS0713', 'KBS0715', 'KBS0721', \
-    'KBS0722', 'KBS0724', 'KBS0727', 'KBS0802', 'KBS0812']
+strain_dict = {'ATCC13985': 'Pseudomonas', 'ATCC43928': 'Pseudomonas', \
+'KBS0702': 'Arthrobacter', 'KBS0703': 'Arthrobacter', 'KBS0705':'Inquilinus', \
+'KBS0706':'Mycobacterium', 'KBS0707': 'Pseudomonas', 'KBS0710': 'Pseudomonas', \
+'KBS0711': 'Janthinobacterium', 'KBS0712': 'Variovorax', 'KBS0713': 'Yersinia', \
+'KBS0715': 'Curtobacterium', 'KBS0721': 'Flavobacterium', 'KBS0722': 'Oerskovia', \
+'KBS0724': 'Rhodococcus', 'KBS0727': 'Bradyrhizobium', 'KBS0801': 'Burkholderia', \
+'KBS0802': 'Pseudomonas', 'KBS0812': 'Bacillus'}
 
 class popGenStats:
     '''
@@ -80,9 +85,7 @@ def pandasNames(df):
         name = 'Sample_' + str(x+1)
         names.append(name)
     df.columns = names
-    #df.iloc[:,8:] = pd.to_numeric(df.iloc[:,8:], errors='coerce')
     df.iloc[:,8:] = df.iloc[:,8:].convert_objects(convert_numeric=True)
-    #df.iloc[:,8:] = df.iloc[:,8:].astype(float)
     return (df, samples)
 
 def getPiVar(pi, n):
@@ -97,7 +100,6 @@ def getPiVar(pi, n):
         x1 = ((n+1) / (3* (n-1))) * pi
         x2 = ((( (n**2) + n +3 ) * 2 ) / (9*n * (n-1)) ) * (pi**2)
         return x1 + x2
-
 
 
 def getPolyTable(taxa):
@@ -143,7 +145,9 @@ def getPolyTable(taxa):
 def getPi(strains, folded = True):
     piDict = {}
     OUT = open(mydir + '/data/mapgd/final/PopGenStats.txt', 'w')
+    print>> OUT, 'Strain', 'Genus', 'Replicate', 'Pi', 'Pi_var', 'W_theta', 'W_theta_var', 'T_D'
     for strain in strains:
+        genus = strain_dict[strain]
         IN = pd.read_csv(mydir + '/data/mapgd/annotate/' + strain + '_merged_annotate.txt', delimiter = '\t', \
             header = None)
         names_IN = pandasNames(IN)
@@ -156,12 +160,34 @@ def getPi(strains, folded = True):
         T_D = []
         W_theta_var = []
         for x in range(1, IN_samples + 1):
-
-            #if strain == 'KBS0711' and x == 1:
-            #    '''We're ignoring this sample because it has odd levels of polymorphism
-            #    and I'm unsure how to interpret it.
-            #    '''
-            #    continue
+            if strain == 'KBS0711':
+                if x == 1:
+                    rep = 'L'
+                elif x == 2:
+                    rep = 'A'
+                elif x == 3:
+                    rep = 'C'
+                elif x == 4:
+                    rep = 'D'
+                elif x == 5:
+                    rep = 'K'
+                elif x == 6:
+                    rep = 'WA'
+                elif x == 7:
+                    rep = 'WB'
+                elif x == 8:
+                    rep = 'WC'
+                elif x == 9:
+                    rep = 'WD'
+            else:
+                if x == 1:
+                    rep = 'A'
+                elif x == 2:
+                    rep = 'B'
+                elif x == 3:
+                    rep = 'C'
+                elif x == 4:
+                    rep = 'D'
 
             sample_column = 'Sample_' + str(x)
             pi_subset_names = ['Coverage', sample_column]
@@ -184,6 +210,7 @@ def getPi(strains, folded = True):
             # sum over pi
             pi_x_sum = sum(pi_x)
             if pi_x_sum == float(0) and S == int(0):
+                print strain, x
                 T_D.append(0)
                 pi.append(0)
                 piVar.append(0)
@@ -200,40 +227,24 @@ def getPi(strains, folded = True):
                 piVar.append(pi_x_var)
                 W_theta.append(W_theta_x)
                 W_theta_var.append(W_theta_var_x)
-                print>> OUT, strain, x, pi_x_sum, pi_x_var, W_theta_x, W_theta_var_x, \
-                    T_D_x
+                print>> OUT, strain, genus, rep, pi_x_sum, \
+                    pi_x_var, W_theta_x, W_theta_var_x, T_D_x
         pi_mean = np.mean(pi)
         pi_var = np.mean(piVar)
         W_theta_mean = np.mean(W_theta)
         T_D_mean = np.mean(T_D)
         T_D_SD = np.std(T_D)
-        piDict[strain] = [pi_mean, pi_var, W_theta_mean, T_D_mean, T_D_SD]
+        piDict[strain] = [genus, pi_mean, pi_var, W_theta_mean, T_D_mean, T_D_SD]
     OUT.close()
     df = pd.DataFrame(piDict, index=None)
     df = df.transpose()
     df.reset_index(level=0, inplace=True)
-    df.columns = ['strain', 'pi_mean', 'pi_var', 'W_theta_mean', 'T_D_mean', 'T_D_SD']
-    df_path = mydir + '/data/mapgd/final/mapgd_summary.txt'
+    df.columns = ['Strain', 'Genus', 'Pi_mean', 'Pi_var', 'W_theta_mean', 'T_D_mean', 'T_D_SD']
+    df_path = mydir + '/data/mapgd/final/PopGenStatsSummary.txt'
     df.to_csv(df_path,sep='\t')
 
 
-def getMutations(strains):
-    for strain in strains:
-        IN = pd.read_csv(mydir + '/data/mapgd/annotate/' + strain + '_merged_annotate.txt', delimiter = '\t', \
-            header = None)
-        names_IN = pandasNames(IN)
-        IN = names_IN[0]
-        IN_samples = names_IN[1]
-        #NC_count = IN[IN.apply(lambda x: (x.iloc[6] == 'NC'), axis=1 )]
-        #C_count = IN[IN.apply(lambda x: (x.iloc[6] != 'NC'), axis=1 )]
-        #C_S_count = IN[IN.apply(lambda x:  (x.iloc[7] == 'S'), axis=1 )]
-        # for just the samples IN.iloc[:, 8:]
-        # remove cases where they're all equal
-        #print  IN[IN.apply(lambda x: (x.iloc[ 8:] == float(1)), axis=0 )]
-
-
-
-
 #getPolyTable(taxa)
+taxa = ['KBS0703', 'KBS0710', 'KBS0711', 'KBS0713', 'KBS0715', 'KBS0721', \
+    'KBS0722', 'KBS0724', 'KBS0727', 'KBS0802', 'KBS0812']
 getPi(taxa)
-#getMutations(taxa)
