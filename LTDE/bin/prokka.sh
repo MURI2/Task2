@@ -3,9 +3,9 @@
 
 cd /Users/WRShoemaker/Desktop/
 
-scp -r wrshoema@mason.indiana.edu:/N/dc2/projects/muri2/Task2/LTDE/data/2015_SoilGenomes_Annotate/ .
+scp -r wrshoema@mason.indiana.edu:/N/dc2/projects/muri2/Task2/LTDE/data/2015_SoilGenomes_Assembled/ .
 
-mkdir -p 2015_SoilGenomes_Annotate/2015_SoilGenomes_Assembled
+mkdir -p 2015_SoilGenomes_Annotate/2015_SoilGenomes_Annotate
 
 cd 2015_SoilGenomes_Annotate/2015_SoilGenomes_Assembled
 
