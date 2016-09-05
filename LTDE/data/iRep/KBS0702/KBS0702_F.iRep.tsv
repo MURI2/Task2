@@ -1,0 +1,36 @@
+## index of replication (iRep) - thresholds: min cov. = 5, min wins. = 0.98, min r^2 = 0.9, max fragments/Mbp = 175, GC correction min r^2 = 0.0
+# genome	/Users/WRShoemaker/github/Task2/LTDE/data/iRep/KBS0702/GSF1046-KBS0702-F_S16_mapped_sort_NOdup_sort.sam
+/Users/WRShoemaker/github/Task2/LTDE/data/2016_KBSGenomes_Annotate/KBS0702/G-Chr1.fna	1.19903215078
+#
+## un-filtered index of replication (iRep)
+# genome	/Users/WRShoemaker/github/Task2/LTDE/data/iRep/KBS0702/GSF1046-KBS0702-F_S16_mapped_sort_NOdup_sort.sam
+/Users/WRShoemaker/github/Task2/LTDE/data/2016_KBSGenomes_Annotate/KBS0702/G-Chr1.fna	1.19903215078
+#
+## raw index of replication (no GC bias correction)
+# genome	/Users/WRShoemaker/github/Task2/LTDE/data/iRep/KBS0702/GSF1046-KBS0702-F_S16_mapped_sort_NOdup_sort.sam
+/Users/WRShoemaker/github/Task2/LTDE/data/2016_KBSGenomes_Annotate/KBS0702/G-Chr1.fna	1.21446238014
+#
+## r^2
+# genome	/Users/WRShoemaker/github/Task2/LTDE/data/iRep/KBS0702/GSF1046-KBS0702-F_S16_mapped_sort_NOdup_sort.sam
+/Users/WRShoemaker/github/Task2/LTDE/data/2016_KBSGenomes_Annotate/KBS0702/G-Chr1.fna	0.989283693332
+#
+## coverage
+# genome	/Users/WRShoemaker/github/Task2/LTDE/data/iRep/KBS0702/GSF1046-KBS0702-F_S16_mapped_sort_NOdup_sort.sam
+/Users/WRShoemaker/github/Task2/LTDE/data/2016_KBSGenomes_Annotate/KBS0702/G-Chr1.fna	48.926974329
+#
+## % windows passing filter
+# genome	/Users/WRShoemaker/github/Task2/LTDE/data/iRep/KBS0702/GSF1046-KBS0702-F_S16_mapped_sort_NOdup_sort.sam
+/Users/WRShoemaker/github/Task2/LTDE/data/2016_KBSGenomes_Annotate/KBS0702/G-Chr1.fna	99.92
+#
+## fragments/Mbp
+# genome	/Users/WRShoemaker/github/Task2/LTDE/data/iRep/KBS0702/GSF1046-KBS0702-F_S16_mapped_sort_NOdup_sort.sam
+/Users/WRShoemaker/github/Task2/LTDE/data/2016_KBSGenomes_Annotate/KBS0702/G-Chr1.fna	54
+#
+## GC bias
+# genome	/Users/WRShoemaker/github/Task2/LTDE/data/iRep/KBS0702/GSF1046-KBS0702-F_S16_mapped_sort_NOdup_sort.sam
+/Users/WRShoemaker/github/Task2/LTDE/data/2016_KBSGenomes_Annotate/KBS0702/G-Chr1.fna	-12.1928531164
+#
+## GC r^2
+# genome	/Users/WRShoemaker/github/Task2/LTDE/data/iRep/KBS0702/GSF1046-KBS0702-F_S16_mapped_sort_NOdup_sort.sam
+/Users/WRShoemaker/github/Task2/LTDE/data/2016_KBSGenomes_Annotate/KBS0702/G-Chr1.fna	0.199192686157
+#

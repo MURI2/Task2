@@ -192,7 +192,7 @@ class annotate:
         for line in IN:
             if self.isopen:
                 if line[0]=='@':
-                    print line,
+                    #print line,
                     self.isopen=False
                 fields=line.split('\t')
                 ChiPoly=[]
@@ -255,10 +255,10 @@ class annotate:
                             kind='NC'
                             fourfold = 'NC'
                 if max(ChiPoly)>self.CUTOFF or max(ChiFixed)>self.CUTOFF:
-                    print '\t'.join(map(str, fields[:6]))+'\t'+hit+'\t'+kind+'\t'+ fourfold +'\t'+'\t'.join(map(str, Freq))
+                    #print '\t'.join(map(str, fields[:6]))+'\t'+hit+'\t'+kind+'\t'+ fourfold +'\t'+'\t'.join(map(str, Freq))
                     print>> OUT, '\t'.join(map(str, fields[:6]))+'\t'+hit+'\t'+kind +'\t'+ fourfold +'\t'+'\t'.join(map(str, Freq))
             else:
-                print line,
+                #print line,
                 fields=line.split('\t')
                 if fields[0]=="@SCFNAME       ":
                     self.isopen=True
@@ -326,8 +326,12 @@ class formatSNPs:
 
 def annotateStrains():
     mydir = os.path.expanduser("~/github/Task2/LTDE")
-    strains = ['KBS0703', 'KBS0705', 'KBS0706', 'KBS0710', 'KBS0711', 'KBS0713', \
-        'KBS0715', 'KBS0721', 'KBS0722', 'KBS0724', 'KBS0727', 'KBS0802', 'KBS0812']
+    strains = ['ATCC13985', 'ATCC43928', 'KBS0702', 'KBS0703', 'KBS0705', \
+        'KBS0706', 'KBS0707', 'KBS0710', 'KBS0711','KBS0712', 'KBS0713', \
+        'KBS0715', 'KBS0721', 'KBS0722', 'KBS0724', 'KBS0727', 'KBS0801', \
+        'KBS0802', 'KBS0812']
+    KBSGenomes_Annotate = ['ATCC13985', 'ATCC43928', 'KBS0702', 'KBS0707', \
+        'KBS0712', 'KBS0801']
     #strains = ['KBS0711']
     for strain in strains:
         content_list = []
@@ -336,6 +340,9 @@ def annotateStrains():
         if strain == 'KBS0812':
             GFF = mydir + '/data/Bacillus_test/AL009126.3.gff'
             FFN = mydir + '/data/Bacillus_test/AL009126.fa'
+        elif strain in KBSGenomes_Annotate:
+            GFF = mydir + '/data/2016_KBSGenomes_Annotate/' + strain + '/G-Chr1.gff'
+            FFN = mydir + '/data/2016_KBSGenomes_Annotate/' + strain + '/G-Chr1.fna'
         else:
             GFF = mydir + '/data/2015_SoilGenomes_Annotate/' + strain + '/G-Chr1.gff'
             FFN = mydir + '/data/2015_SoilGenomes_Annotate/' + strain + '/G-Chr1.fna'

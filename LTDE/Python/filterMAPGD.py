@@ -150,6 +150,7 @@ def getPi(strains, folded = True):
         genus = strain_dict[strain]
         IN = pd.read_csv(mydir + '/data/mapgd/annotate/' + strain + '_merged_annotate.txt', delimiter = '\t', \
             header = None)
+
         names_IN = pandasNames(IN)
         IN = names_IN[0]
         IN_samples = names_IN[1]
@@ -179,6 +180,17 @@ def getPi(strains, folded = True):
                     rep = 'WC'
                 elif x == 9:
                     rep = 'WD'
+            elif strain == 'ATCC43928':
+                if x == 1:
+                    rep = 'A'
+                elif x == 2:
+                    rep = 'B'
+                elif x == 3:
+                    rep = 'C'
+                elif x == 4:
+                    continue
+                elif x == 5:
+                    rep = 'D'
             else:
                 if x == 1:
                     rep = 'A'
@@ -188,6 +200,7 @@ def getPi(strains, folded = True):
                     rep = 'C'
                 elif x == 4:
                     rep = 'D'
+
 
             sample_column = 'Sample_' + str(x)
             pi_subset_names = ['Coverage', sample_column]
@@ -210,7 +223,6 @@ def getPi(strains, folded = True):
             # sum over pi
             pi_x_sum = sum(pi_x)
             if pi_x_sum == float(0) and S == int(0):
-                print strain, x
                 T_D.append(0)
                 pi.append(0)
                 piVar.append(0)
@@ -244,7 +256,9 @@ def getPi(strains, folded = True):
     df.to_csv(df_path,sep='\t')
 
 
+taxa = ['ATCC13985', 'ATCC43928', 'KBS0702', 'KBS0703', \
+    'KBS0707', 'KBS0710', 'KBS0711','KBS0712', 'KBS0713', \
+    'KBS0715', 'KBS0721', 'KBS0722', 'KBS0724', 'KBS0727', 'KBS0801', \
+    'KBS0802', 'KBS0812']
 #getPolyTable(taxa)
-taxa = ['KBS0703', 'KBS0710', 'KBS0711', 'KBS0713', 'KBS0715', 'KBS0721', \
-    'KBS0722', 'KBS0724', 'KBS0727', 'KBS0802', 'KBS0812']
-getPi(taxa)
+#getPi(taxa)
