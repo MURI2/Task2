@@ -215,6 +215,56 @@ def iRepvsTDPlot(evol = True):
         bbox_inches = "tight", pad_inches = 0.4, dpi = 600)
     plt.close()
 
+def iRepvsPi(evol = True):
+    '''
+    'evol' is the argument for if you only want the lines that fit the nonlinear model
+    False means that all data is used.
+    '''
+    IN = pd.read_csv(mydir + '/data/Final/MAPGD_Evol_iRep.txt', sep ='\t')
+    pd.set_option('display.precision', 20)
+    if evol == True:
+        IN = IN.loc[IN['evolvability'] > float(0)]
+        IN = IN.loc[IN['iRep'] < float(7)]
+    else:
+        IN = IN.loc[IN['evolvability']  >= float(0)]
+    names_count = collections.Counter(IN.Strain.tolist())
+    names_count_sorted  = sorted(names_count.items(), key=itemgetter(0))
+    x = IN.iRep.values
+    y = IN.Pi.values
+    groups = IN.groupby('Genus')
+    # Plot
+    fig, ax = plt.subplots()
+    ax.margins(0.05) # Optional, just adds 5% padding to the autoscaling
+    for name, group in groups:
+        ax.plot(group.iRep, group.Pi, marker='o', alpha = 0.8, \
+            linestyle='', ms=12, label=name, c = genus_color[name])
+    ax.legend(numpoints=1, prop={'size':10},  loc='upper left', frameon=False)
+    ax.text(1.2, 2.68, r'$r^{2}=0.751$', fontsize=14)
+    ax.text(1.2, 2.5 , r'$p < 0.05$', fontsize=14)
+    slope, intercept, r_value, p_value, std_err = stats.linregress(x,y)
+    print "intecept = "  + str(intercept)
+    print "slope = " + str(slope)
+    print "r2 = " + str(r_value**2)
+    print "p = " + str(p_value)
+    predict_y = intercept + slope * x
+    pred_error = y - predict_y
+    degrees_of_freedom = len(x) - 2
+    residual_std_error = np.sqrt(np.sum(pred_error**2) / degrees_of_freedom)
+    plt.plot(x, predict_y, 'k-')
+    plt.tick_params(axis='both', which='major', labelsize=10)
+    plt.ylim([min(y)-0.1,max(y)+0.1])
+    plt.xlim([min(x)-0.3,max(x)+ 0.05])
+
+    plt.ylabel(r'$\pi$', fontsize=20)
+    plt.xlabel('Average genome copy number', fontsize=20)
+    if evol == True:
+        evolTxt = '_evol'
+    else:
+        evolTxt = ''
+    fig.savefig(mydir + '/figs/iRep_vs_Pi' + evolTxt  + '.png', \
+        bbox_inches = "tight", pad_inches = 0.4, dpi = 600)
+    plt.close()
+
 
 def SlopevsEvolPlot(evol = True):
     '''
@@ -281,8 +331,8 @@ def EvolvsTDPlot(evol = True):
         ax.plot(group.evolvability * 2, group.T_D, marker='o', alpha = 0.8, \
             linestyle='', ms=12, label=name, c = genus_color[name])
     ax.legend(numpoints=1, prop={'size':10},  loc='upper left', frameon=False)
-    ax.text(0.000006, 2.68, r'$r^{2}=0.640$', fontsize=14)
-    ax.text(0.000006, 2.5 , r'$p < 0.001$', fontsize=14)
+    ax.text(0.000006, 2.58, r'$r^{2}=0.635$', fontsize=14)
+    ax.text(0.000006, 2.4 , r'$p < 0.001$', fontsize=14)
     slope, intercept, r_value, p_value, std_err = stats.linregress(x,y)
     print "slope = " + str(slope)
     print "r2 = " + str(r_value**2)
@@ -316,6 +366,7 @@ def iRepvsSlopePlot(evol = True):
     pd.set_option('display.precision', 20)
     if evol == True:
         IN = IN.loc[IN['evolvability'] > float(0)]
+        IN = IN.loc[IN['iRep'] < float(7)]
     else:
         IN = IN.loc[IN['evolvability'] >= float(0)]
     names_count = collections.Counter(IN.Strain.tolist())
@@ -338,7 +389,7 @@ def iRepvsSlopePlot(evol = True):
     pred_error = y - predict_y
     degrees_of_freedom = len(x) - 2
     residual_std_error = np.sqrt(np.sum(pred_error**2) / degrees_of_freedom)
-    plt.plot(x, predict_y, 'k-')
+    #plt.plot(x, predict_y, 'k-')
     plt.tick_params(axis='both', which='major', labelsize=10)
     plt.ylim([min(y)-0.001,max(y)+0.001])
     plt.xlim([min(x)-0.1,max(x)+ 0.1])
@@ -361,6 +412,7 @@ def iRepvsEvolPlot(evol = True):
     pd.set_option('display.precision', 20)
     if evol == True:
         IN = IN.loc[IN['evolvability'] > float(0)]
+        IN = IN.loc[IN['iRep'] < float(7)]
     x = IN.iRep.values
     y = IN.evolvability.values *2
     names_count = collections.Counter(IN.Strain.tolist())
@@ -373,8 +425,8 @@ def iRepvsEvolPlot(evol = True):
         ax.plot(group.iRep, group.evolvability *2, marker='o', alpha = 0.8, \
             linestyle='', ms=12, label=name, c = genus_color[name])
     ax.legend(numpoints=1, prop={'size':10}, frameon=False, loc='upper left')
-    ax.text(1.15, 0.0000175, r'$r^{2}=0.754$', fontsize=14)
-    ax.text(1.15, 0.0000166, r'$p \:\ll  0.0001$', fontsize=14)
+    ax.text(1.15, 0.0000165, r'$r^{2}=0.692$', fontsize=14)
+    ax.text(1.15, 0.0000155, r'$p \:\ll  0.0001$', fontsize=14)
     slope, intercept, r_value, p_value, std_err = stats.linregress(x,y)
     print "intecept = "  + str(intercept)
     print "slope = " + str(slope)
@@ -425,4 +477,7 @@ def twoYs():
 
 
 #iRepvsEvolPlot()
-EvolvsTDPlot()
+#EvolvsTDPlot()
+#iRepvsPi()
+#iRepvsSlopePlot()
+TDvsSlopePlot()
