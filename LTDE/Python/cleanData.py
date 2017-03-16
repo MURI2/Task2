@@ -61,7 +61,6 @@ def mergeData(path = mydir):
     IN_merged_1 = pd.merge(IN_iRep, IN_PopGen, how='right', on=['Strain', 'Replicate'])
     pd.set_option('display.precision',20)
     IN_Evol = pd.read_csv(mydir + '/data/perRepDeathCurveTraits_centered.txt', sep = ' ')
-    print IN_Evol
     IN_Evol['log_evolvability'] = np.log(IN_Evol.evolvability)
     replicate = []
     # model_type says whether the chosem model was linear (0) or quadratic (1)

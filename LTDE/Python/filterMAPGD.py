@@ -4,6 +4,7 @@ import os, math
 import numpy as np
 import scipy.stats as st
 import csv
+import annotateFuncs as af
 mydir = os.path.expanduser("~/github/Task2/LTDE")
 
 strain_dict = {'ATCC13985': 'Pseudomonas', 'ATCC43928': 'Pseudomonas', \
@@ -141,12 +142,36 @@ def getPolyTable(taxa):
     latex_path = mydir + '/tables/test.tex'
     df.to_latex(latex_path)
 
+def getPotentialMutations(taxa):
+    for taxon in taxa:
+        IN = pd.read_csv(mydir + '/data/mapgd/annotate/' + taxon + '_merged_annotate.txt', delimiter = '\t', \
+            header = None)
+        names_IN = pandasNames(IN)
+        IN = names_IN[0]
+        IN_samples = names_IN[1]
+        for index, row in IN.iterrows():
+            print row[9:].values
+
+
+def getNumberSilentSitesAll(strain):
+    if strain == 'KBS0812':
+        GFF = mydir + '/data/Bacillus_test/AL009126.3.gff'
+        FFN = mydir + '/data/Bacillus_test/AL009126.fa'
+    elif strain in af.KBSGenomes():
+        GFF = mydir + '/data/2016_KBSGenomes_Annotate/' + strain + '/G-Chr1.gff'
+        FFN = mydir + '/data/2016_KBSGenomes_Annotate/' + strain + '/G-Chr1.fna'
+    else:
+        GFF = mydir + '/data/2015_SoilGenomes_Annotate/' + strain + '/G-Chr1.gff'
+        FFN = mydir + '/data/2015_SoilGenomes_Annotate/' + strain + '/G-Chr1.fna'
+    return af.annotate(GFF, FFN).countFourfoldSites()
+
 
 def getPi(strains, folded = True):
     piDict = {}
     OUT = open(mydir + '/data/mapgd/final/PopGenStats.txt', 'w')
-    print>> OUT, 'Strain', 'Genus', 'Replicate', 'Pi', 'Pi_var', 'W_theta', 'W_theta_var', 'T_D'
+    print>> OUT, 'Strain', 'Genus', 'Replicate', 'Pi', 'Pi_var', 'Pi_prob', 'W_theta', 'W_theta_var', 'T_D'
     for strain in strains:
+        fourfoldCount = getNumberSilentSitesAll(strain)
         genus = strain_dict[strain]
         IN = pd.read_csv(mydir + '/data/mapgd/annotate/' + strain + '_merged_annotate.txt', delimiter = '\t', \
             header = None)
@@ -240,20 +265,24 @@ def getPi(strains, folded = True):
                 W_theta.append(W_theta_x)
                 W_theta_var.append(W_theta_var_x)
                 print>> OUT, strain, genus, rep, pi_x_sum, \
-                    pi_x_var, W_theta_x, W_theta_var_x, T_D_x
+                    pi_x_var, pi_x_sum/fourfoldCount , W_theta_x, W_theta_var_x, T_D_x
         pi_mean = np.mean(pi)
         pi_var = np.mean(piVar)
         W_theta_mean = np.mean(W_theta)
         T_D_mean = np.mean(T_D)
         T_D_SD = np.std(T_D)
-        piDict[strain] = [genus, pi_mean, pi_var, W_theta_mean, T_D_mean, T_D_SD]
+        print pi_mean /fourfoldCount
+        piDict[strain] = [genus, pi_mean, pi_var, pi_mean /fourfoldCount ,W_theta_mean, T_D_mean, T_D_SD]
     OUT.close()
     df = pd.DataFrame(piDict, index=None)
     df = df.transpose()
     df.reset_index(level=0, inplace=True)
-    df.columns = ['Strain', 'Genus', 'Pi_mean', 'Pi_var', 'W_theta_mean', 'T_D_mean', 'T_D_SD']
+    df.columns = ['Strain', 'Genus', 'Pi_mean', 'Pi_var', 'Pi_prob', 'W_theta_mean', 'T_D_mean', 'T_D_SD']
     df_path = mydir + '/data/mapgd/final/PopGenStatsSummary.txt'
     df.to_csv(df_path,sep='\t')
+
+
+
 
 
 taxa = ['ATCC13985', 'ATCC43928', 'KBS0702', 'KBS0703', \
@@ -262,3 +291,4 @@ taxa = ['ATCC13985', 'ATCC43928', 'KBS0702', 'KBS0703', \
     'KBS0802', 'KBS0812']
 #getPolyTable(taxa)
 #getPi(taxa)
+getPotentialMutations(taxa)

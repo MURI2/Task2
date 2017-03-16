@@ -68,7 +68,10 @@ class annotate:
         rc={'A':'T', 'T':'A', 'C':'G', 'G':'C'}
         rseq=[]
         for s in seq:
-            rseq.insert(0, rc[s])
+            if s != 'N':
+                rseq.insert(0, rc[s])
+            else:
+                rseq.insert(0, 'N')
         return ''.join(rseq)
 
     def getmut(self, start, bp, seq, mut):
@@ -107,6 +110,43 @@ class annotate:
         seq=' '+''.join(seq)
         return seq
 
+    def countFourfoldSites(self):
+        fourfold_sites = 0
+        not_fourfold_sites = 0
+        GFF = open(self.GFF)
+        FFN = open(self.FFN)
+        get_tuple = self.getGenesAndSizes(GFF)
+        gene_sizes = get_tuple[0]
+        genes = get_tuple[1]
+        this_gene=genes.pop(0)
+        seq = self.getSeqs(FFN)
+        this_gene_copy = copy.copy(this_gene)
+        genes_copy = copy.copy(genes)
+        while ( len(genes_copy)  >0 ):
+            this_gene_copy=genes_copy.pop(0)
+
+            if this_gene_copy.strand=='+':
+
+                gene = seq[this_gene_copy.start: this_gene_copy.stop+1]
+                codons = re.findall('...',gene)
+                for codon in codons:
+                    if self.is_fourfold(codon) == 'Y':
+                        fourfold_sites += 1
+
+            elif this_gene_copy.strand=='-':
+                gene = self.rcomp(seq[this_gene_copy.start: this_gene_copy.stop+1])
+                codons = re.findall('...',gene)
+                for codon in codons:
+                    if self.is_fourfold(codon) == 'Y':
+                        fourfold_sites += 1
+
+        return fourfold_sites
+
+
+
+
+
+
     def annotateGATK(self, IN, OUT):
         IN = open(IN)
         OUT = open(OUT, 'wr')
@@ -120,7 +160,6 @@ class annotate:
 
         this_gene_copy = copy.copy(this_gene)
         genes_copy = copy.copy(genes)
-        seq_copy = copy.copy(seq)
         for line in IN:
             fields=line.strip().split('\t')
             if fields[0]=='CHROM':
@@ -187,7 +226,6 @@ class annotate:
 
         this_gene_copy = copy.copy(this_gene)
         genes_copy = copy.copy(genes)
-        seq_copy = copy.copy(seq)
 
         for line in IN:
             if self.isopen:
@@ -324,14 +362,19 @@ class formatSNPs:
             index = False)
 
 
+def KBSGenomes():
+    KBSGenomes_Annotate = ['ATCC13985', 'ATCC43928', 'KBS0702', 'KBS0707', \
+        'KBS0712', 'KBS0801']
+    return KBSGenomes_Annotate
+
+
 def annotateStrains():
     mydir = os.path.expanduser("~/github/Task2/LTDE")
     strains = ['ATCC13985', 'ATCC43928', 'KBS0702', 'KBS0703', 'KBS0705', \
         'KBS0706', 'KBS0707', 'KBS0710', 'KBS0711','KBS0712', 'KBS0713', \
         'KBS0715', 'KBS0721', 'KBS0722', 'KBS0724', 'KBS0727', 'KBS0801', \
         'KBS0802', 'KBS0812']
-    KBSGenomes_Annotate = ['ATCC13985', 'ATCC43928', 'KBS0702', 'KBS0707', \
-        'KBS0712', 'KBS0801']
+    KBSGenomes_Annotate = KBSGenomes()
     #strains = ['KBS0711']
     for strain in strains:
         content_list = []
@@ -357,4 +400,4 @@ def annotateStrains():
         formatSNPs(strain).getSNPTable()
         formatSNPs(strain).filterSNPTable(coding_to_csv=True)
 
-annotateStrains()
+#annotateStrains()
