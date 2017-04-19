@@ -7,14 +7,16 @@
 module load java
 module load fastqc
 
-mkdir -p /N/dc2/projects/muri2/Task2/PoolPopSeq/data/reads_quality/
-mkdir -p /N/dc2/projects/muri2/Task2/PoolPopSeq/data/reads_quality/D100/
+Sample_date=D200
 
-for file in /N/dc2/projects/muri2/Task2/PoolPopSeq/data/reads_raw/D100/*/*.fastq.gz
+mkdir -p /N/dc2/projects/muri2/Task2/PoolPopSeq/data/reads_quality/
+mkdir -p "/N/dc2/projects/muri2/Task2/PoolPopSeq/data/reads_quality/${Sample_date}/"
+
+for file in "/N/dc2/projects/muri2/Task2/PoolPopSeq/data/reads_raw/${Sample_date}/"*/*.fastq.gz
 do
   sample="$(echo "$file" | cut -d "/" -f11-11)"
-  OUTdir="/N/dc2/projects/muri2/Task2/PoolPopSeq/data/reads_quality/D100/${sample}"
+  OUTdir="/N/dc2/projects/muri2/Task2/PoolPopSeq/data/reads_quality/${Sample_date}/${sample}"
   mkdir -p $OUTdir
-  #echo "$file"
+  #echo $OUTdir
   fastqc "$file" --outdir=$OUTdir
 done

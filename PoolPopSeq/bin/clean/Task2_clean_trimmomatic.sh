@@ -12,11 +12,13 @@ module load cutadapt
 #-g CAAGCAGAAGACGGCATACGA
 #-g AATGATACGGCGACCACCGA
 
+Sample_date=D100
+
 mkdir -p "/N/dc2/projects/muri2/Task2/PoolPopSeq/data/reads_clean_trimmomatic"
-mkdir -p "/N/dc2/projects/muri2/Task2/PoolPopSeq/data/reads_clean_trimmomatic/D100"
+mkdir -p "/N/dc2/projects/muri2/Task2/PoolPopSeq/data/reads_clean_trimmomatic/${Sample_date}"
 
 
-for folder in /N/dc2/projects/muri2/Task2/PoolPopSeq/data/reads_raw/D100/*/
+for folder in "/N/dc2/projects/muri2/Task2/PoolPopSeq/data/reads_raw/${Sample_date}/"*/
 do
   declare -a ARRAYreps=()
   declare -a ARRAYlines=()
@@ -31,16 +33,16 @@ do
   REMDUPrep=($(printf "%s\n" "${ARRAYreps[@]}" | sort | uniq -c | sort -rnk1 | awk '{ print $2 }'))
   REMDUPline=($(printf "%s\n" "${ARRAYlines[@]}" | sort | uniq -c | sort -rnk1 | awk '{ print $2 }'))
   line_folder="$(  echo "$REMDUPline" | cut -d"/" -f1-1)"
-  mkdir -p "/N/dc2/projects/muri2/Task2/PoolPopSeq/data/reads_clean_trimmomatic/D100/${line_folder}"
+  mkdir -p "/N/dc2/projects/muri2/Task2/PoolPopSeq/data/reads_clean_trimmomatic/${Sample_date}/${line_folder}"
 
   for rep in "${REMDUPrep[@]}"
   do
-    InR1="/N/dc2/projects/muri2/Task2/PoolPopSeq/data/reads_raw/D100/${REMDUPline}_R1_${rep}.fastq.gz"
-    InR2="/N/dc2/projects/muri2/Task2/PoolPopSeq/data/reads_raw/D100/${REMDUPline}_R2_${rep}.fastq.gz"
-    OutR1Paired="/N/dc2/projects/muri2/Task2/PoolPopSeq/data/reads_clean_trimmomatic/D100/${REMDUPline}_R1_${rep}_clean_paired.fastq.gz"
-    OutR2Paired="/N/dc2/projects/muri2/Task2/PoolPopSeq/data/reads_clean_trimmomatic/D100/${REMDUPline}_R2_${rep}_clean_paired.fastq.gz"
-    OutR1UnPaired="/N/dc2/projects/muri2/Task2/PoolPopSeq/data/reads_clean_trimmomatic/D100/${REMDUPline}_R1_${rep}_clean_unpaired.fastq.gz"
-    OutR2UnPaired="/N/dc2/projects/muri2/Task2/PoolPopSeq/data/reads_clean_trimmomatic/D100/${REMDUPline}_R2_${rep}_clean_unpaired.fastq.gz"
+    InR1="/N/dc2/projects/muri2/Task2/PoolPopSeq/data/reads_raw/${Sample_date}/${REMDUPline}_R1_${rep}.fastq.gz"
+    InR2="/N/dc2/projects/muri2/Task2/PoolPopSeq/data/reads_raw/${Sample_date}/${REMDUPline}_R2_${rep}.fastq.gz"
+    OutR1Paired="/N/dc2/projects/muri2/Task2/PoolPopSeq/data/reads_clean_trimmomatic/${Sample_date}/${REMDUPline}_R1_${rep}_clean_paired.fastq.gz"
+    OutR2Paired="/N/dc2/projects/muri2/Task2/PoolPopSeq/data/reads_clean_trimmomatic/${Sample_date}/${REMDUPline}_R2_${rep}_clean_paired.fastq.gz"
+    OutR1UnPaired="/N/dc2/projects/muri2/Task2/PoolPopSeq/data/reads_clean_trimmomatic/${Sample_date}/${REMDUPline}_R1_${rep}_clean_unpaired.fastq.gz"
+    OutR2UnPaired="/N/dc2/projects/muri2/Task2/PoolPopSeq/data/reads_clean_trimmomatic/${Sample_date}/${REMDUPline}_R2_${rep}_clean_unpaired.fastq.gz"
     adaptor1="$(  echo "$REMDUPline" | cut -d"_" -f3-3 | cut -d"-" -f1-1)"
     adaptor2="$(  echo "$REMDUPline" | cut -d"_" -f3-3 | cut -d"-" -f2-2)"
     #echo $adaptor1

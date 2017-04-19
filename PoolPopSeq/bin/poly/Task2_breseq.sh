@@ -11,6 +11,7 @@ D=/N/dc2/projects/muri2/Task2/reference_assemblies_task2/Deinococcus_radiodurans
 B=/N/dc2/projects/muri2/Task2/reference_assemblies_task2/Bacillus_subtilis_168/GCA_000009045.1_ASM904v1_genomic.gbff
 C=/N/dc2/projects/muri2/Task2/reference_assemblies_task2/Caulobacter_crescentus_NA1000/GCA_000022005.1_ASM2200v1_genomic.gbff
 F=/N/dc2/projects/muri2/Task2/reference_assemblies_task2/Pedobacter_sp_KBS0701/G-Chr1.gbk
+J=/N/dc2/projects/muri2/Task2/reference_assemblies_task2/Janthinobacterium_sp_KBS0711/KBS0711_2015_SoilGenomes_Annotate/G-Chr1.gbk
 
 for line_path in /N/dc2/projects/muri2/Task2/PoolPopSeq/data/reads_clean_trimmomatic/D100/*;
 do
@@ -23,19 +24,27 @@ do
     mkdir -p $OUT
     taxon="$(echo "$line_path" | grep -Po ".(?=.{1}$)")"
     if [[ $taxon == "P" ]]; then
-      REF=$P
+      #REF=$P
+      continue
     elif [[ $taxon == "D" ]]
     then
-      REF=$D
+      #REF=$D
+      continue
     elif [[ $taxon == "B" ]]
     then
-      REF=$B
+      #REF=$B
+      continue
     elif [[ $taxon == "C" ]]
     then
-      REF=$C
+      #REF=$C
+      continue
     elif [[ $taxon == "F" ]]
     then
-      REF=$F
+      #REF=$F
+      continue
+    elif [[ $taxon == "J" ]]
+    then
+      REF=$J
     else
       continue
     fi

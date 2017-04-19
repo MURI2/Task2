@@ -263,20 +263,74 @@ class PPS_pi:
         return sum_pi_numer / sum_pi_denom
 
 
+class PPS_tajimas_D:
+    '''
+    A class to estimate Tajima's D using pi (Tajima's theta), S
+    (number polymorphic sites), and N (pop. size)
+    We'll use mean coverage here for N. I need to get a better estimate for
+    the variance term of Tajima's D
+    '''
+
+    def __init__(self, pi, w, S, n):
+        self.pi = float(pi)
+        self.w = float(w)
+        self.S = int(S)
+        self.n = int(n)
+
+    def a1(self):
+        '''Given n, this function returns the (n-1)th harmonic number'''
+        return sum((1.0/d) for d in range(1,self.n))
+
+    def a2(self):
+        '''Given n, this function returns the (n-1)th squared harmonic number'''
+        return sum((1.0/(d**2)) for d in range(1,self.n))
+
+    def b1(self):
+        '''Creates b1 for the variance of Tajima's theta'''
+        return ((self.n+1) /  (3*(self.n-1)))
+
+    def b2(self):
+        '''Creates b2 for the variance of Tajima's theta'''
+        num = ((self.n**2) + self.n + 3) * 2
+        den = 9 * self.n * (self.n-1)
+        return num / den
+
+    def c1(self):
+        '''Creates c1 for the variance of Tajima's theta'''
+        return self.b1() - (1 / self.a1())
+
+    def c2(self):
+        '''Creates c2 for the variance of Tajima's theta'''
+        return self.b2() - ((self.n+2) / (self.a1() * self.n)) + (self.a2() / (self.a1() ** 2 ))
+
+    def e1(self):
+        return self.c1() / self.a1()
+
+    def e2(self):
+        return self.c2() / ( (self.a1() ** 2) + self.a2() )
+
+    def tajimas_D(self):
+        num = self.pi - self.w
+        den = math.sqrt( (self.e1() * self.S) + (self.e2() * self.S * (self.S-1)) )
+        T_D = num / den
+        return T_D
+
+
 def harmonic_number(j):
     a_j = 0
     for k in range(1, j):
         a_j += 1/k
     return a_j
+
 def popGenTable(MAF = 0.01, n_c = 70):
     L_samples = {'C': 4042929, 'D': 3284156, 'F': 5836693, 'P':6592875, \
-        'B':4215606}
+        'B':4215606, 'J':6082545}
     strains = ['B', 'C', 'D', 'F', 'J', 'P']
     #strains = ['B']
     OUT =  mydir + 'pop_gen_stats/D100/popGenTable.txt'
     OUT = open(OUT, 'w')
-    print>> OUT, 'strain', 'treatment', 'replicate', 'k', 'S', 'pi', 'W_T',\
-            'k_L', 'S_L', 'pi_L', 'W_T_L', 'mean_coverage'
+    print>> OUT, 'strain', 'treatment', 'replicate', 'k', 'S', 'pi', 'W_T', \
+            'T_D', 'k_L', 'S_L', 'pi_L', 'W_T_L', 'mean_coverage'
     for strain in strains:
         path = mydir + 'breseq_output_gbk_essentials_split_clean_merged_unique/D100/Strain_' + strain + '.txt'
 
@@ -299,11 +353,14 @@ def popGenTable(MAF = 0.01, n_c = 70):
                     site_split = site[1].split('/')
                     coverage += (int(site_split[0]) + int(site_split[1]))
                 if coverage > 0:
-
                     mean_coverage = coverage / S
                 else:
                     #print sample_freq
                     mean_coverage = 0
+                if mean_coverage == 0:
+                    T_D = float('nan')
+                else:
+                    T_D = PPS_tajimas_D(pi, W_T, S, mean_coverage).tajimas_D()
                 L = L_samples[strain]
                 k_L = k /L
                 S_L = S / L
@@ -312,7 +369,7 @@ def popGenTable(MAF = 0.01, n_c = 70):
                 treatment = sample_freq_split[1][1]
                 replicate = sample_freq_split[1][3]
                 print>> OUT, species_dict[strain], treatment, replicate, k, S, pi, \
-                        W_T, k_L, S_L, pi_L,W_T_L, mean_coverage
+                        W_T, T_D, k_L, S_L, pi_L, W_T_L, mean_coverage
 
     OUT.close()
 
@@ -327,15 +384,7 @@ def get_column_name(row, row_name):
         return sample[-1]
     else:
         return float('NaN')
-    #if frequency_row[frequency_row.notnull()].shape[0] > 1:
-    #    print frequency_row
-    #else:
-    #    return
-    #if column_name == 'treatment':
-    #elif column_name == 'replicate':
-    #else:
-    #    return float('NaN')
-    #return row['a'] % row['c']
+
 
 
 def geneTable(MAF = 0.01):
@@ -381,19 +430,6 @@ def geneTable(MAF = 0.01):
                 + strain + '_reduced.txt', sep = '\t', index = False)
 
 
-def examine_L0D5():
-    path = mydir + 'breseq_output_gbk_essentials_split_clean_merged_unique/D100/Strain_D.txt'
-    IN = pd.read_csv(path, sep = '\t', header = 'infer')
-    keep = ['seq_id', 'position', 'gene_list', \
-        'gene_name', 'gene_position', 'mutation', 'gene_product', \
-        'locus_tag', 'aa_new_seq', 'aa_position', 'aa_ref_seq', \
-        'codon_new_seq', 'codon_number', 'codon_position', \
-        'codon_ref_seq', 'gene_strand', 'transl_table', 'frequency_L0D5']
-    IN = IN[keep]
-    IN = IN[np.isfinite(IN['frequency_L0D5'])]
-    IN.to_csv(mydir + 'L0D5_poly.txt', sep = '\t', index = False)
-
-    #print IN
 
 
 
@@ -405,7 +441,7 @@ def examine_L0D5():
 #print PPS_Wtheta(freqs, coverage).calculate_corrected_WTheta()
 #print PPS_pi(freqs, coverage).calculate_corrected_pi()
 
-#popGenTable()
+popGenTable()
 #geneTable()
 
 #examine_L0D5()
