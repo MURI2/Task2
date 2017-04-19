@@ -442,7 +442,7 @@ def iRepvsEvolPlot(evol = True):
     plt.ylim([min(y)-0.000001,max(y)+0.000001])
     plt.xlim([min(x)-0.1,max(x)+ 0.1])
     plt.ylabel('Change in growth rate', fontsize=24)
-    plt.xlabel('Average genome copy number \n (proxy for replication rate' + r'$^{5}$' ')', fontsize=24)
+    plt.xlabel('Average genome copy number \n (proxy for birth rate)', fontsize=24)
     if evol == True:
         evolTxt = '_evol'
     else:
@@ -451,33 +451,120 @@ def iRepvsEvolPlot(evol = True):
         bbox_inches = "tight", pad_inches = 0.4, dpi = 600)
     plt.close()
 
-
-def twoYs():
-    x = np.arange(1.2, 1.6, 0.005)
-    y1 = -3.50499676295e-05 + (3.45741372239e-05* x)
-    #y2 = 4.89524054178 +  (-4.73666638243 * x)
-    # original = -4.89524054178 +  (4.73666638243 * x)
-    y2 = -4.89524054178 +  (4.73666638243 * x)
-
-    fig, ax1 = plt.subplots()
-
-    ax2 = ax1.twinx()
-    ax1.plot(x, y1, 'g-')
-    ax1.ticklabel_format(style='sci', axis='y', scilimits=(0,0))
-    ax2.plot(x, y2, 'b-')
-
-    ax1.set_xlabel('Average genome copy number', fontsize=20)
-    ax1.set_ylabel('Change in growth rate', color='g', fontsize=20)
-    ax2.set_ylabel('Loss of genetic diversity', color='b', fontsize=20)
-    ax1.tick_params(axis='x', which='major', pad=15)
-
-    plt.savefig(mydir + '/figs/iRep_vs_Evol_vs_TD.png', \
-        bbox_inches = "tight", pad_inches = 0.4, dpi = 600)
+def PivsEvolPlot(evol = True):
+    '''
+    'evol' is the argument for if you only want the lines that fit the nonlinear model
+    False means that all data is used.
+    '''
+    IN = pd.read_csv(mydir + '/data/Final/MAPGD_Evol_iRep.txt', sep ='\t')
+    pd.set_option('display.precision', 20)
+    if evol == True:
+        IN = IN.loc[IN['evolvability'] > float(0)]
+        IN = IN.loc[IN['iRep'] < float(7)]
+    x = IN.evolvability.values *2
+    y = IN.Pi_prob.values
+    names_count = collections.Counter(IN.Strain.tolist())
+    names_count_sorted  = sorted(names_count.items(), key=itemgetter(0))
+    groups = IN.groupby('Genus')
+    # Plot
+    fig, ax = plt.subplots()
+    ax.margins(0.05) # Optional, just adds 5% padding to the autoscaling
+    for name, group in groups:
+        ax.plot(group.evolvability *2, group.Pi_prob, marker='o', alpha = 0.8, \
+            linestyle='', ms=12, label=name, c = genus_color[name])
+    ax.legend(numpoints=1, prop={'size':10}, frameon=False, loc='upper left')
+    ax.text(min(x), min(y) + 0.0000016, r'$r^{2}=0.527$', fontsize=14)
+    ax.text(min(x), min(y) + 0.00000145, r'$p \ll \, 0.05$', fontsize=14)
+    slope, intercept, r_value, p_value, std_err = stats.linregress(x,y)
+    print "intecept = "  + str(intercept)
+    print "slope = " + str(slope)
+    print "r2 = " + str(r_value**2)
+    print "p = " + str(p_value)
+    predict_y = intercept + slope * x
+    pred_error = y - predict_y
+    degrees_of_freedom = len(x) - 2
+    residual_std_error = np.sqrt(np.sum(pred_error**2) / degrees_of_freedom)
+    plt.plot(x, predict_y, 'k-')
+    plt.tick_params(axis='both', which='major', labelsize=10)
+    plt.ticklabel_format(style='sci', axis='both', scilimits=(0,0))
+    plt.ylabel('Nucleotide diversity, ' + r'$(\pi)$', fontsize=22, labelpad=20)
+    plt.xlabel('Change in growth rate', fontsize=22)
+    if evol == True:
+        evolTxt = '_evol'
+    else:
+        evolTxt = ''
+    plt.savefig(mydir + '/figs/PivsEvolPlot' + evolTxt  + '.png', \
+          pad_inches = 0.4, dpi = 600)
     plt.close()
+
+
+def SlopevsEvolvsPiPlot(evol = True):
+    IN = pd.read_csv(mydir + '/data/Final/MAPGD_Evol_iRep.txt', sep ='\t')
+    pd.set_option('display.precision', 20)
+    if evol == True:
+        IN = IN.loc[IN['evolvability'] > float(0)]
+        IN = IN.loc[IN['iRep'] < float(7)]
+
+    fig = plt.figure()
+    count = 0
+    for i in range(2):
+        ax = fig.add_subplot(2, 1, i+1)
+        y = IN.T_D.values
+        if i == 0:
+            x = IN.decay.values
+        elif i == 1:
+            x = IN.evolvability.values *2
+        names_count = collections.Counter(IN.Strain.tolist())
+        names_count_sorted  = sorted(names_count.items(), key=itemgetter(0))
+        groups = IN.groupby('Genus')
+
+        ax.margins(0.05) # Optional, just adds 5% padding to the autoscaling
+        for name, group in groups:
+            if i == 0:
+                ax.plot(group.decay, group.T_D, marker='o', alpha = 0.8, \
+                    linestyle='', ms=12, label=name, c = genus_color[name])
+            elif i == 1:
+                ax.plot(group.evolvability *2, group.T_D, marker='o', alpha = 0.8, \
+                    linestyle='', ms=12, label=name, c = genus_color[name])
+        slope, intercept, r_value, p_value, std_err = stats.linregress(x,y)
+        print "intecept = "  + str(intercept)
+        print "slope = " + str(slope)
+        print "r2 = " + str(r_value**2)
+        print "p = " + str(p_value)
+        predict_y = intercept + slope * x
+        pred_error = y - predict_y
+        degrees_of_freedom = len(x) - 2
+        residual_std_error = np.sqrt(np.sum(pred_error**2) / degrees_of_freedom)
+        plt.ticklabel_format(style='sci', axis='both', scilimits=(0,0))
+
+        if i == 1:
+            plt.plot(x , predict_y, 'k-')
+            ax.text(min(x), max(y) - 0.3, r'$r^{2}=0.641$', fontsize=14)
+            ax.text(min(x), max(y) - 0.65 , r'$p \:\ll   0.001$', fontsize=14)
+            ax.set_xlabel('Change in growth rate', fontsize = 16)
+        elif i == 0:
+            ax.legend(numpoints=1, prop={'size':10}, frameon=False, loc='upper left')
+            ax.text(max(x) - 0.0004, max(y) - 0.3, r'$r^{2}=0.049$', fontsize=14)
+            ax.text(max(x) - 0.0004, max(y) - 0.65, r'$p \:\nless  0.05$', fontsize=14)
+            ax.set_xlabel('Growth rate', fontsize = 16)
+    if evol == True:
+        evolTxt = '_evol'
+    else:
+        evolTxt = ''
+    fig.subplots_adjust(hspace=0.24)
+    fig.text(0.05, 0.5, r'$D_{T}$', ha='center', va='center', rotation='horizontal', fontsize=22)
+    plt.savefig(mydir + '/figs/SlopevsEvolvsPiPlot' + evolTxt  + '.png', \
+          pad_inches = 0.4, dpi = 600)
+    plt.close()
+
 
 
 #iRepvsEvolPlot()
 #EvolvsTDPlot()
 #iRepvsPi()
 #iRepvsSlopePlot()
-TDvsSlopePlot()
+#TDvsSlopePlot()
+#SlopevsEvolvsPiPlot()
+#PivsEvolPlot()
+
+Fig3()
