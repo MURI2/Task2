@@ -5,11 +5,11 @@
 #PBS -m abe
 #PBS -j oe
 
-#module load samtools
+module load samtools
 module load python
-
-#mkdir -p /N/dc2/projects/muri2/Task2/PoolPopSeq/data/breseq_output_gbk_essentials
-#mkdir -p /N/dc2/projects/muri2/Task2/PoolPopSeq/data/breseq_output_gbk_essentials/D100
+DAY=D100
+mkdir -p /N/dc2/projects/muri2/Task2/PoolPopSeq/data/breseq_output_gbk_essentials
+mkdir -p "/N/dc2/projects/muri2/Task2/PoolPopSeq/data/breseq_output_gbk_essentials/${DAY}"
 
 #for sample in /N/dc2/projects/muri2/Task2/PoolPopSeq/data/breseq_output_gbk/D100/*;
 #do
@@ -25,6 +25,38 @@ module load python
 #  #"${OUT}/evidence.gd"
 #done
 
-#echo "Script ran"
-python /N/dc2/projects/muri2/Task2/PoolPopSeq/bin/poly/calculateNum.py
+#python /N/dc2/projects/muri2/Task2/PoolPopSeq/bin/poly/calculateNum.py
 #python /N/dc2/projects/muri2/Task2/PoolPopSeq/bin/poly/test.py
+
+for line_path in "/N/dc2/projects/muri2/Task2/PoolPopSeq/data/breseq_output_gbk/${DAY}/"*;
+do
+  line="$(echo "$line_path" | cut -d "/" -f11-11)"
+  bash_out="/N/dc2/projects/muri2/Task2/PoolPopSeq/bin/poly/breseq/line_scripts_gbk/${line}_breseq.sh"
+  if [ ! -f $bash_out ]; then
+    OUT="/N/dc2/projects/muri2/Task2/PoolPopSeq/data/breseq_output_gbk/${DAY}/${line}"
+    OUT_essentials="/N/dc2/projects/muri2/Task2/PoolPopSeq/data/breseq_output_gbk_essentials/${DAY}/${line}"
+    mkdir -p $OUT_essentials
+
+    OUT_annotated="${OUT}/output/evidence/annotated.gd"
+    essentials_annotated="${OUT_essentials}/annotated.gd"
+    cp $OUT_annotated $essentials_annotated
+
+    OUT_evidence="${OUT}/output/evidence/evidence.gd"
+    essentials_evidence="${OUT_essentials}/evidence.gd"
+    cp $OUT_evidence $essentials_evidence
+
+    OUT_output="${OUT}/output/output.gd"
+    essentials_output="${OUT_essentials}/output.gd"
+    cp $OUT_output $essentials_output
+
+    bam="${OUT}/data/reference.bam"
+    coverage="${OUT}/data/coverage.txt"
+    if [ -fe $bam ]; then
+        rm $bam
+    fi
+    samtools mpileup $bam > $coverage
+
+    coverage_clean="${OUT_essentials}/coverage_clean.txt"
+    python /N/dc2/projects/muri2/Task2/PoolPopSeq/bin/poly/getCoverage.py -c -i $coverage -o $coverage_clean
+  fi
+done

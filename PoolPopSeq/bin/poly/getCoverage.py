@@ -80,7 +80,7 @@ def selectSites(OUT1_path, OUT2_path):
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description = "condense coverage")
     parser.add_argument('-c', action='store_true', default=False)
-    #parser.add_argument('-v', action='store_true', default=False)
+    parser.add_argument('-v', action='store_true', default=False)
 
     parser.add_argument('-i', type = str, default = "", help = "in file")
     parser.add_argument('-o', type = str, default = "", help = "out file")

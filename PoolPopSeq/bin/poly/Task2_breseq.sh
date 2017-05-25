@@ -1,10 +1,12 @@
 #!/bin/bash
 
+DAY=D100
+
 mkdir -p /N/dc2/projects/muri2/Task2/PoolPopSeq/data/breseq_output_gbk
-mkdir -p /N/dc2/projects/muri2/Task2/PoolPopSeq/data/breseq_output_gbk/D100
+mkdir -p "/N/dc2/projects/muri2/Task2/PoolPopSeq/data/breseq_output_gbk/${DAY}"
 mkdir -p /N/dc2/projects/muri2/Task2/PoolPopSeq/bin/poly/breseq/line_scripts_gbk
 mkdir -p /N/dc2/projects/muri2/Task2/PoolPopSeq/data/breseq_output_gbk_essentials
-mkdir -p /N/dc2/projects/muri2/Task2/PoolPopSeq/data/breseq_output_gbk_essentials/D100
+mkdir -p "/N/dc2/projects/muri2/Task2/PoolPopSeq/data/breseq_output_gbk_essentials/${DAY}"
 
 P=/N/dc2/projects/muri2/Task2/reference_assemblies_task2/Pseudomonas_sp_KBS0710/G-Chr1.gbk
 D=/N/dc2/projects/muri2/Task2/reference_assemblies_task2/Deinococcus_radiodurans_BAA816/GCA_000008565.1_ASM856v1_genomic.gbff
@@ -13,16 +15,13 @@ C=/N/dc2/projects/muri2/Task2/reference_assemblies_task2/Caulobacter_crescentus_
 F=/N/dc2/projects/muri2/Task2/reference_assemblies_task2/Pedobacter_sp_KBS0701/G-Chr1.gbk
 J=/N/dc2/projects/muri2/Task2/reference_assemblies_task2/Janthinobacterium_sp_KBS0711/KBS0711_2015_SoilGenomes_Annotate/G-Chr1.gbk
 
-for line_path in /N/dc2/projects/muri2/Task2/PoolPopSeq/data/reads_clean_trimmomatic/D100/*;
+for line_path in "/N/dc2/projects/muri2/Task2/PoolPopSeq/data/reads_clean_trimmomatic/${DAY}/"*;
 do
   line="$(echo "$line_path" | cut -d "/" -f11-11)"
   bash_out="/N/dc2/projects/muri2/Task2/PoolPopSeq/bin/poly/breseq/line_scripts_gbk/${line}_breseq.sh"
+
   if [ ! -f $bash_out ]; then
-    reads="${line_path}/"*_clean_paired.fastq.gz
-    OUT="/N/dc2/projects/muri2/Task2/PoolPopSeq/data/breseq_output_gbk/D100/${line}"
-    OUT_essentials="/N/dc2/projects/muri2/Task2/PoolPopSeq/data/breseq_output_gbk_essentials/D100/${line}"
-    mkdir -p $OUT
-    taxon="$(echo "$line_path" | grep -Po ".(?=.{1}$)")"
+    taxon="$(echo "$line_path" | grep -Po ".(?=.{5}$)")"
     if [[ $taxon == "P" ]]; then
       #REF=$P
       continue
@@ -32,22 +31,29 @@ do
       continue
     elif [[ $taxon == "B" ]]
     then
-      #REF=$B
-      continue
+      REF=$B
+      #continue
     elif [[ $taxon == "C" ]]
     then
-      #REF=$C
-      continue
+      REF=$C
+      #continue
     elif [[ $taxon == "F" ]]
     then
-      #REF=$F
-      continue
+      REF=$F
+      #continue
     elif [[ $taxon == "J" ]]
     then
-      REF=$J
+      #REF=$J
+      continue
     else
       continue
     fi
+
+    reads="${line_path}/"*_clean_paired.fastq.gz
+    OUT="/N/dc2/projects/muri2/Task2/PoolPopSeq/data/breseq_output_gbk/${DAY}/${line}"
+    OUT_essentials="/N/dc2/projects/muri2/Task2/PoolPopSeq/data/breseq_output_gbk_essentials/${DAY}/${line}"
+    mkdir -p $OUT
+    mkdir -p $OUT_essentials
 
     echo '#!/bin/bash' >> $bash_out
     echo '#PBS -k o' >> $bash_out
@@ -69,7 +75,7 @@ do
 
     OUT_annotated="${OUT}/output/evidence/annotated.gd"
     essentials_annotated="${OUT_essentials}/annotated.gd"
-    echo "cp ${OUT_annotated} ${OUT}/annotated.gd" >> $bash_out
+    echo "cp ${OUT_annotated} ${essentials_annotated}" >> $bash_out
 
     OUT_evidence="${OUT}/output/evidence/evidence.gd"
     essentials_evidence="${OUT_essentials}/evidence.gd"
@@ -84,8 +90,9 @@ do
     echo "samtools mpileup ${bam} > ${coverage}" >> $bash_out
 
     coverage_clean="${OUT_essentials}/coverage_clean.txt"
-    echo "python /N/dc2/projects/muri2/Task2/PoolPopSeq/bin/poly/getCoverage.py ${coverage} ${coverage_clean}" >> $bash_out
+    echo "python /N/dc2/projects/muri2/Task2/PoolPopSeq/bin/poly/getCoverage.py -c -i ${coverage} -o ${coverage_clean}" >> $bash_out
 
     qsub $bash_out
+
   fi
 done
