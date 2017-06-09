@@ -88,6 +88,7 @@ def checkTemp(df):
         print "Temperature difference greater than 3C, check for temperature effects"
 
 
+
 def modGompGrowth(IN_file_name, interceptGuess=0.1, delta = 0.05, synergy=True, \
     temp = True, smooth = True):
     IN = pd.read_csv(IN_file_name, sep = '\t')
@@ -99,103 +100,123 @@ def modGompGrowth(IN_file_name, interceptGuess=0.1, delta = 0.05, synergy=True, 
     #IN['Time'] = pd.to_datetime(IN['Time'], format='%H:%M:%S')
     #IN['Minutes'] = IN['Time'].dt.hour * 60 + IN['Time'].dt.minute
     IN_wells_name = IN_file_name.replace('clean_data', 'raw_data')
-    IN_wells_name = IN_wells_name[:-4] + '_wellNames' + IN_wells_name[-4:]
+    split_in = re.split(r'[./]', IN_wells_name)#[-2]
+    split_in[-1] = split_in[-2]
+    merged_in = '/'.join(split_in)
+    IN_wells_name = merged_in + '_wellNames.txt'
     IN_wells = pd.read_csv(IN_wells_name, sep = '\t')
     IN_wells["SampleRep"] = IN_wells['Sample'] + '_' + IN_wells["Rep"].map(str)
     cutoff_dict = dict([(i, a) for i, a in zip(IN_wells.SampleRep, IN_wells.x_axis_cutoff)])
+    if len(set(IN_wells.Keep.values)) == 1 and list(set(IN_wells.Keep.values))[0] == False:
+        print "No usable data"
+    else:
+        to_remove = IN_wells.loc[IN_wells['Keep'] == False].SampleRep.values
+        IN_file_name_split =  re.split(r'[./]', IN_file_name)
+        IN_file_name_split[-3] = 'params'
+        IN_file_name_split[-2] = IN_file_name_split[-2].replace('_clean', '_params')
+        path_OUT = '/'.join(IN_file_name_split[:-1]) + '.' + IN_file_name_split[-1]
+        OUT = open(path_OUT, 'w')
+        print>> OUT, 'Sample', 'Rep', 'b0', 'A', 'umax', 'L', 'z', 'umax_lw', 'umax_up', \
+                'umax_lw_FI', 'umax_up_FI'
+        #t = IN['Minutes'].values / 60
+        t =  np.asarray(time_hours)
+        to_keep = []
+        ignore_columns = ['Time', 'Temp_C', 'Minutes', 'blank_water_1', 'blank_water_2', 'blank_media_1']
+        #print cutoff_dict
+        for column in IN:
+            if IN[column].name in ignore_columns or IN[column].name in to_remove:
+                continue
+            #if IN[column].name != 'L2J3-100_2':
+            #    continue
+            #growth curve
+            s = IN[column].values
+            s_name = IN[column].name
+            print s_name
+            #print IN[column]
+            #print cutoff_dict[s_name]
+            t_column = [t_i for t_i in t if t_i < cutoff_dict[s_name]]
+            s = s[:len(t_column)]
+            if max(s) - min(s) < delta:
+                print "Observed change in OD is not greater than " +  str(delta) + \
+                      " in well " + IN[column].name
+                continue
+            if smooth == True:
+                taps = [1/11] * 11
+                s_2 = scipy.signal.lfilter(taps, 1.0, s)
+                s_2[0:5] = s[0:5]
+                s_2[5:-5] = s_2[10:]
+                s_2[-6:] = s[-6:]
+            else:
+                s_2 = s
+            s_2_max =  np.argmax(s_2)
+            if len(s_2) < s_2_max + 20:
+                t_trim = t_column
+                s_trim = s_2
+                #print t
+                #print t_trim
+            else:
+                #t_trim = t[:s_2_max + 10]
+                #s_trim = s_2[:s_2_max + 10]
+                t_trim = t_column
+                s_trim = s_2
 
-    IN_file_name_split =  re.split(r'[./]', IN_file_name)
-    IN_file_name_split[-3] = 'params'
-    IN_file_name_split[-2] = IN_file_name_split[-2].replace('_clean', '_params')
-    path_OUT = '/'.join(IN_file_name_split[:-1]) + '.' + IN_file_name_split[-1]
-    OUT = open(path_OUT, 'w')
-    print>> OUT, 'Sample', 'Rep', 'b0', 'A', 'umax', 'L', 'z', 'umax_lw', 'umax_up', \
-            'umax_lw_FI', 'umax_up_FI'
-    #t = IN['Minutes'].values / 60
-    t =  np.asarray(time_hours)
-    ignore_columns = ['Time', 'Temp_C', 'Minutes', 'blank_water_1', 'blank_water_2', 'blank_media_1']
-    for column in IN:
-        if IN[column].name in ignore_columns:
-            continue
-        #if IN[column].name != 'L0J2-100_2':
-        #    continue
-        #growth curve
-        s = IN[column].values
-        s_name = IN[column].name
-        print s_name
-        t = [t_i for t_i in t if t_i < cutoff_dict[s_name]]
-        s = s[:len(t)]
-        if max(s) - min(s) < delta:
-            print "Observed change in OD is not greater than " +  str(delta) + \
-                  " in well " + IN[column].name
-            continue
-        if smooth == True:
-            taps = [1/11] * 11
-            s_2 = scipy.signal.lfilter(taps, 1.0, s)
-            s_2[0:5] = s[0:5]
-            s_2[5:-5] = s_2[10:]
-            s_2[-6:] = s[-6:]
-        else:
-            s_2 = s
-        s_2_max =  np.argmax(s_2)
-        if len(s_2) < s_2_max + 20:
-            t_trim = t
-            s_trim = s_2
-        else:
-            #t_trim = t[:s_2_max + 10]
-            #s_trim = s_2[:s_2_max + 10]
-            t_trim = t
-            s_trim = s_2
-        # we're going to loop through the following combination of
-        # parameter values
-        umax_start_list = [0.05,0.1,1]
-        L_start_list = [-5,-0.5,0.1,5,10,20]
-        z_start_list = [-2,-0.5]
-        # and while keeping the following initial values constant
-        b0_start = interceptGuess
-        A_start = max(s_trim)
-        #A_start = 1.5
-        model = modifiedGompertz(t_trim, s_trim)
-        results = []
-        for umax_start in umax_start_list:
-            for L_start in L_start_list:
-                for z_start in z_start_list:
-                    # b0, A, umax, L, z
-                    start_params = [b0_start, A_start, umax_start, L_start, z_start]
-                    result = model.fit(start_params = start_params, method="lbfgs", \
-                        bounds= [(-1,1), (A_start * 0.66,10), (0,5), (-20,20), (-20, 20)], \
-                        disp = False)
-                    #result = model.fit(start_params = start_params, method="lbfgs", optim_args={'bounds':1e-6})
-                    #if result.mle_retvals['warnflag'] == 0:
-                    results.append(result)
-        AICs = [result.aic for result in results]
-        best = results[AICs.index(min(AICs))]
-        best_CI_FIC = CI_FIC(best)
-        best_CI = best.conf_int()
-        best_params = best.params
-        #print best.mle_settings
-        #boot_mean, boot_std, boot_samples = best.bootstrap(nrep=500, store=True)
-        line = IN[column].name.split('_')[0]
-        rep = IN[column].name.split('_')[1]
-        print>> OUT, line, rep, best_params[0], best_params[1], best_params[2], \
-                best_params[3], best_params[4], best_CI[2][0], best_CI[2][1], \
-                best_CI_FIC[0][2], best_CI_FIC[1][2]
+            # we're going to loop through the following combination of
+            # parameter values
+            umax_start_list = [0.05,0.1,1]
+            L_start_list = [-5,-0.5,0.1,5,10,20]
+            z_start_list = [-2,-0.5]
+            # and while keeping the following initial values constant
+            b0_start = interceptGuess
+            A_start = max(s_trim)
+            #A_start = 1.5
+            def loop_params(_model, _umax_start_list, _L_start_list, _z_start_list, _b0_start, _A_start):
+                _results = []
+                for _umax_start in _umax_start_list:
+                    for _L_start in _L_start_list:
+                        for _z_start in _z_start_list:
+                            # b0, A, umax, L, z
+                            start_params = [_b0_start, _A_start, _umax_start, _L_start, _z_start]
+                            _result = model.fit(start_params = start_params, method="lbfgs", \
+                                bounds= [(-1,1), (_A_start * 0.66,10), (0,5), (-20,20), (-20, 20)], \
+                                disp = False)
+                            _results.append(_result)
+                AICs = [_result.aic for _result in _results]
+                _best = _results[AICs.index(min(AICs))]
+                return _best
+            while True:
+                model = modifiedGompertz(t_trim, s_trim)
+                best = loop_params(model, umax_start_list, L_start_list, z_start_list, b0_start, A_start)
+                if best.endog[-1] + 1 <= cutoff_dict[s_name]:
+                    print "Re-fitting the model"
+                else:
+                    break
 
-        fig = plt.figure()
-        plt.plot(best.endog, best.exog, c = 'black', lw = 2)
-        y_pred = m_gop(best.endog, best_params[0], best_params[1], best_params[2], best_params[3])
-        plt.plot(best.endog, y_pred, c = 'blue', lw = 2)
-        #m_gop(t, b0, A, umax, L)
-        fig.tight_layout(pad = 0.5)
-        fig_direct =  re.split(r'[./]',path_OUT)
-        fig_direct[-4] = 'figs'
-        fig_direct[-3] = 'model_fits'
-        fig_direct.remove(fig_direct[-1])
-        fig_direct = '/'.join(fig_direct)
-        if not os.path.exists(fig_direct):
-            os.makedirs(fig_direct)
-        fig_name = fig_direct + '/' + IN[column].name + '.png'
-        fig.savefig(fig_name, bbox_inches = "tight", pad_inches = 0.4, dpi = 600)
-        plt.close()
+            best_CI_FIC = CI_FIC(best)
+            best_CI = best.conf_int()
+            best_params = best.params
 
-    OUT.close()
+            #print best.mle_settings
+            #boot_mean, boot_std, boot_samples = best.bootstrap(nrep=500, store=True)
+            line = IN[column].name.split('_')[0]
+            rep = IN[column].name.split('_')[1]
+            print>> OUT, line, rep, best_params[0], best_params[1], best_params[2], \
+                    best_params[3], best_params[4], best_CI[2][0], best_CI[2][1], \
+                    best_CI_FIC[0][2], best_CI_FIC[1][2]
+
+            fig = plt.figure()
+            plt.plot(best.endog, best.exog, c = 'black', lw = 2)
+            y_pred = m_gop(best.endog, best_params[0], best_params[1], best_params[2], best_params[3])
+            plt.plot(best.endog, y_pred, c = 'blue', lw = 2)
+            #fig.tight_layout(pad = 0.5)
+            fig_direct =  re.split(r'[./]',path_OUT)
+            fig_direct[-4] = 'figs'
+            fig_direct[-3] = 'model_fits'
+            fig_direct.remove(fig_direct[-1])
+            fig_direct = '/'.join(fig_direct)
+            if not os.path.exists(fig_direct):
+                os.makedirs(fig_direct)
+            fig_name = fig_direct + '/' + IN[column].name + '.png'
+            fig.savefig(fig_name, bbox_inches = "tight", pad_inches = 0.4, dpi = 600)
+            plt.close()
+
+        OUT.close()

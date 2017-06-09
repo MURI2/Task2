@@ -1,0 +1,16 @@
+	G_00099	G_01986	G_01993	G_02686	G_02814	G_04059	G_04267	acoA	bepE_1	besA_1	catB	cynT_2	cysA_1	fixL_3	glnQ_4	hxuA_2	kdpD_1	moaE	mscM	proQ/rpoD_1	purE	rplC	rsmA	uppP_2	yfgC_3
+frequency_L2J3	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+frequency_L2J2	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	3	0
+frequency_L2J1	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+frequency_L2J5	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+frequency_L2J4	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+frequency_L1J4	0	1	0	0	0	0	0	0	0	0	0	0	0	0	3	4	0	0	0	0	0	3	0	0	0
+frequency_L1J5	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+frequency_L1J1	0	0	0	0	0	0	0	0	0	0	2	2	0	0	0	0	0	0	0	2	2	0	0	0	0
+frequency_L1J2	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+frequency_L1J3	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+frequency_L0J1	4	1	0	0	0	0	0	2	4	0	0	0	2	2	0	0	0	0	2	0	0	0	2	0	0
+frequency_L0J3	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	2	0	0	0	0	0	0	0	0
+frequency_L0J2	0	0	0	0	5	2	2	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+frequency_L0J5	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	2
+frequency_L0J4	0	0	6	2	0	0	0	0	0	2	0	0	0	0	0	0	0	4	0	0	0	0	0	0	0

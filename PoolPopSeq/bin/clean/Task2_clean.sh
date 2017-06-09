@@ -13,7 +13,7 @@ module load fastqc
 #-g CAAGCAGAAGACGGCATACGA
 #-g AATGATACGGCGACCACCGA
 
-Sample_date=D100
+Sample_date=D200
 #Sample_date=${var1}
 # fastqc of raw data
 mkdir -p /N/dc2/projects/muri2/Task2/PoolPopSeq/data/reads_quality/
