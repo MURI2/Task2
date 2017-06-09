@@ -1,0 +1,16 @@
+	bkdR	capB	cggR	clpC	dhbF	dinF	fabF	frr	ftsZ	hemH	hom	leuS	lipA	lplB	lplD	mgtE	motA	narG	oppA	oppB	opuBA	pfkA	pgm	pksL	ptsI	pucG	rsbRD	rsgI	rttG	sigA	sigH	spoIIE	srfAA	sufC	xkdT	yhcJ	yhcX	ykpA	yodT	yqbO	yqfO	ytkP	ywjA	ywlD	yxeP	yyaE	zosA
+frequency_L2B3	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+frequency_L2B1	0	0	0	0	0	0	0	0	0	0	1	0	1	0	0	0	0	0	0	0	0	0	0	1	0	1	0	1	0	0	1	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+frequency_L1B4	0	0	0	1	1	0	0	0	0	0	0	0	0	1	0	0	0	0	0	0	0	0	0	1	0	0	0	0	0	0	0	1	0	0	0	0	0	0	0	0	0	0	0	0	0	1	0
+frequency_L1B5	1	0	0	0	0	1	0	0	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0	0	1	1	1	0	0	0	0	0	0	0	0	0	0	1	1	0	0	1	0	0	0	0	1
+frequency_L1B1	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+frequency_L1B2	0	0	0	0	0	0	0	0	0	0	0	0	0	0	1	0	1	0	0	0	0	0	0	0	1	0	0	1	0	0	0	1	1	0	0	2	1	0	0	0	0	0	0	1	2	0	0
+frequency_L1B3	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+frequency_L0B1	0	0	0	0	0	0	1	0	0	0	0	0	0	0	0	0	0	0	1	0	0	0	1	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0	0	0	0	0	0	0	0	0	1
+frequency_L2B2	0	1	0	0	0	0	0	0	0	0	1	1	1	1	0	0	1	1	0	0	0	0	0	0	0	0	0	0	0	0	3	0	0	0	1	0	0	0	0	0	0	1	0	0	0	0	0
+frequency_L0B3	0	0	0	1	1	0	0	1	1	0	0	0	0	0	0	0	0	1	0	0	0	0	0	0	1	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	1	1	0
+frequency_L0B2	0	0	2	0	0	0	0	1	0	0	0	0	0	0	1	0	0	0	1	0	0	2	2	0	1	0	0	0	0	1	0	0	1	2	1	0	1	0	0	0	1	0	1	0	1	0	2
+frequency_L0B5	0	0	1	0	0	0	0	0	1	0	0	0	0	0	0	1	0	0	0	2	0	0	0	0	1	0	1	0	21	0	0	0	0	1	0	0	0	0	1	0	0	0	1	0	0	0	0
+frequency_L0B4	0	0	1	0	0	0	0	0	0	0	0	1	0	0	0	0	0	0	0	0	0	1	2	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+frequency_L2B5	0	0	0	0	0	0	0	0	0	0	0	0	0	1	0	0	0	1	0	0	0	0	0	0	0	0	0	0	0	1	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0	0
+frequency_L2B4	1	1	1	0	0	1	1	0	0	2	0	0	0	0	0	1	0	0	0	0	2	0	0	0	1	0	0	0	0	0	0	0	0	0	0	0	0	1	0	3	1	0	0	1	0	0	0
