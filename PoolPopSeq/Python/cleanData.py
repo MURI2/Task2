@@ -4,9 +4,57 @@ import os, math, numbers, itertools, re
 import pandas as pd
 import numpy as np
 import warnings
+from Bio import SeqIO
 warnings.filterwarnings('ignore')
 
 mydir = os.path.expanduser("~/GitHub/Task2/PoolPopSeq/data/")
+
+def cleanGBK(strain):
+    if strain == 'B':
+        file_name = 'Bacillus_subtilis_168/GCA_000009045.1_ASM904v1_genomic.gbff'
+    elif strain == 'C':
+        file_name = 'Caulobacter_crescentus_NA1000/GCA_000022005.1_ASM2200v1_genomic.gbff'
+    elif strain == 'D':
+        file_name = 'Deinococcus_radiodurans_BAA816/GCA_000008565.1_ASM856v1_genomic.gbff'
+    elif strain == 'F':
+        file_name = 'Pedobacter_sp_KBS0701/G-Chr1.gbk'
+    elif strain == 'J':
+        file_name = 'Janthinobacterium_sp_KBS0711/KBS0711_2015_SoilGenomes_Annotate/G-Chr1.gbk'
+    elif strain == 'P':
+        file_name = 'Pseudomonas_sp_KBS0710/G-Chr1.gbk'
+    else:
+        print "Strain not recognized"
+    IN_path = mydir + 'reference_assemblies_task2/' + file_name
+    genome = SeqIO.parse(IN_path, "genbank")
+    OUT = open(mydir + 'reference_assemblies_task2_table/' + strain + '.txt', 'w')
+    print>> OUT, 'LocusTag', 'Gene', 'Size', 'GC-content', 'Sequence'
+    for record in genome:
+        if 'chromosome' in record.description:
+            descript = record.description
+            descript_split = descript.split(' ')
+            descript_split_index = descript_split.index('chromosome')
+            chrom = descript_split[descript_split_index] + '_' + descript_split[descript_split_index + 1].strip(',')
+        elif 'plasmid' in record.description:
+            descript = record.description
+            descript_split = descript.split(' ')
+            descript_split_index = descript_split.index('plasmid')
+            chrom = descript_split[descript_split_index] + '_' + descript_split[descript_split_index + 1].strip(',')
+        else:
+            chrom = 'Genome'
+        for f in record.features:
+            #and "gene" in f.qualifiers
+            if f.type == "CDS" :
+                if 'gene' in f.qualifiers:
+                    gene = f.qualifiers["gene"][0]
+                else:
+                    gene = 'nan'
+                locus_tag = f.qualifiers["locus_tag"][0]
+                size = f.location.end - f.location.start
+                seq = record.seq[f.location.start: f.location.end]
+                GC = round((seq.count('G') + seq.count('C')) / len(seq), 4)
+                print>> OUT, locus_tag, gene, size, GC, chrom
+    OUT.close()
+
 
 class cleanBreseq_evidence:
 
@@ -678,9 +726,3 @@ def run_everything(day, split = False, get_variants = False, \
             if not os.path.exists(table_out_strain):
                 os.makedirs(table_out_strain)
             get_sample_by_gene_matrix(day, strain)
-
-
-#sample_by_gene_matrix('D100', 'P')
-run_everything('D100', split = True, get_variants = True, merge_variants = True,\
-    unique_mutations = True, multiple_gene_hits = True, sample_by_gene_matrix = True, \
-    variant_type = 'DEL')

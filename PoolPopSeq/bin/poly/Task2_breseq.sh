@@ -7,6 +7,10 @@ mkdir -p "/N/dc2/projects/muri2/Task2/PoolPopSeq/data/breseq_output_gbk/${DAY}"
 mkdir -p /N/dc2/projects/muri2/Task2/PoolPopSeq/bin/poly/breseq/line_scripts_gbk
 mkdir -p /N/dc2/projects/muri2/Task2/PoolPopSeq/data/breseq_output_gbk_essentials
 mkdir -p "/N/dc2/projects/muri2/Task2/PoolPopSeq/data/breseq_output_gbk_essentials/${DAY}"
+mkdir -p /N/dc2/projects/muri2/Task2/PoolPopSeq/data/breseq_output_gbk_coverage
+mkdir -p "/N/dc2/projects/muri2/Task2/PoolPopSeq/data/breseq_output_gbk_coverage/${DAY}"
+mkdir -p /N/dc2/projects/muri2/Task2/PoolPopSeq/bin/poly/breseq/line_scripts_gbk
+mkdir -p "/N/dc2/projects/muri2/Task2/PoolPopSeq/bin/poly/breseq/line_scripts_gbk/${DAY}"
 
 P=/N/dc2/projects/muri2/Task2/reference_assemblies_task2/Pseudomonas_sp_KBS0710/G-Chr1.gbk
 D=/N/dc2/projects/muri2/Task2/reference_assemblies_task2/Deinococcus_radiodurans_BAA816/GCA_000008565.1_ASM856v1_genomic.gbff
@@ -18,17 +22,17 @@ J=/N/dc2/projects/muri2/Task2/reference_assemblies_task2/Janthinobacterium_sp_KB
 for line_path in "/N/dc2/projects/muri2/Task2/PoolPopSeq/data/reads_clean_trimmomatic/${DAY}/"*;
 do
   line="$(echo "$line_path" | cut -d "/" -f11-11)"
-  bash_out="/N/dc2/projects/muri2/Task2/PoolPopSeq/bin/poly/breseq/line_scripts_gbk/${line}_breseq.sh"
+  bash_out="/N/dc2/projects/muri2/Task2/PoolPopSeq/bin/poly/breseq/line_scripts_gbk/${DAY}/${line}_breseq.sh"
 
   if [ ! -f $bash_out ]; then
     taxon="$(echo "$line_path" | grep -Po ".(?=.{5}$)")"
     if [[ $taxon == "P" ]]; then
-      #REF=$P
-      continue
+      REF=$P
+      #continue
     elif [[ $taxon == "D" ]]
     then
-      #REF=$D
-      continue
+      REF=$D
+      #continue
     elif [[ $taxon == "B" ]]
     then
       REF=$B
@@ -43,8 +47,8 @@ do
       #continue
     elif [[ $taxon == "J" ]]
     then
-      #REF=$J
-      continue
+      REF=$J
+      #continue
     else
       continue
     fi
@@ -67,7 +71,6 @@ do
     echo 'module load curl' >> $bash_out
     echo 'module load java' >> $bash_out
     echo 'module load R' >> $bash_out
-    echo 'module load python' >> $bash_out
     echo 'module load breseq' >> $bash_out
     echo 'module load samtools' >> $bash_out
     echo '' >> $bash_out
@@ -89,10 +92,14 @@ do
     coverage="${OUT}/data/coverage.txt"
     echo "samtools mpileup ${bam} > ${coverage}" >> $bash_out
 
-    coverage_clean="${OUT_essentials}/coverage_clean.txt"
-    echo "python /N/dc2/projects/muri2/Task2/PoolPopSeq/bin/poly/getCoverage.py -c -i ${coverage} -o ${coverage_clean}" >> $bash_out
+    #coverage_clean="${OUT_essentials}/coverage_clean.txt"
+    mkdir -p "/N/dc2/projects/muri2/Task2/PoolPopSeq/data/breseq_output_gbk_coverage/${DAY}/${line}"
+    #echo "/N/dc2/projects/muri2/Task2/PoolPopSeq/data/breseq_output_gbk_coverage/${DAY}/${line}"
+    OUT_coverage="/N/dc2/projects/muri2/Task2/PoolPopSeq/data/breseq_output_gbk_coverage/${DAY}/${line}/coverage_clean.txt"
 
-    qsub $bash_out
+    echo "python /N/dc2/projects/muri2/Task2/PoolPopSeq/bin/poly/getCoverage.py -c -i ${coverage} -o ${OUT_coverage}" >> $bash_out
+
+    #qsub $bash_out
 
   fi
 done
