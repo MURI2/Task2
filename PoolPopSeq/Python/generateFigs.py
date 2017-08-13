@@ -163,12 +163,7 @@ def poly_fig(variable):
     for i, poly_value in enumerate(poly_values):
         if variable == 'W_T_L':
             poly_value = [x for x in poly_value if x != 0]
-        if treat_values[i] == 0:
-            poly_values_per_gen.append([ (x / 100) for x in poly_value])
-        elif treat_values[i] == 1:
-            poly_values_per_gen.append([ (x / 10) for x in poly_value])
-        elif treat_values[i] == 2:
-            poly_values_per_gen.append(poly_value)
+        poly_values_per_gen.append(poly_value)
 
     fig, ax1 = plt.subplots(figsize=(10, 6))
     fig.canvas.set_window_title('A Boxplot Example')
@@ -189,10 +184,10 @@ def poly_fig(variable):
     ax1.set_xlabel('Transfer time', fontsize = 20)
     if variable == 'W_T_L':
         ax1.set_ylabel('Segregating sites, ' +  r'$\theta_{W}$' +  \
-        ' \n per base per transfer', fontsize = 20)
+        ' \n per base', fontsize = 20)
     elif variable == 'pi_L':
         ax1.set_ylabel('Nucleotide diversity, ' +  r'$\pi$' +  \
-        '\n per base per transfer', fontsize = 20)
+        '\n per base', fontsize = 20)
 
     # Now fill the boxes with desired colors
     # numBoxes = number treatments * number taxa
@@ -462,8 +457,6 @@ def T_D_fig():
 
 
 
-
-
 def T_D_figsss():
     IN = pd.read_csv(mydir + 'data/pop_gen_stats/D100/popGenTable.txt', \
         sep = ' ', header = 'infer')
@@ -499,6 +492,164 @@ def T_D_figsss():
 
     fig.savefig(mydir + 'figs/TD.png', bbox_inches='tight',  dpi = 600)
     plt.close()
+
+
+def mut_figsss():
+    IN = pd.read_csv(mydir + 'data/pop_gen_stats/D100/mut_bias.txt', \
+        sep = ' ', header = 'infer')
+    strains = list(IN.strain.unique())
+    #treatments = list(IN.treatment.unique())
+    #W_theta_values = []
+    #treat_values = []
+    #strain_values = []
+    #colors = []
+    for strain in strains:
+        treatments = list(IN.treatment.unique())
+        W_theta_values = []
+        treat_values = []
+        strain_values = []
+        colors = []
+        W_theta_values.append( IN[IN.strain == strain]['m_sample_ma'].tolist())
+        treat_values.append( IN[IN.strain == strain]['treatment'].tolist())
+        colors.append(strain_colors[strain])
+        #strain_values.append(IN[IN.Strains == strain]['Strains'].tolist())
+        fig, ax = plt.subplots()
+        ax.margins(0.05) # Optional, just adds 5% padding to the autoscaling
+        for i, color in enumerate(colors):
+            ax.plot(treat_values[i], np.log10(W_theta_values[i]), marker='o', linestyle='', \
+                ms=14, label=strain, color = color, alpha = 0.9)
+
+        #ax.legend(numpoints=1, prop={'size':14},  loc='upper right', frameon=False)
+        fig.canvas.draw()
+        labels = [item.get_text() for item in ax.get_xticklabels()]
+        labels[1] = '1-Day'
+        labels[3] = '10-Day'
+        labels[5] = '100-Day'
+        plt.axhline(y=0, color='grey', linestyle='--', lw = 4)
+        plt.title(strain, fontsize = 22)
+        plt.ylim([-2,2])
+        ax.set_xticklabels(labels, fontsize = 18)
+        ax.set_ylabel(r'$m_{pop} / m_{mut},\; log_{10}$', fontsize = 20)
+        #plt.ticklabel_format(style='sci', axis='y')
+        #ax.yaxis.set_major_formatter(mtick.FormatStrFormatter('%.2e'))
+        fig.savefig(mydir + 'figs/mut_' + strain + '.png', bbox_inches='tight',  dpi = 600)
+        plt.close()
+
+
+def mut():
+    IN = pd.read_csv(mydir + 'data/pop_gen_stats/D100/mut_bias.txt', \
+        sep = ' ', header = 'infer')
+    #IN = IN.sort(['treatment', 'strain'], ascending=[True, True])
+    strains = list(IN.strain.unique())
+    treatments = list(IN.treatment.unique())
+    T_D_values = []
+    treat_values = []
+    strain_values = []
+    colors = []
+    strain_values_colors = []
+    for treatment in treatments:
+        for strain in strains:
+            T_D_value =  IN[(IN.strain == strain) & (IN.treatment == treatment)]['m_sample_ma'].tolist()
+            print strain
+            print T_D_value
+            T_D_values.append([x for x in T_D_value if np.isnan(x) == False])
+            treat_values.append(treatment)
+            strain_values.append(strain)
+            strain_values_colors.append(strain_colors[strain])
+        colors.append(strain_colors[strain])
+    fig, ax1 = plt.subplots(figsize=(10, 6))
+    fig.canvas.set_window_title('A Boxplot Example')
+    plt.subplots_adjust(left=0.075, right=0.95, top=0.9, bottom=0.25)
+    bp = plt.boxplot(T_D_values, notch=0, sym='+', vert=1, whis=1.5)
+    plt.setp(bp['boxes'], color='black')
+    plt.setp(bp['whiskers'], color='black')
+    plt.setp(bp['fliers'], color='red', marker='+')
+    # Add a horizontal grid to the plot, but make it very light in color
+    # so we can use it for reading data values but not be distracting
+    ax1.yaxis.grid(True, linestyle='-', which='major', color='lightgrey',
+                   alpha=0.5)
+    # Hide these grid behind plot objects
+    ax1.set_axisbelow(True)
+    ax1.set_xlabel('Transfer time', fontsize = 20)
+    ax1.set_ylabel(r'$D_{T }$', fontsize = 26)
+    # Now fill the boxes with desired colors
+    # numBoxes = number treatments * number taxa
+    numBoxes = 3*4
+    medians = list(range(numBoxes))
+    for i in range(numBoxes):
+        box = bp['boxes'][i]
+        boxX = []
+        boxY = []
+        for j in range(3):
+            boxX.append(box.get_xdata()[j])
+            boxY.append(box.get_ydata()[j])
+        boxCoords = list(zip(boxX, boxY))
+        boxPolygon = Polygon(boxCoords, facecolor=strain_values_colors[i])
+        ax1.add_patch(boxPolygon)
+        # Now draw the median lines back over what we just filled in
+        med = bp['medians'][i]
+        medianX = []
+        medianY = []
+        for j in range(2):
+            medianX.append(med.get_xdata()[j])
+            medianY.append(med.get_ydata()[j])
+            plt.plot(medianX, medianY, 'k')
+            medians[i] = medianY[0]
+        # Finally, overplot the sample averages, with horizontal alignment
+        # in the center of each box
+        plt.plot([np.average(med.get_xdata())], [np.average(T_D_values[i])],
+                 color='w', marker='*', markeredgecolor='k')
+    #labels = [item.get_text() for item in ax1.get_xticklabels()]
+    #labels_new = []
+    #for i, label in enumerate(labels):
+    #    if i % 3 == 0:
+    #        labels_new.append('1-Day')
+    #    elif i % 3 == 1:
+    #        labels_new.append('10-Day')
+    #    elif i % 3 == 2:
+    #        labels_new.append('100-Day')
+
+    #ax1.set_xticklabels(labels_new, fontsize = 18)
+
+    #for label in ax1.get_xmajorticklabels():
+    #    label.set_rotation(60)
+    #    label.set_fontsize(8)
+        #print ', '.join(i for i in dir(label) if not i.startswith('__'))
+    #    label.set_horizontalalignment("right")
+
+    labels = [item.get_text() for item in ax1.get_xticklabels()]
+    labels_new = []
+    for i, label in enumerate(labels):
+        if i == 3:
+            labels_new.append('1-Day')
+        elif i == 8:
+            labels_new.append('10-Day')
+        elif i == 14:
+            labels_new.append('100-Day')
+        else:
+            labels_new.append('')
+    ax1.set_xticklabels(labels_new, fontsize = 18)
+    # make room for the labels
+    plt.gcf().subplots_adjust(bottom=0.20)
+    #strain_colors = {'Janthinobacterium':'cyan', 'Caulobacter':'lightblue', \
+    #     'Deinococcus': 'red', 'Pseudomonas':'darkgreen', 'Bacillus':'indigo',
+    #     'Pedobacter': 'darkred'}
+    plt.figtext(0.10, 0.640, 'Janthinobacterium',
+                backgroundcolor='indigo',
+                color='white', weight='roman', size='x-small')
+    plt.figtext(0.10, 0.685,' Caulobacter',
+            backgroundcolor='lightblue', color='black', weight='roman',
+            size='x-small')
+    plt.figtext(0.10, 0.730, 'Bacillus',
+                backgroundcolor='cyan',
+                color='black', weight='roman', size='x-small')
+    plt.figtext(0.10, 0.775, 'Deinococcus',
+                backgroundcolor='red',
+                color='white', weight='roman', size='x-small')
+    fig.savefig(mydir + 'figs/mut.png', bbox_inches='tight',  dpi = 600)
+    plt.close()
+
+
 
 def pi_vs_k2():
     IN = pd.read_csv(mydir + 'data/pop_gen_stats/D100/popGenTable.txt', sep = ' ', header = 'infer')
@@ -728,8 +879,9 @@ def GMD_hist(day, strain):
 #AFS()
 #poly_fig('pi_L')
 #poly_fig('W_T_L')
-poly_fig('k_L')
-
+#poly_fig('k_L')
+#mut()
+#mut_figsss()
 #sample_by_gene_dissimilarity('D100', 'D')
 #sample_by_gene_dissimilarity('D100', 'F')
 #sample_by_gene_dissimilarity('D100', 'P')

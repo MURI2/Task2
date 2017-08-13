@@ -1,6 +1,6 @@
 #!/bin/bash
 #PBS -k o
-#PBS -l nodes=1:ppn=8,vmem=100gb,walltime=20:00:00
+#PBS -l nodes=1:ppn=8,vmem=100gb,walltime=24:00:00
 #PBS -M wrshoema@indiana.edu
 #PBS -m abe
 #PBS -j oe
@@ -13,7 +13,7 @@ module load fastqc
 #-g CAAGCAGAAGACGGCATACGA
 #-g AATGATACGGCGACCACCGA
 
-Sample_date=D200
+Sample_date=D100
 #Sample_date=${var1}
 # fastqc of raw data
 mkdir -p /N/dc2/projects/muri2/Task2/PoolPopSeq/data/reads_quality/

@@ -122,18 +122,15 @@ def modGompGrowth(IN_file_name, interceptGuess=0.1, delta = 0.05, synergy=True, 
         t =  np.asarray(time_hours)
         to_keep = []
         ignore_columns = ['Time', 'Temp_C', 'Minutes', 'blank_water_1', 'blank_water_2', 'blank_media_1']
-        #print cutoff_dict
         for column in IN:
             if IN[column].name in ignore_columns or IN[column].name in to_remove:
                 continue
-            #if IN[column].name != 'L2J3-100_2':
+            #if IN[column].name != 'L1D1-100_2.1':
             #    continue
             #growth curve
             s = IN[column].values
             s_name = IN[column].name
             print s_name
-            #print IN[column]
-            #print cutoff_dict[s_name]
             t_column = [t_i for t_i in t if t_i < cutoff_dict[s_name]]
             s = s[:len(t_column)]
             if max(s) - min(s) < delta:
