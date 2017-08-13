@@ -49,7 +49,6 @@ pmatch("frequency_L0", c(rownames(fish.pcoa$points)))
 
 cols <- c()
 treats <- c()
-
 for (x in rownames(fish.pcoa$points)){
   if (grepl("frequency_L0", x)){
     treats <- c(treats, "1")
@@ -61,7 +60,6 @@ for (x in rownames(fish.pcoa$points)){
     treats <- c(treats, "100")
     cols <- c(cols, "#FF6347")
   }
-  #print(x)
 }
 
 

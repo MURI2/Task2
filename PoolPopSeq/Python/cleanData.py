@@ -9,9 +9,52 @@ warnings.filterwarnings('ignore')
 
 mydir = os.path.expanduser("~/GitHub/Task2/PoolPopSeq/data/")
 
+# translation table 11
+codon_dict = {
+    "TTT":"F", "TCT":"S", "TAT":"Y", "TGT":"C",
+    "TTC":"F", "TCC":"S", "TAC":"Y", "TGC":"C",
+    "TTA":"L", "TCA":"S", "TAA":"*", "TGA":"*",
+    "TTG":"L", "TCG":"S", "TAG":"*", "TGG":"W",
+
+    "CTT":"L", "CCT":"P", "CAT":"H", "CGT":"R",
+    "CTC":"L", "CCC":"P", "CAC":"H", "CGC":"R",
+    "CTA":"L", "CCA":"P", "CAA":"Q", "CGA":"R",
+    "CTG":"L", "CCG":"P", "CAG":"Q", "CGG":"R",
+
+    "ATT":"I", "ACT":"T", "AAT":"N", "AGT":"S",
+    "ATC":"I", "ACC":"T", "AAC":"N", "AGC":"S",
+    "ATA":"I", "ACA":"T", "AAA":"K", "AGA":"R",
+    "ATG":"M", "ACG":"T", "AAG":"K", "AGG":"R",
+
+    "GTT":"V", "GCT":"A", "GAT":"D", "GGT":"G",
+    "GTC":"V", "GCC":"A", "GAC":"D", "GGC":"G",
+    "GTA":"V", "GCA":"A", "GAA":"E", "GGA":"G",
+    "GTG":"V", "GCG":"A", "GAG":"E", "GGG":"G"
+    }
+
+ts_tv_dict = {
+    ("A", "C"):"V", ("A", "G"):"S", ("A", "T"):"V",
+    ("C", "A"):"V", ("C", "G"):"V", ("C", "T"):"S",
+    ("G", "A"):"S", ("G", "C"):"V", ("G", "T"):"V",
+    ("T", "A"):"V", ("T", "C"):"S", ("T", "G"):"V",
+    }
+
+merged_on = ['seq_id', 'position', 'gene_list', \
+    'gene_name', 'gene_position', 'gene_product', \
+    'locus_tag', 'gene_strand', 'transl_table', 'reference']
+
+to_rename = ['mutation', 'codon_ref_seq', 'codon_new_seq', 'codon_number', \
+    'codon_position', 'aa_position', 'aa_ref_seq', 'aa_new_seq', \
+    'frequency', 'total_cov', 'number', 'file_number', \
+    'prediction', 'consensus_score', 'polymorphism_score', \
+    'fisher_strand_p_value', 'ks_quality_p_value', 'bias_e_value', \
+    'bias_p_value', 'reject', 'snp_type', 'type', \
+    'major_base', 'minor_base', 'sample']
+
 def cleanGBK(strain):
     if strain == 'B':
-        file_name = 'Bacillus_subtilis_168/GCA_000009045.1_ASM904v1_genomic.gbff'
+        #file_name = 'Bacillus_subtilis_168/GCA_000009045.1_ASM904v1_genomic.gbff'
+        file_name = 'Bacillus_subtilis_NCIB_3610/GCA_002055965.1_ASM205596v1_genomic.gbff'
     elif strain == 'C':
         file_name = 'Caulobacter_crescentus_NA1000/GCA_000022005.1_ASM2200v1_genomic.gbff'
     elif strain == 'D':
@@ -27,7 +70,8 @@ def cleanGBK(strain):
     IN_path = mydir + 'reference_assemblies_task2/' + file_name
     genome = SeqIO.parse(IN_path, "genbank")
     OUT = open(mydir + 'reference_assemblies_task2_table/' + strain + '.txt', 'w')
-    print>> OUT, 'LocusTag', 'Gene', 'Size', 'GC-content', 'Sequence'
+    print>> OUT, 'LocusTag', 'Gene', 'Size', 'GC', 'Sequence', 'Fold_1', \
+            'Fold_2', 'Fold_2_S', 'Fold_2_V', 'Fold_3', 'Fold_4', 'N', 'S'
     for record in genome:
         if 'chromosome' in record.description:
             descript = record.description
@@ -46,14 +90,79 @@ def cleanGBK(strain):
             if f.type == "CDS" :
                 if 'gene' in f.qualifiers:
                     gene = f.qualifiers["gene"][0]
+                    gene = gene.replace(" ", "_")
                 else:
                     gene = 'nan'
                 locus_tag = f.qualifiers["locus_tag"][0]
                 size = f.location.end - f.location.start
-                seq = record.seq[f.location.start: f.location.end]
+                #seq = record.seq[f.location.start: f.location.end]
+                seq = str(f.extract(record.seq))
+                if f.strand == -1:
+                    seq = seq[::-1]
+                start_rf = int(f.qualifiers['codon_start'][0]) - 1
                 GC = round((seq.count('G') + seq.count('C')) / len(seq), 4)
-                print>> OUT, locus_tag, gene, size, GC, chrom
+                codons = [seq[i + start_rf: i + start_rf + 3 ] for i in range(0, len(seq), 3)]
+                nuc_list = ['A', 'C', 'G', 'T']
+                codons = [x for x in codons if (len(x) == 3) and (len(np.setdiff1d(list(x),nuc_list)) == 0)]
+                fold_1 = 0
+                fold_2 = 0
+                fold_3 = 0
+                fold_4 = 0
+                fold_2_V =0
+                fold_2_S =0
+                N = 0
+                for codon in codons:
+                    codon_list = list(codon)
+                    #print np.setdiff1d(codon_list,nuc_list)
+                    #if len(codon) == 3 and len(np.setdiff1d(codon_list,nuc_list)) == 0:
+                    #    #codon_list = list(codon)
+                    N_codon = 0
+                    for g in range(3):
+                        fold_count = 0
+                        fold_2_S_i = 0
+                        fold_2_V_i = 0
+                        for nuc in nuc_list:
+                            codon_mut_list = list(codon_list)
+                            if codon_mut_list[g] == nuc:
+                                continue
+                            codon_mut_list[g] = nuc
+                            codon_mut = "".join(codon_mut_list)
+                            #print codon_mut, codon
+                            #print codon_mut[g], codon[g]
+                            S_V = ts_tv_dict[(codon_mut[g], codon[g])]
+                            if codon_dict[codon_mut] == codon_dict[codon]:
+                                fold_count += 1
+                                if S_V == 'S':
+                                    fold_2_S_i += 1
+                                elif S_V == 'V':
+                                    fold_2_V_i += 1
+                        if fold_count == 0:
+                            fold_1 += 1
+                        elif fold_count == 1:
+                            fold_2 += 1
+                            if fold_2_S_i == 1 and fold_2_V_i == 0:
+                                fold_2_S += 1
+                            elif fold_2_S_i == 0 and fold_2_V_i == 1:
+                                fold_2_V += 1
+                            else:
+                                print fold_S_count, fold_V_count
+                        elif fold_count == 2:
+                            fold_3 += 1
+                        elif fold_count == 3:
+                            fold_4 += 1
+                        N_codon += (3 - fold_count) / 3
+                    N += N_codon
+                # synonymous sites.
+                # calculated using http://bioinformatics.cvr.ac.uk/blog/calculating-dnds-for-ngs-datasets/
+
+                S = (3*len(codons)) - N
+                N = round(N, 2)
+                S = round(S, 2)
+                # fold_2_S and fold_2_V calculated using Comeron, 1995
+                print>> OUT, locus_tag, gene, size, GC, chrom, fold_1, fold_2, \
+                        fold_2_S, fold_2_V, fold_3, fold_4, N, S
     OUT.close()
+
 
 
 class cleanBreseq_evidence:
@@ -213,7 +322,6 @@ class cleanBreseq_annotated:
                 return row[:gene_name_index] +  [gene_name] + row[data_indices[gene_name_index_end+1]:]
         else:
             return row
-
 
     def variant_line(self, row, columns):
         row = self.clean_value(row, 'gene_product')
@@ -438,10 +546,11 @@ class cleanBreseq_annotated:
         OUT_UN.close()
         OUT_variants.close()
 
-def get_variant_annotated(strain, treatments, reps, variant_type):
+def get_variant_annotated(day, strain, treatments, reps, variant_type):
     for treatment in treatments:
         for rep in reps:
-            in_path =  mydir + 'breseq_output_gbk_essentials_split/D100/Sample_L' +  treatment + strain + rep
+            in_path =  mydir + 'breseq_output_gbk_essentials_split/' + \
+                day +'/Sample_L' +  treatment + strain + rep + '-' + day[1:]
             variants_path = in_path + '/evidence_variants.txt'
             RA_path = in_path + '/evidence_RA.txt'
             if os.path.exists(variants_path) == True:
@@ -472,28 +581,12 @@ def merge_variant_annotated(strain, variant_type):
     #treatments = ['0']
     #reps = ['1', '2']
     count = 0
-    merged_on = ['seq_id', 'position', 'gene_list', \
-        'gene_name', 'gene_position', 'mutation', 'gene_product', \
-        'locus_tag', 'aa_new_seq', 'aa_position', 'aa_ref_seq', \
-        'codon_new_seq', 'codon_number', 'codon_position', \
-        'codon_ref_seq', 'gene_strand', 'transl_table']
     for treatment in treatments:
         for rep in reps:
             path = mydir + 'breseq_output_gbk_essentials_split_clean/D100/Sample_L' +  \
                 treatment + strain + rep + '/' + variant_type +'.txt'
             if os.path.exists(path) == True:
                 IN = pd.read_csv(path, sep = '\t', header = 'infer')
-                # removed mutation
-                #to_rename = ['frequency', 'total_cov', 'number', 'file_number', \
-                #    'prediction', 'consensus_score', 'polymorphism_score', \
-                #    'fisher_strand_p_value', 'ks_quality_p_value', 'bias_e_value', \
-                #    'bias_p_value', 'reject', 'snp_type', 'type', \
-                #    'major_base', 'minor_base', 'sample']
-                to_rename = ['frequency', 'total_cov', 'number', 'file_number', \
-                    'prediction', 'consensus_score', 'polymorphism_score', \
-                    'fisher_strand_p_value', 'ks_quality_p_value', 'bias_e_value', \
-                    'bias_p_value', 'reject', 'snp_type', 'type', \
-                    'major_base', 'minor_base', 'sample']
                 renamed = []
                 for x in to_rename:
                     x_renamed = x + '_L' + treatment +  strain + rep
@@ -532,6 +625,8 @@ def get_unique_mutations(strain, variant_type):
     path = mydir + 'breseq_output_gbk_essentials_split_clean_merged/D100/' \
         + strain + '/Strain_' + strain + '_' + variant_type + '.txt'
     IN = pd.read_csv(path, sep = '\t', header = 'infer')
+    if not os.path.exists(mydir + 'breseq_output_gbk_essentials_split_clean_merged_unique/D100/'):
+        os.makedirs(mydir + 'breseq_output_gbk_essentials_split_clean_merged_unique/D100/')
     sample_freqs = [x for x in IN.columns if 'frequency_' in x]
     IN_freqs = IN[sample_freqs]
     samples = IN_freqs.shape[1]
@@ -545,12 +640,14 @@ def get_unique_mutations(strain, variant_type):
 def get_sample_by_gene_matrix(day, strain):
     path = mydir + 'breseq_output_gbk_essentials_split_clean_merged_unique/D100/Strain_' + strain + '.txt'
     IN = pd.read_csv(path, sep = '\t', header = 'infer')
+    #print IN
     sample_freqs = [x for x in IN.columns if 'frequency_' in x]
-    list_slice = ['seq_id'] + ['position'] + ['gene_name'] + sample_freqs
+    list_slice = ['seq_id'] + ['position'] + ['gene_name'] + ['locus_tag'] + sample_freqs
     IN_slice = IN[list_slice]
     mut_dict = {}
     for index, row in IN_slice.iterrows():
-        gene_name = row['gene_name']
+        #print row
+        gene_name = row['locus_tag']
         if gene_name not in mut_dict:
             mut_dict[gene_name] = {}
         for sample_freq in sample_freqs:
@@ -605,16 +702,6 @@ def get_sample_variable_value(row, variable):
 
 
 def get_multiple_gene_hits(day, strain, MAF = 0.01):
-    to_rename = ['frequency', 'total_cov', 'number', 'file_number', \
-        'prediction', 'consensus_score', 'polymorphism_score', \
-        'fisher_strand_p_value', 'ks_quality_p_value', 'bias_e_value', \
-        'bias_p_value', 'reject', 'snp_type', 'type', \
-        'major_base', 'minor_base', 'sample']
-    merged_on = ['seq_id', 'position', 'gene_list', \
-        'gene_name', 'gene_position', 'mutation', 'gene_product', \
-        'locus_tag', 'aa_new_seq', 'aa_position', 'aa_ref_seq', \
-        'codon_new_seq', 'codon_number', 'codon_position', \
-        'codon_ref_seq', 'gene_strand', 'transl_table']
     to_keep = to_rename + merged_on
     path = mydir + 'breseq_output_gbk_essentials_split_clean_merged_unique/' \
         + day + '/Strain_' + strain + '.txt'
@@ -683,46 +770,56 @@ def get_multiple_gene_hits(day, strain, MAF = 0.01):
         #out_df_small.to_csv(mydir + 'multiple_gene_hits/' + day + '/Strain_' \
         #    + strain + '_reduced.txt', sep = '\t', index = False)
 
+def get_split_unique(day, strain, variant_type):
+    path = mydir + 'breseq_output_gbk_essentials_split_clean_merged_unique/D100/Strain_' \
+            + strain + '.txt'
+    IN = pd.read_csv(path, sep = '\t', header = 'infer')
+    if not os.path.exists(mydir + 'breseq_output_gbk_essentials_split_clean_merged_unique_split/D100/'):
+        os.makedirs(mydir + 'breseq_output_gbk_essentials_split_clean_merged_unique/D100/')
+    if not os.path.exists(mydir + 'breseq_output_gbk_essentials_split_clean_merged_unique_split/D100/' + strain):
+        os.makedirs(mydir + 'breseq_output_gbk_essentials_split_clean_merged_unique_split/D100/'+ strain)
+    samples = [x.split('_')[1] for x in IN.columns if 'frequency_' in x]
+    for sample in samples:
+        to_rename_sample = [x + '_' + sample for x in to_rename]
+        to_slice = merged_on + to_rename_sample
+        IN_sample = IN[to_slice]
+        IN_sample = IN_sample[np.isfinite(IN_sample['bias_p_value_' + sample])]
+        OUTname = mydir + 'breseq_output_gbk_essentials_split_clean_merged_unique_split/D100/' \
+                    + strain + '/' + sample + '.txt'
+        IN_sample.to_csv(OUTname, sep = '\t', index = False)
 
-def run_everything(day, split = False, get_variants = False, \
+def run_everything(day, strain, split = False, get_variants = False, \
     merge_variants = False,  unique_mutations = False, multiple_gene_hits = False, \
-    sample_by_gene_matrix = False, variant_type = 'SNP'):
+    sample_by_gene_matrix = False, split_unique = False, variant_type = 'SNP'):
     treatments = ['0', '1', '2']
-    #strains = ['B', 'C', 'D', 'F', 'P']
-    strains = ['J']
-    #treatments = ['1']
-    #reps = ['1']
     reps = ['1', '2', '3', '4', '5']
     table_out = mydir + 'gene_by_sample'
     if not os.path.exists(table_out):
         os.makedirs(table_out)
-    for strain in strains:
-        for treatment in treatments:
-            for rep in reps:
-                if split == True:
-                    path = mydir + 'breseq_output_gbk_essentials/D100/Sample_L' + treatment + strain + rep
-                    evidence_path = path + '/evidence.gd'
-                    annotated_path = path + '/annotated.gd'
-                    if os.path.exists(evidence_path) == True:
-                        print treatment + strain + rep
-                        cleanBreseq_annotated(annotated_path).split_annotated()
-                if get_variants == True:
+    for treatment in treatments:
+        for rep in reps:
+            if split == True:
+                if not os.path.exists(mydir + 'breseq_output_gbk_essentials_split/D100/'):
+                    os.makedirs(mydir + 'breseq_output_gbk_essentials_split/D100/')
+                path = mydir + 'breseq_output_gbk_essentials/D100/Sample_L' + treatment + strain + rep + '-' + day[1:]
+                evidence_path = path + '/evidence.gd'
+                annotated_path = path + '/annotated.gd'
+                if os.path.exists(evidence_path) == True:
                     print treatment + strain + rep
-                    get_variant_annotated(strain, treatments, reps, variant_type)
-                    #get_variant_annotated(strain, treatments, reps, 'SNP')
-                    #get_variant_annotated(strain, treatments, reps, 'INS')
-                    #get_variant_annotated(strain, treatments, reps, 'DEL')
-                    #get_variant_annotated(strain, treatments, reps, 'SUB')
-        if merge_variants == True:
-            #merge_variant_annotated(strain, 'SNP')
-            merge_variant_annotated(strain, variant_type)
-        if unique_mutations == True:
-            #get_unique_mutations(strain, 'SNP')
-            get_unique_mutations(strain, variant_type)
-        if multiple_gene_hits == True:
-            get_multiple_gene_hits(day, strain)
-        if sample_by_gene_matrix == True:
-            table_out_strain = mydir + 'gene_by_sample/' + strain
-            if not os.path.exists(table_out_strain):
-                os.makedirs(table_out_strain)
-            get_sample_by_gene_matrix(day, strain)
+                    cleanBreseq_annotated(annotated_path).split_annotated()
+            if get_variants == True:
+                print treatment + strain + rep
+                get_variant_annotated(day, strain, treatments, reps, variant_type)
+    if merge_variants == True:
+        merge_variant_annotated(strain, variant_type)
+    if unique_mutations == True:
+        get_unique_mutations(strain, variant_type)
+    if multiple_gene_hits == True:
+        get_multiple_gene_hits(day, strain)
+    if sample_by_gene_matrix == True:
+        table_out_strain = mydir + 'gene_by_sample/' + strain
+        if not os.path.exists(table_out_strain):
+            os.makedirs(table_out_strain)
+        get_sample_by_gene_matrix(day, strain)
+    if split_unique == True:
+        get_split_unique(day, strain, variant_type)

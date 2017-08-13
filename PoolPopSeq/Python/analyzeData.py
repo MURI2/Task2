@@ -370,7 +370,6 @@ def popGenTable(MAF = 0.01, n_c = 70):
                 replicate = sample_freq_split[1][3]
                 print>> OUT, species_dict[strain], treatment, replicate, k, S, pi, \
                         W_T, T_D, k_L, S_L, pi_L, W_T_L, mean_coverage
-
     OUT.close()
 
 def get_column_name(row, row_name):
@@ -443,5 +442,3 @@ def geneTable(MAF = 0.01):
 
 popGenTable()
 #geneTable()
-
-#examine_L0D5()
