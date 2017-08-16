@@ -9,8 +9,8 @@ import matplotlib.ticker as mtick
 from sklearn.grid_search import GridSearchCV
 from sklearn.neighbors import KernelDensity
 import sklearn.metrics.pairwise as pairwise
-import skbio.stats.ordination as ordination
-import skbio.stats.distance as distance
+#import skbio.stats.ordination as ordination
+#import skbio.stats.distance as distance
 from matplotlib.patches import Polygon
 
 import pylab as P
@@ -870,6 +870,61 @@ def GMD_hist(day, strain):
     fig.savefig(fig_out, bbox_inches = "tight", pad_inches = 0.4, dpi = 600)
     plt.close()
 
+def get_coverage_clean_figs(sigmas = 3):
+    days = ['D100', 'D200', 'D300']
+    out_summary = open(mydir + 'data/coverage_clean/coverage_clean_summary.txt', 'w')
+    headers = ['line', 'cov_mean', 'cov_std', 'percent_below_50', 'resequence']
+    out_summary.write('\t'.join(headers) + '\n')
+    #print>> out_summary, 'line', 'cov_mean', 'cov_std', 'percent_below_100', 'resequence'
+    for day in days:
+        in_dir = mydir + 'data/coverage_clean/' + day + '/'
+        out_dir = mydir + 'figs/coverage_clean_figs/' + day + '/'
+        if not os.path.exists(out_dir):
+            os.makedirs(out_dir)
+        for filename in os.listdir(in_dir):
+            if filename.endswith(".txt"):
+                sample = filename.split('_')[1]
+                print sample
+                cov_df = pd.read_csv(os.path.join(in_dir, filename), sep = ' ')
+                x = cov_df.cov_mean.values
+                x_mean = np.mean(x)
+                if len(x) == 0:
+                    continue
+                x_under_cov = [x_i for x_i in x if x_i < 50]
+                alpha = (len(x_under_cov) + 1) / len(x)
+
+                #fig = plt.figure()
+                #plt.hist(x, bins=200, alpha = 0.8, normed=True)
+                #plt.title(sample + ' dist. of coverage')
+                #plt.xlabel('Coverage', fontsize=14)
+                #plt.ylabel('Probability', fontsize=14)
+                #plt.xlim([0, max(120,  x_mean  + (x_mean * 2)) ])
+                #plt.axvline(x=100, c = 'grey', linestyle = '--', lw = 3)
+                #plt.axvline(x=x_mean, c = 'black', linestyle = '-', lw = 3)
+                # std deviation in poisson process = sqrt(lambda)
+                #plt.axvline(x=x_mean + (np.sqrt(x_mean) * 2), c = 'black', linestyle = ':', lw = 3)
+                #plt.axvline(x=x_mean - (np.sqrt(x_mean) * 2), c = 'black', linestyle = ':', lw = 3)
+                #fig.tight_layout()
+                #fig.savefig(out_dir + sample + '.png', bbox_inches = "tight", pad_inches = 0.4, dpi = 600)
+                #plt.close()
+
+                #if x_mean -  (np.sqrt(x_mean) * 2) > 100:
+                #    reseq = False
+                #else:
+                #    reseq = True
+                #print alpha
+                if alpha < 0.25:
+                    reseq = False
+                else:
+                    reseq = True
+                #print>> out_summary, sample, str(x_mean), str(np.std(x)), str(alpha), str(reseq)
+                data = [sample, str(x_mean), str(np.std(x)), str(alpha), str(reseq)]
+                out_summary.write('\t'.join(data) + '\n')
+
+    out_summary.close()
+
+
+
 #poly_fig()
 #K_fig()
 #pi_fig()
@@ -895,3 +950,5 @@ def GMD_hist(day, strain):
 #GMD_hist('D100', 'P')
 #GMD_hist('D100', 'B')
 #GMD_hist('D100', 'J')
+
+get_coverage_clean_figs()

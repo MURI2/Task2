@@ -89,23 +89,32 @@ def categorize_genes(strain):
                         + strain + '_MAPLE_modules/' + strain + '.module.function.txt'
     IN_maple_fxn = pd.read_csv(IN_maple_fxn_path, sep = '\t')
 
-    IN_maple_fxn_MCR75 = IN_maple_fxn.loc[IN_maple_fxn['MCR % (ITR)'] > 0.75]
-    IN_maple_pthwy_MCR75 = IN_maple_pthwy.loc[IN_maple_pthwy['MCR % (ITR)'] > 0.75]
-    IN_maple_cmplx_MCR75 = IN_maple_cmplx.loc[IN_maple_cmplx['MCR % (ITR)'] > 0.75]
-    IN_maple_sign_MCR75 = IN_maple_sign.loc[IN_maple_sign['MCR % (ITR)'] > 0.75]
+    #IN_maple_fxn_MCR75 = IN_maple_fxn.loc[IN_maple_fxn['MCR % (ITR)'] > 0.75]
+    #IN_maple_pthwy_MCR75 = IN_maple_pthwy.loc[IN_maple_pthwy['MCR % (ITR)'] > 0.75]
+    #IN_maple_cmplx_MCR75 = IN_maple_cmplx.loc[IN_maple_cmplx['MCR % (ITR)'] > 0.75]
+    #IN_maple_sign_MCR75 = IN_maple_sign.loc[IN_maple_sign['MCR % (ITR)'] > 0.75]
 
-    to_keep = ['Large category', 'Small category', 'ID', 'Type', 'Name(abbreviation)', 'Components #']
-    IN_maple_fxn_MCR75_subset = IN_maple_fxn_MCR75[to_keep]
-    IN_maple_cmplx_MCR75_subset = IN_maple_cmplx_MCR75[to_keep]
-    IN_maple_pthwy_MCR75_subset = IN_maple_pthwy_MCR75[to_keep]
-    IN_maple_sign_MCR75_subset = IN_maple_sign_MCR75[to_keep]
-    df_list = [IN_maple_fxn_MCR75_subset, IN_maple_cmplx_MCR75_subset, \
-                IN_maple_pthwy_MCR75_subset, IN_maple_sign_MCR75_subset]
-    df_list1 = [IN_maple_cmplx_MCR75_subset, \
-                IN_maple_pthwy_MCR75_subset, IN_maple_sign_MCR75_subset]
-    df_merged = IN_maple_fxn_MCR75_subset.append(df_list1)
+    to_keep = ['Large category', 'Small category', 'ID', 'Type', \
+                'Name(abbreviation)', 'Components #', 'MCR % (ITR)']
+    #IN_maple_fxn_MCR75_subset = IN_maple_fxn_MCR75[to_keep]
+    #IN_maple_cmplx_MCR75_subset = IN_maple_cmplx_MCR75[to_keep]
+    #IN_maple_pthwy_MCR75_subset = IN_maple_pthwy_MCR75[to_keep]
+    #IN_maple_sign_MCR75_subset = IN_maple_sign_MCR75[to_keep]
+    #df_list = [IN_maple_fxn_MCR75_subset, IN_maple_cmplx_MCR75_subset, \
+    #            IN_maple_pthwy_MCR75_subset, IN_maple_sign_MCR75_subset]
+    #df_list1 = [IN_maple_cmplx_MCR75_subset, \
+    #            IN_maple_pthwy_MCR75_subset, IN_maple_sign_MCR75_subset]
+    #df_merged = IN_maple_fxn_MCR75_subset.append(df_list1)
+    #df_merged = df_merged.reset_index(drop=True)
+    IN_maple_fxn_subset = IN_maple_fxn[to_keep]
+    IN_maple_cmplx_subset = IN_maple_cmplx[to_keep]
+    IN_maple_pthwy_subset = IN_maple_pthwy[to_keep]
+    IN_maple_sign_subset = IN_maple_sign[to_keep]
+    df_list = [IN_maple_cmplx_subset, IN_maple_pthwy_subset, IN_maple_sign_subset]
+    df_merged = IN_maple_fxn_subset.append(df_list)
+    df_merged = df_merged.reset_index(drop=True)
     df_merged.columns = ['Large_category', 'Small_category', 'Pathway_ID' , \
-                    'Pathway_Type', 'Pathway_Name', 'Components_#']
+                    'Pathway_Type', 'Pathway_Name', 'Components_#', 'MCR_ITR']
     KO_to_M_path = mydir + 'reference_assemblies_task2/MAPLE/MAPLE_modules/' \
             + strain + '_MAPLE_modules/' + strain + '_KO_to_M.txt'
     KO_to_M = pd.read_csv(KO_to_M_path, sep = '\t', header = 'infer')
@@ -118,11 +127,11 @@ def categorize_genes(strain):
 
 
 strains = ['B', 'C', 'D', 'F', 'J', 'P']
-#for strain in strains:
-#    print strain
-#    module_to_KO(strain)
-#    clean_kaas(strain)
-#    categorize_genes(strain)
+for strain in strains:
+    print strain
+    module_to_KO(strain)
+    clean_kaas(strain)
+    categorize_genes(strain)
 
 #clean_kaas('P')
 #module_to_KO('P')

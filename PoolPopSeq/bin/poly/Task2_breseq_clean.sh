@@ -5,8 +5,11 @@
 #PBS -m abe
 #PBS -j oe
 
-module load samtools
-module load python
+module load gcc/4.9.4
+#module load samtools
+#module load python
+
+
 DAY=D100
 mkdir -p /N/dc2/projects/muri2/Task2/PoolPopSeq/data/breseq_output_gbk_essentials
 mkdir -p "/N/dc2/projects/muri2/Task2/PoolPopSeq/data/breseq_output_gbk_essentials/${DAY}"

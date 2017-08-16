@@ -113,9 +113,6 @@ def cleanGBK(strain):
                 N = 0
                 for codon in codons:
                     codon_list = list(codon)
-                    #print np.setdiff1d(codon_list,nuc_list)
-                    #if len(codon) == 3 and len(np.setdiff1d(codon_list,nuc_list)) == 0:
-                    #    #codon_list = list(codon)
                     N_codon = 0
                     for g in range(3):
                         fold_count = 0
@@ -127,8 +124,6 @@ def cleanGBK(strain):
                                 continue
                             codon_mut_list[g] = nuc
                             codon_mut = "".join(codon_mut_list)
-                            #print codon_mut, codon
-                            #print codon_mut[g], codon[g]
                             S_V = ts_tv_dict[(codon_mut[g], codon[g])]
                             if codon_dict[codon_mut] == codon_dict[codon]:
                                 fold_count += 1
@@ -407,7 +402,6 @@ class cleanBreseq_annotated:
         row_0_8 = row[:8]
         row_8_inf = row[8:]
         row_list = []
-        #print row_8_inf
         values_dict = dict(item.split("=") for item in row_8_inf if '=' in item)
         for column in columns:
             if column in values_dict:
@@ -568,34 +562,37 @@ def get_variant_annotated(day, strain, treatments, reps, variant_type):
                 IN_RA.seq_id = IN_RA.seq_id.astype(str)
                 IN_merged = pd.merge(IN_variants_SNPs, IN_RA, how='inner',
                     on=['seq_id', 'position'])
-                out_path = mydir + 'breseq_output_gbk_essentials_split_clean/D100/Sample_L' +  \
+                out_path = mydir + 'breseq_output_gbk_essentials_split_clean/' \
+                        + day +'/Sample_L' +  \
                     treatment + strain + rep
+                if variant_type == 'INS':
+                    drop_dups_on = ['type', 'seq_id', 'position']
+                    IN_merged = IN_merged.drop_duplicates(subset=drop_dups_on, keep="first")
                 if not os.path.exists(out_path):
                     os.makedirs(out_path)
+                #print IN_variants_SNPs
                 IN_merged.to_csv(out_path + '/' + variant_type +'.txt', sep = '\t', index = False)
 
 
-def merge_variant_annotated(strain, variant_type):
+def merge_variant_annotated(day, strain, variant_type):
     treatments = ['0', '1', '2']
     reps = ['1', '2', '3', '4', '5']
-    #treatments = ['0']
-    #reps = ['1', '2']
     count = 0
     for treatment in treatments:
         for rep in reps:
-            path = mydir + 'breseq_output_gbk_essentials_split_clean/D100/Sample_L' +  \
-                treatment + strain + rep + '/' + variant_type +'.txt'
+            path = mydir + 'breseq_output_gbk_essentials_split_clean/' + day \
+                + '/Sample_L' + treatment + strain + rep + '/' + variant_type +'.txt'
             if os.path.exists(path) == True:
                 IN = pd.read_csv(path, sep = '\t', header = 'infer')
                 renamed = []
                 for x in to_rename:
-                    x_renamed = x + '_L' + treatment +  strain + rep
+                    x_renamed = x + '_L' + treatment +  strain + rep + '_' + day
                     IN = IN.rename(columns = {x : x_renamed})
                     renamed.append(x_renamed)
 
                 if count == 0:
                     merged = IN
-                    frequency = 'frequency_L' + treatment +  strain + rep
+                    frequency = 'frequency_L' + treatment +  strain + rep + '_' + day
                     merged_freq = merged[frequency]
                     merged.drop(labels=[frequency], axis=1,inplace = True)
                     merged.insert(len(merged.columns)-1, frequency, merged_freq)
@@ -604,16 +601,18 @@ def merge_variant_annotated(strain, variant_type):
 
                     merged = pd.merge(merged, IN[merged_keep], \
                             how='outer', on = merged_on)
+                    #print merged
                 count += 1
         test = merged.columns.tolist()
         for i, column in enumerate(merged_on):
             test.remove(column)
             test.insert(i, column)
         merged = merged.reindex_axis(test, axis=1)
-        OUT_path = mydir + 'breseq_output_gbk_essentials_split_clean_merged/D100/' + strain
+        OUT_path = mydir + 'breseq_output_gbk_essentials_split_clean_merged/' \
+                + day + '/' + strain
         if not os.path.exists(OUT_path):
             os.makedirs(OUT_path)
-        OUT_name = OUT_path + '/Strain_' + strain + '_' + variant_type + '.txt'
+        OUT_name = OUT_path + '/Strain_' + strain + '_' + day + '_' + variant_type + '.txt'
         #if 'seq_id' in merged.columns:
         #    merged = merged.drop_duplicates(subset = ['position', 'seq_id'])
         #else:
@@ -621,32 +620,37 @@ def merge_variant_annotated(strain, variant_type):
         merged.to_csv(OUT_name, sep = '\t', index = False)
 
 
-def get_unique_mutations(strain, variant_type):
-    path = mydir + 'breseq_output_gbk_essentials_split_clean_merged/D100/' \
-        + strain + '/Strain_' + strain + '_' + variant_type + '.txt'
+def get_unique_mutations(day, strain, variant_type):
+    path = mydir + 'breseq_output_gbk_essentials_split_clean_merged/' + day +'/' \
+        + strain + '/Strain_' + strain + '_' + day + '_' + variant_type + '.txt'
     IN = pd.read_csv(path, sep = '\t', header = 'infer')
-    if not os.path.exists(mydir + 'breseq_output_gbk_essentials_split_clean_merged_unique/D100/'):
-        os.makedirs(mydir + 'breseq_output_gbk_essentials_split_clean_merged_unique/D100/')
+    if not os.path.exists(mydir + 'breseq_output_gbk_essentials_split_clean_merged_unique/' \
+            + day + '/'):
+        os.makedirs(mydir + 'breseq_output_gbk_essentials_split_clean_merged_unique/' \
+            + day + '/')
     sample_freqs = [x for x in IN.columns if 'frequency_' in x]
     IN_freqs = IN[sample_freqs]
     samples = IN_freqs.shape[1]
     NoDups = IN_freqs[IN_freqs.apply(lambda x:  x.isnull().sum() == samples - 1, 1)]
     NoDups_index = NoDups.index.values
     IN_unique = IN.ix[NoDups_index]
-    OUTname = mydir + 'breseq_output_gbk_essentials_split_clean_merged_unique/D100/Strain_' + strain + '.txt'
+    OUTname = mydir + 'breseq_output_gbk_essentials_split_clean_merged_unique/' \
+        + day + '/Strain_' + strain + '_' + day + '_' + variant_type + '.txt'
     IN_unique.to_csv(OUTname, sep = '\t', index = False)
 
 
-def get_sample_by_gene_matrix(day, strain):
-    path = mydir + 'breseq_output_gbk_essentials_split_clean_merged_unique/D100/Strain_' + strain + '.txt'
+def get_sample_by_gene_matrix(strain):
+    table_out_strain = mydir + 'gene_by_sample/' + strain
+    if not os.path.exists(table_out_strain):
+        os.makedirs(table_out_strain)
+    path = mydir + 'breseq_output_gbk_essentials_split_clean_merged_unique_merged/Strain_' \
+        + strain + '_SNP.txt'
     IN = pd.read_csv(path, sep = '\t', header = 'infer')
-    #print IN
     sample_freqs = [x for x in IN.columns if 'frequency_' in x]
     list_slice = ['seq_id'] + ['position'] + ['gene_name'] + ['locus_tag'] + sample_freqs
     IN_slice = IN[list_slice]
     mut_dict = {}
     for index, row in IN_slice.iterrows():
-        #print row
         gene_name = row['locus_tag']
         if gene_name not in mut_dict:
             mut_dict[gene_name] = {}
@@ -673,7 +677,7 @@ def get_sample_by_gene_matrix(day, strain):
     #    rename_dict[sample_freq_new] = sample_freq_new[1]
     #mut_df = mut_df.rename(columns = {'two':'new_name'})
     mut_df = mut_df.T
-    OUTpath = mydir + 'gene_by_sample/' + strain + '/' + day
+    OUTpath = mydir + 'gene_by_sample/' + strain
     if not os.path.exists(OUTpath):
         os.makedirs(OUTpath)
     # remove singletons
@@ -696,101 +700,61 @@ def get_column_name(row, row_name):
     else:
         return float('NaN')
 
-def get_sample_variable_value(row, variable):
-    sample = row['line_name']
-    return row[variable + '_' + sample]
+
+def merge_unique_mutations(days, strain, variant_type):
+    days_dfs = []
+    count = 0
+    for day in days:
+        path = mydir + 'breseq_output_gbk_essentials_split_clean_merged_unique/' \
+            + day + '/Strain_' + strain + '_' + day + '_' + variant_type + '.txt'
+        if os.path.exists(path):
+            IN = pd.read_csv(path, sep = '\t', header = 'infer')
+        else:
+            continue
+        if count == 0:
+            merged = IN
+        else:
+            merged = pd.merge(merged, IN, \
+                    how='outer', on = merged_on)
+        count += 1
+
+    test = merged.columns.tolist()
+    for i, column in enumerate(merged_on):
+        test.remove(column)
+        test.insert(i, column)
+    merged = merged.reindex_axis(test, axis=1)
+    OUT_name = mydir + 'breseq_output_gbk_essentials_split_clean_merged_unique_merged/' \
+            + 'Strain_' + strain + '_'+ variant_type + '.txt'
+    if 'seq_id' in merged.columns:
+        merged = merged.drop_duplicates(subset = ['position', 'seq_id'])
+    else:
+        merged = merged.drop_duplicates(subset = ['position'])
+    merged.to_csv(OUT_name, sep = '\t', index = False)
 
 
-def get_multiple_gene_hits(day, strain, MAF = 0.01):
-    to_keep = to_rename + merged_on
-    path = mydir + 'breseq_output_gbk_essentials_split_clean_merged_unique/' \
-        + day + '/Strain_' + strain + '.txt'
-    if os.path.exists(path) == True:
-        IN = pd.read_csv(path, sep = '\t', header = 'infer')
-        gene_name = IN['gene_name']
-        genes = set(gene_name.values)
-        indexes = []
-        for gene in genes:
-            rows = IN.loc[IN['gene_name'] == gene]
-            row_count = rows.shape[0]
-            if row_count > 1:
-                gene_indexes = rows.index.values
-                indexes.extend(gene_indexes)
-        path_multiple_gene_day = mydir +  'multiple_gene_hits/' + day
-        if os.path.exists(path_multiple_gene_day) == False:
-            os.makedirs(path_multiple_gene_day)
-        path_multiple_gene_poly = mydir + 'multiple_gene_hits/multiple_gene_hits_poly/'
-        path_multiple_gene_subs = mydir + 'multiple_gene_hits/multiple_gene_hits_subs/'
-        if os.path.exists(path_multiple_gene_poly) == False:
-            os.makedirs(path_multiple_gene_poly)
-        if os.path.exists(path_multiple_gene_subs) == False:
-            os.makedirs(path_multiple_gene_subs)
-        path_multiple_gene_poly_day = path_multiple_gene_poly + day
-        path_multiple_gene_subs_day = path_multiple_gene_subs + day
-        if os.path.exists(path_multiple_gene_poly_day) == False:
-            os.makedirs(path_multiple_gene_poly_day)
-        if os.path.exists(path_multiple_gene_subs_day) == False:
-            os.makedirs(path_multiple_gene_subs_day)
-
-        path_multiple_gene_day_strain = path_multiple_gene_day + '/Strain_' + strain + '.txt'
-        path_multiple_gene_poly_day_strain = path_multiple_gene_poly_day + '/Strain_' + strain + '.txt'
-        path_multiple_gene_subs_day_strain = path_multiple_gene_subs_day + '/Strain_' + strain + '.txt'
-        # find non-nan values and keep those columns. set new column with
-        # strain, treatment, and replicate
-        out_df = IN.iloc[indexes]
-        treatment = out_df.apply(get_column_name, args=('treatment',), axis=1)
-        replicate = out_df.apply(get_column_name, args=('replicate',), axis=1)
-        out_df['treatment'] = treatment
-        out_df['replicate'] = replicate
-        out_df['line_name'] = 'L' + out_df['treatment'].astype(str) + \
-            strain + out_df['replicate'].astype(str)
-        for x in to_rename:
-            x_cols = [y for y in out_df.columns if (x + '_') in y \
-                and ('_' + x + '_') not in y]
-            # select out value from the column name that matches the
-            # value in the sample column
-            out_df[x] = out_df.apply(get_sample_variable_value, args=(x,), axis=1)
-
-            # remove columns for variable for all samples
-            out_df = out_df.drop(x_cols, axis=1)
-
-        # remove excess columns
-        out_df = out_df[to_keep + ['treatment', 'replicate', 'line_name']]
-        # all mutations out
-        out_df.to_csv(path_multiple_gene_day_strain, sep = '\t', index = False)
-        out_df_poly = out_df.loc[out_df['frequency'] != float(1)]
-        out_df_subs = out_df.loc[out_df['frequency'] == float(1)]
-
-        out_df_poly.to_csv(path_multiple_gene_poly_day_strain, sep = '\t', index = False)
-        out_df_subs.to_csv(path_multiple_gene_subs_day_strain, sep = '\t', index = False)
-
-        #out_df_small = out_df[['seq_id', 'position', 'gene_name', \
-        #    'gene_position', 'treatment', 'replicate', 'gene_product']]
-
-        #out_df_small.to_csv(mydir + 'multiple_gene_hits/' + day + '/Strain_' \
-        #    + strain + '_reduced.txt', sep = '\t', index = False)
 
 def get_split_unique(day, strain, variant_type):
-    path = mydir + 'breseq_output_gbk_essentials_split_clean_merged_unique/D100/Strain_' \
-            + strain + '.txt'
+    path = mydir + 'breseq_output_gbk_essentials_split_clean_merged_unique/' + day + '/Strain_' \
+            + strain + '_' + day + '_' + variant_type + '.txt'
     IN = pd.read_csv(path, sep = '\t', header = 'infer')
-    if not os.path.exists(mydir + 'breseq_output_gbk_essentials_split_clean_merged_unique_split/D100/'):
-        os.makedirs(mydir + 'breseq_output_gbk_essentials_split_clean_merged_unique/D100/')
-    if not os.path.exists(mydir + 'breseq_output_gbk_essentials_split_clean_merged_unique_split/D100/' + strain):
-        os.makedirs(mydir + 'breseq_output_gbk_essentials_split_clean_merged_unique_split/D100/'+ strain)
+    if not os.path.exists(mydir + 'breseq_output_gbk_essentials_split_clean_merged_unique_split/' + day + '/'):
+        os.makedirs(mydir + 'breseq_output_gbk_essentials_split_clean_merged_unique_split/' + day + '/')
+    if not os.path.exists(mydir + 'breseq_output_gbk_essentials_split_clean_merged_unique_split/' + day + '/' + strain):
+        os.makedirs(mydir + 'breseq_output_gbk_essentials_split_clean_merged_unique_split/' + day + '/' + strain)
     samples = [x.split('_')[1] for x in IN.columns if 'frequency_' in x]
     for sample in samples:
-        to_rename_sample = [x + '_' + sample for x in to_rename]
+        to_rename_sample = [x + '_' + sample + '_' + day for x in to_rename]
         to_slice = merged_on + to_rename_sample
         IN_sample = IN[to_slice]
-        IN_sample = IN_sample[np.isfinite(IN_sample['bias_p_value_' + sample])]
-        OUTname = mydir + 'breseq_output_gbk_essentials_split_clean_merged_unique_split/D100/' \
-                    + strain + '/' + sample + '.txt'
+        IN_sample = IN_sample[np.isfinite(IN_sample['bias_p_value_' + sample + '_' + day])]
+        OUTname = mydir + 'breseq_output_gbk_essentials_split_clean_merged_unique_split/' + day + '/' \
+                    + strain + '/' + sample + '_' + day + '_' + variant_type + '.txt'
         IN_sample.to_csv(OUTname, sep = '\t', index = False)
 
+
 def run_everything(day, strain, split = False, get_variants = False, \
-    merge_variants = False,  unique_mutations = False, multiple_gene_hits = False, \
-    sample_by_gene_matrix = False, split_unique = False, variant_type = 'SNP'):
+    merge_variants = False,  unique_mutations = False, \
+    split_unique = False, variant_type = 'SNP'):
     treatments = ['0', '1', '2']
     reps = ['1', '2', '3', '4', '5']
     table_out = mydir + 'gene_by_sample'
@@ -799,27 +763,19 @@ def run_everything(day, strain, split = False, get_variants = False, \
     for treatment in treatments:
         for rep in reps:
             if split == True:
-                if not os.path.exists(mydir + 'breseq_output_gbk_essentials_split/D100/'):
-                    os.makedirs(mydir + 'breseq_output_gbk_essentials_split/D100/')
-                path = mydir + 'breseq_output_gbk_essentials/D100/Sample_L' + treatment + strain + rep + '-' + day[1:]
+                if not os.path.exists(mydir + 'breseq_output_gbk_essentials_split/' + day + '/'):
+                    os.makedirs(mydir + 'breseq_output_gbk_essentials_split/' + day + '/')
+                path = mydir + 'breseq_output_gbk_essentials/' + day + '/Sample_L' \
+                        + treatment + strain + rep + '-' + day[1:]
                 evidence_path = path + '/evidence.gd'
                 annotated_path = path + '/annotated.gd'
                 if os.path.exists(evidence_path) == True:
-                    print treatment + strain + rep
                     cleanBreseq_annotated(annotated_path).split_annotated()
             if get_variants == True:
-                print treatment + strain + rep
                 get_variant_annotated(day, strain, treatments, reps, variant_type)
     if merge_variants == True:
-        merge_variant_annotated(strain, variant_type)
+        #print "merge_variants"
+        merge_variant_annotated(day, strain, variant_type)
     if unique_mutations == True:
-        get_unique_mutations(strain, variant_type)
-    if multiple_gene_hits == True:
-        get_multiple_gene_hits(day, strain)
-    if sample_by_gene_matrix == True:
-        table_out_strain = mydir + 'gene_by_sample/' + strain
-        if not os.path.exists(table_out_strain):
-            os.makedirs(table_out_strain)
-        get_sample_by_gene_matrix(day, strain)
-    if split_unique == True:
-        get_split_unique(day, strain, variant_type)
+        #print "unique_mutations"
+        get_unique_mutations(day, strain, variant_type)
