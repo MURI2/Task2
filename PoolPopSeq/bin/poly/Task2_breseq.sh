@@ -14,7 +14,6 @@ mkdir -p "/N/dc2/projects/muri2/Task2/PoolPopSeq/bin/poly/breseq/line_scripts_gb
 
 P=/N/dc2/projects/muri2/Task2/reference_assemblies_task2/Pseudomonas_sp_KBS0710/G-Chr1.gbk
 D=/N/dc2/projects/muri2/Task2/reference_assemblies_task2/Deinococcus_radiodurans_BAA816/GCA_000008565.1_ASM856v1_genomic.gbff
-#B=/N/dc2/projects/muri2/Task2/reference_assemblies_task2/Bacillus_subtilis_168/GCA_000009045.1_ASM904v1_genomic.gbff
 B=/N/dc2/projects/muri2/Task2/reference_assemblies_task2/Bacillus_subtilis_NCIB_3610/GCA_002055965.1_ASM205596v1_genomic.gbff
 C=/N/dc2/projects/muri2/Task2/reference_assemblies_task2/Caulobacter_crescentus_NA1000/GCA_000022005.1_ASM2200v1_genomic.gbff
 F=/N/dc2/projects/muri2/Task2/reference_assemblies_task2/Pedobacter_sp_KBS0701/G-Chr1.gbk
@@ -72,6 +71,7 @@ do
     echo '#PBS -j oe' >> $bash_out
     echo '' >> $bash_out
     echo 'module load python' >> $bash_out
+    echo 'module load gcc/4.9.4' >> $bash_out
     echo 'module load bowtie2/2.2.6' >> $bash_out
     echo 'module load intel' >> $bash_out
     echo 'module load curl' >> $bash_out
@@ -95,16 +95,16 @@ do
     essentials_output="${OUT_essentials}/output.gd"
     echo "cp ${OUT_output} ${essentials_output}" >> $bash_out
 
-    bam="${OUT}/data/reference.bam"
-    coverage="${OUT}/data/coverage.txt"
-    echo "samtools mpileup ${bam} > ${coverage}" >> $bash_out
+    #bam="${OUT}/data/reference.bam"
+    #coverage="${OUT}/data/coverage.txt"
+    #echo "samtools mpileup ${bam} > ${coverage}" >> $bash_out
 
-    coverage_clean="${OUT_essentials}/coverage_clean.txt"
-    mkdir -p "/N/dc2/projects/muri2/Task2/PoolPopSeq/data/breseq_output_gbk_coverage/${DAY}/${line}"
+    #coverage_clean="${OUT_essentials}/coverage_clean.txt"
+    #mkdir -p "/N/dc2/projects/muri2/Task2/PoolPopSeq/data/breseq_output_gbk_coverage/${DAY}/${line}"
     #echo "/N/dc2/projects/muri2/Task2/PoolPopSeq/data/breseq_output_gbk_coverage/${DAY}/${line}"
-    OUT_coverage="/N/dc2/projects/muri2/Task2/PoolPopSeq/data/breseq_output_gbk_coverage/${DAY}/${line}/coverage_clean.txt"
+    #OUT_coverage="/N/dc2/projects/muri2/Task2/PoolPopSeq/data/breseq_output_gbk_coverage/${DAY}/${line}/coverage_clean.txt"
 
-    echo "python /N/dc2/projects/muri2/Task2/PoolPopSeq/bin/poly/getCoverage.py -c -i ${coverage} -o ${OUT_coverage}" >> $bash_out
+    #echo "python /N/dc2/projects/muri2/Task2/PoolPopSeq/bin/poly/getCoverage.py -c -i ${coverage} -o ${OUT_coverage}" >> $bash_out
     qsub $bash_out
   fi
 done

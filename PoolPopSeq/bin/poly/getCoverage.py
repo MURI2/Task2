@@ -1,9 +1,8 @@
 from __future__ import division
 import os, math, decimal, sys, argparse
-
-#coverage = str(sys.argv[1])
-#coverage_merged = str(sys.argv[2])
-#evidence = str(sys.argv[3])
+import  matplotlib.pyplot as plt
+import pandas as pd
+import numpy as np
 
 def condenseCoverage(IN, OUT_path):
     OUT = open(OUT_path, 'w')
@@ -34,6 +33,52 @@ def condenseCoverage(IN, OUT_path):
         print>> OUT, contig, position_start, int(position_start) + int(count), coverage_max
 
     OUT.close()
+
+def mean_std_window(IN, OUT_path, block_size = 100):
+    OUT = open(OUT_path, 'w')
+    print>> OUT, 'contig', 'start', 'stop', 'cov_mean', 'cov_std'
+    with open(IN) as f:
+        coverage_list = []
+        position_list = []
+        contig_list = []
+        for x ,line in enumerate(f):
+            line_list = line.split()
+            coverage = line_list[3]
+            contig = line_list[0]
+            position = line_list[1]
+            coverage_list.append(int(coverage))
+            position_list.append(int(position))
+            contig_list.append(contig)
+            if  x % block_size == 0 and x != 0:
+                contig_set = set(contig_list)
+                if len(contig_set) > 1:
+                    contig_out = ','.join(list(contig_set))
+                else:
+                    contig_out = list(contig_set)[0]
+                print>> OUT, contig_out, position_list[0], position_list[-1], \
+                        str(np.mean(coverage_list)), str(np.std(coverage_list))
+                coverage_list = []
+                position_list = []
+                contig_list = []
+    OUT.close()
+
+def mean_std_window_plot(OUT_path, OUT_plot_path):
+    cov_df = pd.read_csv(OUT_path, sep = ' ')
+    x = cov_df.start.values
+    y = cov_df.cov_mean.values
+    y_erros = cov_df.cov_std.values * 2
+    fig = plt.figure()
+    ax = fig.add_subplot(1, 1,  1)
+    ax.plot(x, y, lw = 2, color = '#FF6347')
+    ax.fill_between(x, y+y_erros, y-y_erros, facecolor='#FF6347', alpha=0.5)
+    plt.axhline(y = 100, c = 'grey', linestyle = '--', lw = 3)
+    ax.set_xlabel('Posistion (100 bp)', fontsize=20)
+    ax.set_ylabel('Coverage', fontsize=14)
+    ax.set_ylim([0, 120])
+    ax.set_xlim([x[0], x[-1]])
+    fig.tight_layout()
+    fig.savefig(OUT_plot_path + '.png', bbox_inches = "tight", pad_inches = 0.4, dpi = 600)
+    plt.close()
 
 def selectSites(OUT1_path, OUT2_path):
     poly_dict = {}
@@ -71,23 +116,26 @@ def selectSites(OUT1_path, OUT2_path):
                     print len(sites)
                 L += 1
 
-
     OUT_subset.close()
-
-#selectSites(coverage_merged, evidence)
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description = "condense coverage")
     parser.add_argument('-c', action='store_true', default=False)
+    parser.add_argument('-m', action='store_true', default=False)
     parser.add_argument('-v', action='store_true', default=False)
 
     parser.add_argument('-i', type = str, default = "", help = "in file")
     parser.add_argument('-o', type = str, default = "", help = "out file")
+    #parser.add_argument('-p', type = str, default = "", help = "out plot")
 
     params = parser.parse_args()
 
     if params.v == False and params.c == True:
         condenseCoverage(params.i, params.o)
+    elif params.v == False and params.m == True:
+        mean_std_window(IN = params.i, OUT_path = params.o)
+    #    if params.p != "":
+    #        mean_std_window_plot(OUT_path = params.o, OUT_plot_path = params.p)
     else:
         print "No argument provided\nExiting program"

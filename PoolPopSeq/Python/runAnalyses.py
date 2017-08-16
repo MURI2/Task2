@@ -320,18 +320,31 @@ def mut_bias():
     OUT.close()
 
 
-strains = ['B', 'C', 'D', 'F', 'J', 'P']
-#strains = ['B']
-#for strain in strains:
-    #print strain
-    #cd.run_everything('D100', strain, split = True, get_variants = True, \
-    #    merge_variants = True,  unique_mutations = True, multiple_gene_hits = True, \
-    #    sample_by_gene_matrix = True, split_unique = True, variant_type = 'SNP')
-    #cd.cleanGBK(strain)
-#    p_q('D100', strain)
+strains = ['B', 'C', 'D', 'F', 'J', 'P', 'S']
+days = ['D100', 'D200', 'D300']
+#days = ['D100']
+#strains = ['S']
+variant_types = ['SNP', 'INS', 'DEL']
+#variant_types = ['SNP', 'DEL']
+#variant_types = ['INS']
+for strain in strains:
+    for variant_type in variant_types:
+        for day in days:
+            if strain == 'S' and day != 'D100':
+                continue
+            print day, strain, variant_type
+            cd.run_everything(day, strain, split = False, get_variants = False, \
+                merge_variants = False,  unique_mutations = False, \
+                split_unique = False, variant_type = variant_type)
+        cd.merge_unique_mutations(days, strain, variant_type)
+        if variant_type == 'SNP':
+            cd.get_sample_by_gene_matrix(strain)
+    #g_b_s_long()
 
-    #g_b_s_long(strain)
-    #cd.get_sample_by_gene_matrix('D100', strain)
-dN_dS('D100')
+#cd.cleanGBK(strain)
+#p_q('D100', strain)
 
+#g_b_s_long(strain)
+#cd.get_sample_by_gene_matrix('D100', strain)
+#dN_dS('D100')
 #mut_bias()
