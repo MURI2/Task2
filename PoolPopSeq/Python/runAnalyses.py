@@ -50,11 +50,12 @@ species_dict = {'B': 'Bacillus', 'C':'Caulobacter', 'D':'Deinococcus', \
 
 
 def getTransferTime(x):
-    if x[-3] == str(0):
+    x = x.split('_')[1][1]
+    if x == str(0):
         return str(1)
-    elif x[-3] == str(1):
+    elif x == str(1):
         return str(10)
-    elif x[-3] == str(2):
+    elif x == str(2):
         return str(100)
 
 def common_entries(*dcts):
@@ -62,8 +63,12 @@ def common_entries(*dcts):
         yield (i,) + tuple(d[i] for d in dcts)
 
 def g_b_s_long(strain):
-    IN_file_mut = mydir + 'gene_by_sample/' + strain +  '/D100/sample_by_gene.txt'
-    IN_file_genes = mydir + 'reference_assemblies_task2_table/' + strain + '.txt'
+    IN_file_mut = mydir + 'gene_by_sample/' + strain +  '/sample_by_gene.txt'
+    if strain == 'S':
+        IN_file_genes = mydir + 'reference_assemblies_task2/reference_assemblies_task2_table/B.txt'
+    else:
+        IN_file_genes = mydir + 'reference_assemblies_task2/reference_assemblies_task2_table/' \
+            + strain + '.txt'
     IN_mut = pd.read_csv(IN_file_mut, sep = '\t')
     # remove columns with all zeros
     #print IN_mut.loc[:, (IN_mut != 0).any(axis=0)]
@@ -77,25 +82,25 @@ def g_b_s_long(strain):
     IN_merged['SizeLog10'] = np.log10(IN_merged['Size'])
     # turn the wide form data into long form
     value_vars_strain = [x for x in IN_merged.columns if 'frequency_' in x]
+    #print value_vars_strain
     IN_merged_long = pd.melt(IN_merged, id_vars=['LocusTag', 'SizeLog10', \
         'GC', 'Sequence'], value_vars=value_vars_strain, \
         var_name = 'Line', value_name = 'Muts')
     IN_merged_long['TransferTime'] = IN_merged_long['Line'].apply(getTransferTime)
-    IN_merged_long['Strain'] = IN_merged_long['Line'].apply(lambda x: x[-2])
-    IN_merged_long['Replicate'] = IN_merged_long['Line'].apply(lambda x: x[-1])
+    IN_merged_long['Strain'] = IN_merged_long['Line'].apply(lambda x: x.split('_')[1][-2])
+    IN_merged_long['Replicate'] = IN_merged_long['Line'].apply(lambda x: x.split('_')[1][-1])
+    IN_merged_long['Day'] = IN_merged_long['Line'].apply(lambda x: x.split('_')[2][1:])
     # make sure mutations are read as integers
     IN_merged_long.Muts = IN_merged_long.Muts.astype(int)
-    # add info for day .....
-    #IN_merged_long['Day'] = IN_merged_long['Line'].apply(lambda x: x[-3:])
-    #print [IN_merged_long.iloc[:,i].apply(type).value_counts() for i in range(IN_merged_long.shape[1])]
-    IN_merged_long = IN_merged_long.sort_values(['TransferTime', 'Replicate'], \
-        ascending=[True, True])
-    cov_matrix = IN_merged_long[['TransferTime', 'Replicate']]
-    cov_matrix['TransferTime'] = cov_matrix['TransferTime'].apply(int)
-    cov_matrix['Replicate'] = cov_matrix['Replicate'].apply(int)
-    cov_matrix['TransferTime'] = np.log10(cov_matrix['TransferTime'])
-    cov_matrix['Replicate'] = cov_matrix['Replicate'] - 1
-    cov_matrix['TransferTime'] = cov_matrix['TransferTime'].apply(int)
+    IN_merged_long.TransferTime = IN_merged_long.TransferTime.astype(int)
+    #IN_merged_long = IN_merged_long.sort_values(['TransferTime', 'Replicate'], \
+    #    ascending=[True, True])
+    #cov_matrix = IN_merged_long[['TransferTime', 'Replicate']]
+    #cov_matrix['TransferTime'] = cov_matrix['TransferTime'].apply(int)
+    #cov_matrix['Replicate'] = cov_matrix['Replicate'].apply(int)
+    #cov_matrix['TransferTime'] = np.log10(cov_matrix['TransferTime'])
+    #cov_matrix['Replicate'] = cov_matrix['Replicate'] - 1
+    #cov_matrix['TransferTime'] = cov_matrix['TransferTime'].apply(int)
     IN_merged_long.to_csv(mydir + 'gene_by_sample_long/gene_by_sample_long_' + strain + '.txt', sep = '\t')
 
 
@@ -320,13 +325,12 @@ def mut_bias():
     OUT.close()
 
 
-strains = ['B', 'C', 'D', 'F', 'J', 'P', 'S']
+#strains = ['B', 'C', 'D', 'F', 'J', 'P', 'S']
 days = ['D100', 'D200', 'D300']
 #days = ['D100']
-#strains = ['S']
-variant_types = ['SNP', 'INS', 'DEL']
-#variant_types = ['SNP', 'DEL']
-#variant_types = ['INS']
+strains = ['S']
+#variant_types = ['SNP', 'INS', 'DEL']
+variant_types = ['SNP']
 for strain in strains:
     for variant_type in variant_types:
         for day in days:
@@ -336,15 +340,14 @@ for strain in strains:
             cd.run_everything(day, strain, split = False, get_variants = False, \
                 merge_variants = False,  unique_mutations = False, \
                 split_unique = False, variant_type = variant_type)
-        cd.merge_unique_mutations(days, strain, variant_type)
+        #cd.merge_unique_mutations(days, strain, variant_type)
         if variant_type == 'SNP':
             cd.get_sample_by_gene_matrix(strain)
-    #g_b_s_long()
+    g_b_s_long(strain)
 
 #cd.cleanGBK(strain)
 #p_q('D100', strain)
 
-#g_b_s_long(strain)
 #cd.get_sample_by_gene_matrix('D100', strain)
 #dN_dS('D100')
 #mut_bias()

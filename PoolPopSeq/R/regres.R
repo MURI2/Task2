@@ -10,7 +10,9 @@ for (package in package.list) {
   }
 }
 
-df <- read.table("data/gene_by_sample_long/gene_by_sample_long_D.txt", sep = "\t", header = TRUE)
+# figure out how to do this with time series data.....
+
+df <- read.table("data/gene_by_sample_long/gene_by_sample_long_P.txt", sep = "\t", header = TRUE)
 
 df_sub <- select(df, LocusTag, Line, Muts)
 gene_by_pop <- spread(df_sub, Line, Muts)
@@ -63,6 +65,18 @@ for (x in rownames(fish.pcoa$points)){
 }
 
 
+times <- c()
+for (x in rownames(fish.pcoa$points)){
+  if (grepl("D100", x)){
+    times <- c(times, "100")
+  } else if ( grepl("D200", x)) {
+    times <- c(times, "200")
+  } else if (grepl("D300", x)) {
+    times <- c(times, "300")
+  }
+}
+
+
 v <- c('a','b','c','e')
 
 grepl("frequency_L0", rownames(fish.pcoa$points)[1])
@@ -75,9 +89,12 @@ cols_t1 <- c('#87CEEB', '#87CEEB', '#87CEEB', '#87CEEB',
 #plot
 points(fish.pcoa$points[ ,1], fish.pcoa$points[ ,2],
        pch = 19, cex = 3, bg = "gray", col = cols_t1)
+
+text(fish.pcoa$points[ ,1], fish.pcoa$points[ ,2], labels=times, cex= 0.7)
+
 # Create "Factors" vector
 quality <- c(rep("1", 4), rep("10", 4), rep("100", 4))
-ordiellipse(fish.pcoa, quality, conf = 0.95)
+ordiellipse(fish.pcoa, treats, conf = 0.95)
 
 
 

@@ -646,7 +646,7 @@ def get_sample_by_gene_matrix(strain):
     path = mydir + 'breseq_output_gbk_essentials_split_clean_merged_unique_merged/Strain_' \
         + strain + '_SNP.txt'
     IN = pd.read_csv(path, sep = '\t', header = 'infer')
-    sample_freqs = [x for x in IN.columns if 'frequency_' in x]
+    sample_freqs = [x for x in IN.columns if 'frequency_' in x and '_frequency_' not in x]
     list_slice = ['seq_id'] + ['position'] + ['gene_name'] + ['locus_tag'] + sample_freqs
     IN_slice = IN[list_slice]
     mut_dict = {}
@@ -717,7 +717,6 @@ def merge_unique_mutations(days, strain, variant_type):
             merged = pd.merge(merged, IN, \
                     how='outer', on = merged_on)
         count += 1
-
     test = merged.columns.tolist()
     for i, column in enumerate(merged_on):
         test.remove(column)
