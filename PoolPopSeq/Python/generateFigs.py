@@ -12,7 +12,7 @@ import sklearn.metrics.pairwise as pairwise
 #import skbio.stats.ordination as ordination
 #import skbio.stats.distance as distance
 from matplotlib.patches import Polygon
-
+import matplotlib as mpl
 import pylab as P
 
 
@@ -43,40 +43,58 @@ def CV_KDE(oneD_array):
 
 
 def AFS():
-    strains = ['B', 'C', 'D', 'F', 'J', 'P']
-    #strains = ['B']
+    #strains = ['B', 'C', 'D', 'F', 'J', 'P', 'S']
+    strains = ['S']
     colors = {'1':'cyan', '2':'lightblue', \
              '3': 'red', '4':'darkgreen', '5':'indigo'}
-    treatments = ['0', '1', '2']
     for strain in strains:
-        path = mydir + 'data/breseq_output_gbk_essentials_split_clean_merged_unique/D100/Strain_' + strain +'.txt'
+        path = mydir + 'data/breseq_output_gbk_essentials_split_clean_merged_unique_merged/Strain_' + strain + '_SNP.txt'
         if os.path.exists(path) != True:
             continue
-        IN = pd.read_csv(path, sep = '\t', header = 'infer')
-        out_path = mydir + 'figs/SFS/D100/' + strain
+        IN = pd.read_csv(path, sep = '\t', header = 'infer', low_memory=False)
+        out_path = mydir + 'figs/SFS/' + strain
         if not os.path.exists(out_path):
             os.makedirs(out_path)
-        for treatment in treatments:
+        samples = [x for x in IN.columns if 'frequency_L' in x]
+        days = set([x.split('_')[-1] for x in samples])
+        for day in list(days):
+            out_path_day = mydir + 'figs/SFS/' + strain + '/' + day
+            if not os.path.exists(out_path_day):
+                os.makedirs(out_path_day)
+        for sample in samples:
+            sfs = IN[sample].values
+            sfs = sfs[~np.isnan(sfs)]
+            sfs = sfs[(sfs != float(1))]
+            if len(sfs) == 0:
+                continue
+            print sample
+            #fig = plt.figure()
+            #plt.hist(sfs, bins=30, alpha = 0.8,  normed = True)
+            #plt.title(sample + ' dist. of coverage')
+            #plt.xlabel('Site frequency', fontsize=14)
+            #plt.ylabel('Probability', fontsize=14)
+            #plt.xlim([0, max(120,  x_mean  + (x_mean * 2)) ])
+            #fig.tight_layout()
+            out_plot = mydir + 'figs/SFS/' + strain + '/' + sample.split('_')[-1] + '/' + sample + '.png'
+            #fig.savefig(out_plot, bbox_inches = "tight", pad_inches = 0.4, dpi = 600)
+            #plt.close()
+
             fig, ax = plt.subplots()
-            reps = [x for x in IN.columns if 'frequency_L' + treatment in x]
-            for rep in reps:
-                sfs = IN[rep].values
-                sfs = sfs[~np.isnan(sfs)]
-                sfs = sfs[(sfs != float(1))]
-                #weights = np.ones_like(sfs)/len(sfs)
-                rep_number = rep[-1]
-                if len(sfs) > 0:
-                    weights = np.ones_like(sfs)/len(sfs)
-                    ax.hist(sfs, 50, fc=colors[rep_number], histtype='stepfilled',
-                        label='Replicate ' + rep_number, alpha=0.5, weights= weights)
+            #weights = np.ones_like(sfs)/len(sfs)
+            #ax.hist(sfs, 50, fc=colors[rep_number], histtype='stepfilled',
+            #    label='Replicate ' + rep_number, alpha=0.5, weights= weights)
+            #ax.hist(sfs, 50, histtype='stepfilled', alpha=0.5, weights= weights)
+            ax.hist(sfs, 40, histtype='stepfilled', alpha=0.8, normed= True)
+            #print sfs
             plt.xlim([0.01,0.99])
-            ax.legend()
+            #ax.legend()
             ax.set_xlabel('Site frequency', fontsize = 16)
             ax.set_ylabel('Fraction of sites', fontsize = 16)
-            title = 'Site frequency spectra for ' + treatment_dict[rep[-3]] \
-                + ' ' + species_dict[rep[-2]]
-            fig.suptitle(title, fontsize=15)
-            plt.savefig(out_path + '/' + strain + '_' + treatment + '.png', dpi=600)
+            #title = 'Site frequency spectra for ' + treatment_dict[rep[-3]] \
+            #+ ' ' + species_dict[rep[-2]]
+            #fig.suptitle(title, fontsize=15)
+            fig.tight_layout()
+            fig.savefig(out_plot, bbox_inches = "tight", pad_inches = 0.4, dpi = 600)
             plt.close()
 
     #KDE = CV_KDE(afs)
@@ -893,20 +911,20 @@ def get_coverage_clean_figs(sigmas = 3):
                 x_under_cov = [x_i for x_i in x if x_i < 50]
                 alpha = (len(x_under_cov) + 1) / len(x)
 
-                #fig = plt.figure()
-                #plt.hist(x, bins=200, alpha = 0.8, normed=True)
-                #plt.title(sample + ' dist. of coverage')
-                #plt.xlabel('Coverage', fontsize=14)
-                #plt.ylabel('Probability', fontsize=14)
-                #plt.xlim([0, max(120,  x_mean  + (x_mean * 2)) ])
-                #plt.axvline(x=100, c = 'grey', linestyle = '--', lw = 3)
-                #plt.axvline(x=x_mean, c = 'black', linestyle = '-', lw = 3)
+                fig = plt.figure()
+                plt.hist(x, bins=200, alpha = 0.8, normed=True)
+                plt.title(sample + ' dist. of coverage')
+                plt.xlabel('Coverage', fontsize=14)
+                plt.ylabel('Probability', fontsize=14)
+                plt.xlim([0, max(120,  x_mean  + (x_mean * 2)) ])
+                plt.axvline(x=100, c = 'grey', linestyle = '--', lw = 3)
+                plt.axvline(x=x_mean, c = 'black', linestyle = '-', lw = 3)
                 # std deviation in poisson process = sqrt(lambda)
-                #plt.axvline(x=x_mean + (np.sqrt(x_mean) * 2), c = 'black', linestyle = ':', lw = 3)
-                #plt.axvline(x=x_mean - (np.sqrt(x_mean) * 2), c = 'black', linestyle = ':', lw = 3)
-                #fig.tight_layout()
-                #fig.savefig(out_dir + sample + '.png', bbox_inches = "tight", pad_inches = 0.4, dpi = 600)
-                #plt.close()
+                plt.axvline(x=x_mean + (np.sqrt(x_mean) * 2), c = 'black', linestyle = ':', lw = 3)
+                plt.axvline(x=x_mean - (np.sqrt(x_mean) * 2), c = 'black', linestyle = ':', lw = 3)
+                fig.tight_layout()
+                fig.savefig(out_dir + sample + '.png', bbox_inches = "tight", pad_inches = 0.4, dpi = 600)
+                plt.close()
 
                 #if x_mean -  (np.sqrt(x_mean) * 2) > 100:
                 #    reseq = False
@@ -923,6 +941,50 @@ def get_coverage_clean_figs(sigmas = 3):
 
     out_summary.close()
 
+class make_muller_plots:
+
+    def __init__(self, strain):
+        self.strain = strain
+
+    def stacked_trajectory_plot(self, name = 'stacked_trajectory', xlabel="generation"):
+        IN = pd.read_csv(mydir + 'data/breseq_output_gbk_essentials_split_clean_merged_unique_merged/' + \
+            'Strain_' + self.strain + '_SNP.txt',  sep = '\t', low_memory=False)
+        colors_lighter = ["#A567AF", "#8F69C1", "#8474D1", "#7F85DB", "#7F97DF",\
+                        "#82A8DD", "#88B5D5", "#8FC0C9", "#97C8BC", "#A1CDAD", \
+                        "#ACD1A0", "#B9D395", "#C6D38C", "#D3D285", "#DECE81", \
+                        "#E8C77D", "#EDBB7A", "#EEAB77", "#ED9773", "#EA816F", \
+                        "#E76B6B"]
+        pops = [x.split('_')[1] for x in IN.columns if 'frequency_' in x]
+        for pop in list(set(pops)):
+            if pop != 'frequency' and pop == 'L0B2':
+                time_points = [x for x in IN.columns if 'frequency_' + pop in x]
+                time_points_x = [int(x.split('_')[2][1:]) for x in time_points]
+                IN_time_points = IN[time_points]
+                #trajectories = IN_time_points.dropna(thresh=2)
+                trajectories = IN_time_points.dropna(how='all')
+                # NaNs should be counted as 0, since we have fixed mutations in the df
+                trajectories = trajectories.fillna(0)
+                trajectories = trajectories.values
+                if trajectories.shape[0] == 0:
+                    continue
+
+                fig = plt.figure()
+                for i in range(trajectories.shape[0]):
+                    plt.plot(time_points_x, trajectories[i,], linestyle='-', \
+                        marker='o', alpha = 0.6)
+                print pop
+                plt.ylim(0, 1)
+                plt.xlim(100, 300)
+                plt.ylabel("Frequency")
+                plt.xlabel('Days')
+                plt.title('Population ' + pop)
+                plt.xticks(np.arange(min(time_points_x), max(time_points_x)+1, 100))
+                out_dir = mydir + 'figs/muller_plots/' + self.strain
+                if not os.path.exists(out_dir):
+                    os.makedirs(out_dir)
+                plt.savefig(out_dir + '/' + pop + '.png', bbox_inches='tight',  dpi = 600)
+                plt.close()
+
 
 
 #poly_fig()
@@ -931,24 +993,15 @@ def get_coverage_clean_figs(sigmas = 3):
 #W_theta_fig()
 #T_D_fig()
 #pi_vs_k()
-#AFS()
 #poly_fig('pi_L')
 #poly_fig('W_T_L')
 #poly_fig('k_L')
 #mut()
 #mut_figsss()
-#sample_by_gene_dissimilarity('D100', 'D')
-#sample_by_gene_dissimilarity('D100', 'F')
-#sample_by_gene_dissimilarity('D100', 'P')
-#sample_by_gene_dissimilarity('D100', 'C')
-#sample_by_gene_dissimilarity('D100', 'B')
-#sample_by_gene_dissimilarity('D100', 'J')
 
-#GMD_hist('D100', 'D')
-#GMD_hist('D100', 'C')
-#GMD_hist('D100', 'F')
-#GMD_hist('D100', 'P')
-#GMD_hist('D100', 'B')
-#GMD_hist('D100', 'J')
-
-get_coverage_clean_figs()
+#get_coverage_clean_figs()
+#AFS()
+#strains = ['B', 'C', 'D', 'F', 'J', 'P']
+#for strain in strains:
+#    make_muller_plots(strain).stacked_trajectory_plot()
+#make_muller_plots('B').stacked_trajectory_plot()
