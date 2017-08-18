@@ -956,13 +956,18 @@ class make_muller_plots:
                         "#E76B6B"]
         pops = [x.split('_')[1] for x in IN.columns if 'frequency_' in x]
         for pop in list(set(pops)):
-            if pop != 'frequency' and pop == 'L0B2':
+            if pop != 'frequency':
                 time_points = [x for x in IN.columns if 'frequency_' + pop in x]
                 time_points_x = [int(x.split('_')[2][1:]) for x in time_points]
+                time_points_x.insert(0, 0)
                 IN_time_points = IN[time_points]
                 #trajectories = IN_time_points.dropna(thresh=2)
                 trajectories = IN_time_points.dropna(how='all')
+                #print trajectories.loc[trajectories['frequency_L0P2_D200'] > 0.9]
                 # NaNs should be counted as 0, since we have fixed mutations in the df
+                #trajectories['D0'] = 0
+                trajectories.insert(0, 'D0', 0)
+                #print trajectories
                 trajectories = trajectories.fillna(0)
                 trajectories = trajectories.values
                 if trajectories.shape[0] == 0:
@@ -974,7 +979,7 @@ class make_muller_plots:
                         marker='o', alpha = 0.6)
                 print pop
                 plt.ylim(0, 1)
-                plt.xlim(100, 300)
+                plt.xlim(0, 300)
                 plt.ylabel("Frequency")
                 plt.xlabel('Days')
                 plt.title('Population ' + pop)
@@ -1004,4 +1009,4 @@ class make_muller_plots:
 #strains = ['B', 'C', 'D', 'F', 'J', 'P']
 #for strain in strains:
 #    make_muller_plots(strain).stacked_trajectory_plot()
-#make_muller_plots('B').stacked_trajectory_plot()
+#make_muller_plots('P').stacked_trajectory_plot()
