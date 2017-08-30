@@ -69,9 +69,12 @@ def cleanGBK(strain):
         print "Strain not recognized"
     IN_path = mydir + 'reference_assemblies_task2/' + file_name
     genome = SeqIO.parse(IN_path, "genbank")
-    OUT = open(mydir + 'reference_assemblies_task2_table/' + strain + '.txt', 'w')
-    print>> OUT, 'LocusTag', 'Gene', 'Size', 'GC', 'Sequence', 'Fold_1', \
+    OUT = open(mydir + 'reference_assemblies_task2/reference_assemblies_task2_table/' + strain + '.txt', 'w')
+    print>> OUT, 'LocusTag', 'Gene', 'Type', 'Size', 'GC', 'Sequence', 'Fold_1', \
             'Fold_2', 'Fold_2_S', 'Fold_2_V', 'Fold_3', 'Fold_4', 'N', 'S'
+    types_keep = ['CDS', 'rRNA', 'tRNA', 'tmRNA']
+    total = []
+    total1 = []
     for record in genome:
         if 'chromosome' in record.description:
             descript = record.description
@@ -85,22 +88,26 @@ def cleanGBK(strain):
             chrom = descript_split[descript_split_index] + '_' + descript_split[descript_split_index + 1].strip(',')
         else:
             chrom = 'Genome'
+        #print len(record.features)
         for f in record.features:
-            #and "gene" in f.qualifiers
-            if f.type == "CDS" :
-                if 'gene' in f.qualifiers:
-                    gene = f.qualifiers["gene"][0]
-                    gene = gene.replace(" ", "_")
-                else:
-                    gene = 'nan'
-                locus_tag = f.qualifiers["locus_tag"][0]
-                size = f.location.end - f.location.start
-                #seq = record.seq[f.location.start: f.location.end]
-                seq = str(f.extract(record.seq))
-                if f.strand == -1:
-                    seq = seq[::-1]
+            total.append(f)
+            if f.type not in types_keep:
+                continue
+            total1.append(f)
+            #if f.type == "CDS" :
+            if 'gene' in f.qualifiers:
+                gene = f.qualifiers["gene"][0]
+                gene = gene.replace(" ", "_")
+            else:
+                gene = 'nan'
+            locus_tag = f.qualifiers["locus_tag"][0]
+            size = f.location.end - f.location.start
+            seq = str(f.extract(record.seq))
+            if f.strand == -1:
+                seq = seq[::-1]
+            GC = round((seq.count('G') + seq.count('C')) / len(seq), 4)
+            if f.type == "CDS":
                 start_rf = int(f.qualifiers['codon_start'][0]) - 1
-                GC = round((seq.count('G') + seq.count('C')) / len(seq), 4)
                 codons = [seq[i + start_rf: i + start_rf + 3 ] for i in range(0, len(seq), 3)]
                 nuc_list = ['A', 'C', 'G', 'T']
                 codons = [x for x in codons if (len(x) == 3) and (len(np.setdiff1d(list(x),nuc_list)) == 0)]
@@ -149,13 +156,19 @@ def cleanGBK(strain):
                     N += N_codon
                 # synonymous sites.
                 # calculated using http://bioinformatics.cvr.ac.uk/blog/calculating-dnds-for-ngs-datasets/
-
                 S = (3*len(codons)) - N
                 N = round(N, 2)
                 S = round(S, 2)
                 # fold_2_S and fold_2_V calculated using Comeron, 1995
-                print>> OUT, locus_tag, gene, size, GC, chrom, fold_1, fold_2, \
+                print>> OUT, locus_tag, gene, f.type, size, GC, chrom, fold_1, fold_2, \
                         fold_2_S, fold_2_V, fold_3, fold_4, N, S
+            else:
+                print>> OUT, locus_tag, gene, f.type, size, GC, chrom, 'nan', 'nan', \
+                        'nan', 'nan', 'nan', 'nan', 'nan', 'nan'
+
+    #print set(types)
+    print len(total)
+    print len(total1)
     OUT.close()
 
 
@@ -687,6 +700,36 @@ def get_sample_by_gene_matrix(strain):
     multiple_hits = mut_df.loc[:, mut_df.sum(axis=0) > 1]
     OUTname2 = OUTpath + '/sample_by_gene_multiple_hits.txt'
     multiple_hits.to_csv(OUTname2, sep = '\t', index = True)
+
+
+def get_sample_by_gene_matrix_gscore(strain):
+    gene_path = mydir + 'reference_assemblies_task2/reference_assemblies_task2_table/' + strain + '.txt'
+    IN_gene = pd.read_csv(gene_path, sep = ' ', header = 'infer')
+    gene_by_pop_path = mydir + 'gene_by_sample/' + strain + '/sample_by_gene.txt'
+    IN_gbp = pd.read_csv(gene_by_pop_path, sep = '\t', header = 'infer', index_col = 0)
+    # remove intergenic regions
+    cols = [c for c in IN_gbp.columns if '/' not in c]
+    IN_gbp = IN_gbp[cols]
+    L_tot = sum(IN_gene.Size.values)
+    size_dict = dict(zip(IN_gene.LocusTag, IN_gene.Size))
+    rel_sizes = np.asarray([size_dict[x] for x in IN_gbp.columns]) / L_tot
+    for index, row in IN_gbp.iterrows():
+        E_i = sum(row) * rel_sizes
+        E_i_and_G_i = zip(E_i, row)
+        G_i = [2*x[1]*np.log(x[1]/x[0]) for x in E_i_and_G_i]
+        G_i = [0 if math.isnan(x) else x for x in G_i]
+        # make negatives zero for now. Need to worry about this later
+        #num_neg = [x for x in G_i if x < 0]
+        #if len(num_neg) > 0:
+        #    print len(num_neg)
+        G_i = [0 if x < 0 else x for x in G_i]
+        #value_when_true if condition else value_when_false
+        IN_gbp.loc[index,:] = G_i
+
+    OUTname = mydir + 'gene_by_sample/' + strain + '/sample_by_gene_Gscore.txt'
+    IN_gbp.to_csv(OUTname, sep = '\t', index = True)
+
+
 
 def get_column_name(row, row_name):
     names = row.index.tolist()

@@ -14,6 +14,7 @@ ts_tv_dict = {
     ("T", "A"):"V", ("T", "C"):"S", ("T", "G"):"V",
     }
 
+# translation table 11
 codon_dict = {
     "TTT":"F", "TCT":"S", "TAT":"Y", "TGT":"C",
     "TTC":"F", "TCC":"S", "TAC":"Y", "TGC":"C",
@@ -328,7 +329,7 @@ def mut_bias():
 #strains = ['B', 'C', 'D', 'F', 'J', 'P', 'S']
 days = ['D100', 'D200', 'D300']
 #days = ['D100']
-strains = ['S']
+strains = ['P']
 #variant_types = ['SNP', 'INS', 'DEL']
 variant_types = ['SNP']
 for strain in strains:
@@ -341,9 +342,11 @@ for strain in strains:
                 merge_variants = False,  unique_mutations = False, \
                 split_unique = False, variant_type = variant_type)
         #cd.merge_unique_mutations(days, strain, variant_type)
-        if variant_type == 'SNP':
-            cd.get_sample_by_gene_matrix(strain)
-    g_b_s_long(strain)
+        #if variant_type == 'SNP':
+        #    cd.get_sample_by_gene_matrix(strain)
+    #g_b_s_long(strain)
+    #cd.cleanGBK(strain)
+    cd.get_sample_by_gene_matrix_gscore(strain)
 
 #cd.cleanGBK(strain)
 #p_q('D100', strain)
