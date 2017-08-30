@@ -6,7 +6,7 @@ import  matplotlib.pyplot as plt
 mydir = os.path.expanduser("~/GitHub/Task2/SporeAssay/")
 
 def make_fig():
-    path_IN = mydir + 'data/Sporulation_170731_long.txt'
+    path_IN = mydir + 'data/Sporulation_170822_long.txt'
     IN = pd.read_csv(path_IN, sep = '\t')
     IN_0B1 = IN.loc[IN['Pop'] == '0B1']
     IN_2B1 = IN.loc[IN['Pop'] == '2B1']
@@ -32,7 +32,7 @@ def make_fig():
     plt.ylabel('Percent spores, log10', fontsize = 18)
     plt.ylim(0.0008, 1.1)
     plt.yscale('log')
-    plt.legend(numpoints=1, prop={'size':12},  loc='upper left', frameon=False)
+    plt.legend(numpoints=1, prop={'size':10},  loc='lower right', frameon=False)
     fig_name = mydir + 'figs/test.png'
     fig.savefig(fig_name, bbox_inches = "tight", pad_inches = 0.4, dpi = 600)
     plt.close()
