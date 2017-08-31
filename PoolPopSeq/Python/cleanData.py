@@ -703,7 +703,10 @@ def get_sample_by_gene_matrix(strain):
 
 
 def get_sample_by_gene_matrix_gscore(strain):
-    gene_path = mydir + 'reference_assemblies_task2/reference_assemblies_task2_table/' + strain + '.txt'
+    if strain == 'S':
+        gene_path = mydir + 'reference_assemblies_task2/reference_assemblies_task2_table/B.txt'
+    else:
+        gene_path = mydir + 'reference_assemblies_task2/reference_assemblies_task2_table/' + strain + '.txt'
     IN_gene = pd.read_csv(gene_path, sep = ' ', header = 'infer')
     gene_by_pop_path = mydir + 'gene_by_sample/' + strain + '/sample_by_gene.txt'
     IN_gbp = pd.read_csv(gene_by_pop_path, sep = '\t', header = 'infer', index_col = 0)
