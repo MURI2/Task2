@@ -327,9 +327,10 @@ def mut_bias():
 
 
 #strains = ['B', 'C', 'D', 'F', 'J', 'P', 'S']
+strains = ['S']
 days = ['D100', 'D200', 'D300']
 #days = ['D100']
-strains = ['P']
+#strains = ['P']
 #variant_types = ['SNP', 'INS', 'DEL']
 variant_types = ['SNP']
 for strain in strains:
@@ -345,7 +346,8 @@ for strain in strains:
         #if variant_type == 'SNP':
         #    cd.get_sample_by_gene_matrix(strain)
     #g_b_s_long(strain)
-    #cd.cleanGBK(strain)
+    if strain != 'S':
+        cd.cleanGBK(strain)
     cd.get_sample_by_gene_matrix_gscore(strain)
 
 #cd.cleanGBK(strain)
