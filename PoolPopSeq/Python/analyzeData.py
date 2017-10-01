@@ -29,7 +29,8 @@ codon_dict = {
 }
 
 species_dict = {'B': 'Bacillus', 'C':'Caulobacter', 'D':'Deinococcus', \
-    'F': 'Pedobacter', 'J': 'Janthinobacterium', 'P':'Pseudomonas'}
+    'F': 'Pedobacter', 'J': 'Janthinobacterium', 'P':'Pseudomonas', \
+    'S': 'Bacillus_spoA'}
 
 
 class PPS_Wtheta:
@@ -324,15 +325,15 @@ def harmonic_number(j):
 
 def popGenTable(MAF = 0.01, n_c = 70):
     L_samples = {'C': 4042929, 'D': 3284156, 'F': 5836693, 'P':6592875, \
-        'B':4215606, 'J':6082545}
-    strains = ['B', 'C', 'D', 'F', 'J', 'P']
+        'B':4215606, 'J':6082545, 'S':4215606}
+    strains = ['B', 'C', 'D', 'F', 'J', 'P', 'S']
     #strains = ['B']
     OUT =  mydir + 'pop_gen_stats/D100/popGenTable.txt'
     OUT = open(OUT, 'w')
     print>> OUT, 'strain', 'treatment', 'replicate', 'k', 'S', 'pi', 'W_T', \
             'T_D', 'k_L', 'S_L', 'pi_L', 'W_T_L', 'mean_coverage'
     for strain in strains:
-        path = mydir + 'breseq_output_gbk_essentials_split_clean_merged_unique/D100/Strain_' + strain + '.txt'
+        path = mydir + 'breseq_output_gbk_essentials_split_clean_merged_unique/D100/Strain_' + strain + '_D100_SNP.txt'
 
         if os.path.exists(path) == True:
             IN = pd.read_csv(path, sep = '\t', header = 'infer')
@@ -340,7 +341,7 @@ def popGenTable(MAF = 0.01, n_c = 70):
             number_samples = len(sample_freqs)
             for sample_freq in sample_freqs:
                 sample_freq_split = sample_freq.split('_')
-                total_cov = 'total_cov_' + sample_freq_split[1]
+                total_cov = 'total_cov_' + sample_freq_split[1] + '_D100'
                 sample_freq_cov = list(zip( IN[sample_freq], IN[total_cov]))
                 sample_freq_cov = [x for x in sample_freq_cov if np.isnan(x[0]) == False]
                 k = len([x for x in sample_freq_cov if x[0] == float(1)])

@@ -20,7 +20,7 @@ mydir = os.path.expanduser("~/GitHub/Task2/PoolPopSeq/")
 
 strain_colors = {'Janthinobacterium':'indigo', 'Caulobacter':'lightblue', \
          'Deinococcus': 'red', 'Pseudomonas':'darkgreen', 'Bacillus':'cyan',
-         'Pedobacter': 'darkred'}
+         'Pedobacter': 'darkred', 'Bacillus_spoA':'darkblue'}
 
 species_dict = {'B': 'Bacillus', 'C':'Caulobacter', 'D':'Deinococcus', \
     'F': 'Pedobacter', 'J': 'Janthinobacterium', 'P':'Pseudomonas'}
@@ -668,6 +668,119 @@ def mut():
     plt.close()
 
 
+def mut_B_S():
+    IN = pd.read_csv(mydir + 'data/pop_gen_stats/D100/mut_bias.txt', \
+        sep = ' ', header = 'infer')
+    #IN = IN.sort(['treatment', 'strain'], ascending=[True, True])
+    strains = ['Bacillus', 'Bacillus_spoA']
+    treatments = list(IN.treatment.unique())
+    ma_values = []
+    treat_values = []
+    strain_values = []
+    colors = []
+    strain_values_colors = []
+    for treatment in treatments:
+        for strain in strains:
+            ma_value =  IN[(IN.strain == strain) & (IN.treatment == treatment)]['m_sample_ma'].tolist()
+            ma_values.append([x for x in ma_value if np.isnan(x) == False])
+            treat_values.append(treatment)
+            strain_values.append(strain)
+            strain_values_colors.append(strain_colors[strain])
+        colors.append(strain_colors[strain])
+    fig, ax1 = plt.subplots(figsize=(10, 6))
+    fig.canvas.set_window_title('A Boxplot Example')
+    plt.subplots_adjust(left=0.075, right=0.95, top=0.9, bottom=0.25)
+    print strain_values
+    print ma_values
+    bp = plt.boxplot(ma_values, notch=0, sym='+', vert=1, whis=1.5)
+    plt.setp(bp['boxes'], color='black')
+    plt.setp(bp['whiskers'], color='black')
+    plt.setp(bp['fliers'], color='red', marker='+')
+    # Add a horizontal grid to the plot, but make it very light in color
+    # so we can use it for reading data values but not be distracting
+    ax1.yaxis.grid(True, linestyle='-', which='major', color='lightgrey',
+                   alpha=0.5)
+    # Hide these grid behind plot objects
+    ax1.set_axisbelow(True)
+    ax1.set_xlabel('Transfer time', fontsize = 20)
+    ax1.set_ylabel(r'$D_{T}$', fontsize = 26)
+    # Now fill the boxes with desired colors
+    # numBoxes = number treatments * number taxa
+    numBoxes = 3*2
+    medians = list(range(numBoxes))
+    for i in range(numBoxes):
+        box = bp['boxes'][i]
+        boxX = []
+        boxY = []
+        for j in range(3):
+            boxX.append(box.get_xdata()[j])
+            boxY.append(box.get_ydata()[j])
+        boxCoords = list(zip(boxX, boxY))
+        boxPolygon = Polygon(boxCoords, facecolor=strain_values_colors[i])
+        ax1.add_patch(boxPolygon)
+        # Now draw the median lines back over what we just filled in
+        med = bp['medians'][i]
+        medianX = []
+        medianY = []
+        for j in range(2):
+            medianX.append(med.get_xdata()[j])
+            medianY.append(med.get_ydata()[j])
+            plt.plot(medianX, medianY, 'k')
+            medians[i] = medianY[0]
+        # Finally, overplot the sample averages, with horizontal alignment
+        # in the center of each box
+        plt.plot([np.average(med.get_xdata())], [np.average(ma_values[i])],
+                 color='w', marker='*', markeredgecolor='k')
+    #labels = [item.get_text() for item in ax1.get_xticklabels()]
+    #labels_new = []
+    #for i, label in enumerate(labels):
+    #    if i % 3 == 0:
+    #        labels_new.append('1-Day')
+    #    elif i % 3 == 1:
+    #        labels_new.append('10-Day')
+    #    elif i % 3 == 2:
+    #        labels_new.append('100-Day')
+
+    #ax1.set_xticklabels(labels_new, fontsize = 18)
+
+    #for label in ax1.get_xmajorticklabels():
+    #    label.set_rotation(60)
+    #    label.set_fontsize(8)
+        #print ', '.join(i for i in dir(label) if not i.startswith('__'))
+    #    label.set_horizontalalignment("right")
+
+    labels = [item.get_text() for item in ax1.get_xticklabels()]
+    labels_new = []
+    for i, label in enumerate(labels):
+        if i == 3:
+            labels_new.append('1-Day')
+        elif i == 8:
+            labels_new.append('10-Day')
+        elif i == 14:
+            labels_new.append('100-Day')
+        else:
+            labels_new.append('')
+    ax1.set_xticklabels(labels_new, fontsize = 18)
+    # make room for the labels
+    plt.gcf().subplots_adjust(bottom=0.20)
+    #strain_colors = {'Janthinobacterium':'cyan', 'Caulobacter':'lightblue', \
+    #     'Deinococcus': 'red', 'Pseudomonas':'darkgreen', 'Bacillus':'indigo',
+    #     'Pedobacter': 'darkred'}
+    plt.figtext(0.10, 0.640, 'Janthinobacterium',
+                backgroundcolor='indigo',
+                color='white', weight='roman', size='x-small')
+    plt.figtext(0.10, 0.685,' Caulobacter',
+            backgroundcolor='lightblue', color='black', weight='roman',
+            size='x-small')
+    plt.figtext(0.10, 0.730, 'Bacillus',
+                backgroundcolor='cyan',
+                color='black', weight='roman', size='x-small')
+    plt.figtext(0.10, 0.775, 'Deinococcus',
+                backgroundcolor='red',
+                color='white', weight='roman', size='x-small')
+    fig.savefig(mydir + 'figs/mut_B_S.png', bbox_inches='tight',  dpi = 600)
+    plt.close()
+
 
 def pi_vs_k2():
     IN = pd.read_csv(mydir + 'data/pop_gen_stats/D100/popGenTable.txt', sep = ' ', header = 'infer')
@@ -991,6 +1104,142 @@ class make_muller_plots:
                 plt.close()
 
 
+def euc_dist(strain):
+    IN = pd.read_csv(mydir + 'data/euclidean_distance/' +  strain + '.txt', sep = '\t', low_memory=False)
+    IN_0_100 =  IN[IN['Line'].str.contains("L0B") & (IN['Time1'] == 100)]
+    IN_1_100 =  IN[IN['Line'].str.contains("L1B") & (IN['Time1'] == 100)]
+    IN_2_100 =  IN[IN['Line'].str.contains("L2B") & (IN['Time1'] == 100)]
+    print np.mean(IN_0_100.Distance.values), np.std(IN_0_100.Distance.values)
+    print np.mean(IN_1_100.Distance.values), np.std(IN_1_100.Distance.values)
+    print np.mean(IN_2_100.Distance.values), np.std(IN_2_100.Distance.values)
+
+
+def pi_b_s(param = 'pi_L'):
+    IN = pd.read_csv(mydir + 'data/pop_gen_stats/D100/popGenTable.txt', sep = ' ', header = 'infer')
+    IN = IN[IN.pi_L != 0]
+    b_1 = IN.loc[(IN['strain'] == 'Bacillus') & (IN['treatment'] == 0)]
+    b_10 = IN.loc[(IN['strain'] == 'Bacillus') & (IN['treatment'] == 1)]
+    b_100 = IN.loc[(IN['strain'] == 'Bacillus') & (IN['treatment'] == 2)]
+    s_1 = IN.loc[(IN['strain'] == 'Bacillus_spoA') & (IN['treatment'] == 0)]
+    s_10 = IN.loc[(IN['strain'] == 'Bacillus_spoA') & (IN['treatment'] == 1)]
+    s_100 = IN.loc[(IN['strain'] == 'Bacillus_spoA') & (IN['treatment'] == 2)]
+    #mean_100_1day = mean_100.loc[mean_100['TransferTime'] == 1]
+    #mean_100_10day = mean_100.loc[mean_100['TransferTime'] == 10]
+
+    data_to_plot = [b_1[param], b_10[param], b_100[param], s_1[param], s_10[param], s_100[param]]
+    data_to_plot = [np.log10(x) for x in data_to_plot]
+    print IN
+    #print data_to_plot[1]#data_to_plot = [x[(x.T != 0).any()]]
+    print data_to_plot
+    #data_to_plot = [np.log10(x) for x in data_to_plot ]
+    # Create a figure instance
+    fig = plt.figure(1, figsize=(9, 6))
+    # Create an axes instance
+    ax = fig.add_subplot(111)
+
+    # Create the boxplot
+    bp = ax.boxplot(data_to_plot)
+    ## add patch_artist=True option to ax.boxplot()
+    ## to get fill color
+    bp = ax.boxplot(data_to_plot, patch_artist=True)
+
+    ## change outline color, fill color and linewidth of the boxes
+    for box in bp['boxes']:
+        # change outline color
+        box.set( color='#7570b3', linewidth=2)
+        # change fill color
+        box.set( facecolor = '#1b9e77' )
+
+    ## change color and linewidth of the whiskers
+    for whisker in bp['whiskers']:
+        whisker.set(color='#7570b3', linewidth=2)
+
+    ## change color and linewidth of the caps
+    for cap in bp['caps']:
+        cap.set(color='#7570b3', linewidth=2)
+
+    ## change color and linewidth of the medians
+    for median in bp['medians']:
+        median.set(color='#b2df8a', linewidth=2)
+
+    ## change the style of fliers and their fill
+    for flier in bp['fliers']:
+        flier.set(marker='o', color='#e7298a', alpha=0.5)
+
+    ## Custom x-axis labels
+    #ax.set_xticklabels(['1-Day', '10-Day'])
+    ## Remove top axes and right axes ticks
+    ax.get_xaxis().tick_bottom()
+    ax.get_yaxis().tick_left()
+    ax.set_ylabel(r'$\pi$', fontsize = 25)
+
+    out_dir = mydir + 'figs/pi_b_s.png'
+    plt.savefig(out_dir, bbox_inches='tight',  dpi = 600)
+    plt.close()
+    #(df["B"] > 50) & (df["C"] == 900)
+
+def td_b_s(param = 'T_D'):
+    IN = pd.read_csv(mydir + 'data/pop_gen_stats/D100/popGenTable.txt', sep = ' ', header = 'infer')
+    IN = IN[IN.pi_L != 0]
+    b_1 = IN.loc[(IN['strain'] == 'Bacillus') & (IN['treatment'] == 0)]
+    b_10 = IN.loc[(IN['strain'] == 'Bacillus') & (IN['treatment'] == 1)]
+    b_100 = IN.loc[(IN['strain'] == 'Bacillus') & (IN['treatment'] == 2)]
+    s_1 = IN.loc[(IN['strain'] == 'Bacillus_spoA') & (IN['treatment'] == 0)]
+    s_10 = IN.loc[(IN['strain'] == 'Bacillus_spoA') & (IN['treatment'] == 1)]
+    s_100 = IN.loc[(IN['strain'] == 'Bacillus_spoA') & (IN['treatment'] == 2)]
+    #mean_100_1day = mean_100.loc[mean_100['TransferTime'] == 1]
+    #mean_100_10day = mean_100.loc[mean_100['TransferTime'] == 10]
+
+    data_to_plot = [b_1[param], s_1[param], b_10[param], s_10[param], b_100[param], s_100[param]]
+    #print data_to_plot[1]#data_to_plot = [x[(x.T != 0).any()]]
+    # Create a figure instance
+    fig = plt.figure(1, figsize=(9, 6))
+    # Create an axes instance
+    ax = fig.add_subplot(111)
+
+    # Create the boxplot
+    bp = ax.boxplot(data_to_plot)
+    ## add patch_artist=True option to ax.boxplot()
+    ## to get fill color
+    bp = ax.boxplot(data_to_plot, patch_artist=True)
+
+    ## change outline color, fill color and linewidth of the boxes
+    for box in bp['boxes']:
+        # change outline color
+        box.set( color='#7570b3', linewidth=2)
+        # change fill color
+        box.set( facecolor = '#1b9e77' )
+
+    ## change color and linewidth of the whiskers
+    for whisker in bp['whiskers']:
+        whisker.set(color='#7570b3', linewidth=2)
+
+    ## change color and linewidth of the caps
+    for cap in bp['caps']:
+        cap.set(color='#7570b3', linewidth=2)
+
+    ## change color and linewidth of the medians
+    for median in bp['medians']:
+        median.set(color='#b2df8a', linewidth=2)
+
+    ## change the style of fliers and their fill
+    for flier in bp['fliers']:
+        flier.set(marker='o', color='#e7298a', alpha=0.5)
+
+    ## Custom x-axis labels
+    #ax.set_xticklabels(['1-Day', '10-Day'])
+    ## Remove top axes and right axes ticks
+    ax.get_xaxis().tick_bottom()
+    ax.get_yaxis().tick_left()
+    #ax.set_yscale("log", nonposy='clip')
+    ax.set_ylabel(r'$\pi$', fontsize = 25)
+
+    out_dir = mydir + 'figs/td_b_s.png'
+    plt.savefig(out_dir, bbox_inches='tight',  dpi = 600)
+    plt.close()
+
+
+
 
 #poly_fig()
 #K_fig()
@@ -1004,9 +1253,13 @@ class make_muller_plots:
 #mut()
 #mut_figsss()
 
+
 #get_coverage_clean_figs()
 #AFS()
 #strains = ['B', 'C', 'D', 'F', 'J', 'P']
 #for strain in strains:
 #    make_muller_plots(strain).stacked_trajectory_plot()
 #make_muller_plots('P').stacked_trajectory_plot()
+#euc_dist('B')
+#mut_B_S()
+pi_b_s()

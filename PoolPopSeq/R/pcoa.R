@@ -2,8 +2,8 @@ rm(list = ls())
 getwd()
 setwd("~/GitHub/Task2/PoolPopSeq/")
 
-strains <- c('B', 'C', 'D', 'F', 'J', 'P', 'S')
-#strains <- c('B')
+#strains <- c('B', 'C', 'D', 'F', 'J', 'P', 'S')
+strains <- c('B')
 strains.vec <- vector(mode="list", length=6)
 names(strains.vec) <- c('B', 'C', 'D', 'F', 'J', 'P')
 strains.vec[[1]] <- 'Bacillus'; strains.vec[[2]] <- 'Caulobacter'
@@ -18,7 +18,7 @@ for (package in package.list) {
 }
 
 for (strain in strains) {
-  # run PCoA for gene_by_pop containing G scores
+  # run PCoA for gene_by_pop containing G scores for all time points
   gene_by_pop <- c("data/gene_by_sample/", strain, "/sample_by_gene_Gscore.txt")
   df.all <- read.table(paste(gene_by_pop, collapse = ''), sep = "\t", header = TRUE, row.names = 1)
   df.all.no0 <- df.all[rowSums(df.all[,-1]) != 0,]
@@ -77,9 +77,53 @@ for (strain in strains) {
   ordiellipse(df.all.pcoa, treats, conf = 0.95)
   text(df.all.pcoa$points[ ,1], df.all.pcoa$points[ ,2], labels=times, cex= 0.7)
   dev.off()
-  #print(df.all.pcoa)
   
+  # run PCoA for gene_by_pop containing G scores for just day 100
+  df.all.no0.100 <- df.all.no0[grep('D100', rownames(df.all.no0)), ]
+  df.all.db.100 <- vegdist(df.all.no0.100, method = "bray", upper = TRUE, diag = TRUE)
+  df.all.pcoa.100 <- cmdscale(df.all.db.100, eig = TRUE, k = 10) 
+  explainvar1 <- round(df.all.pcoa.100$eig[1] / sum(df.all.pcoa.100$eig), 3) * 100
+  explainvar2 <- round(df.all.pcoa.100$eig[2] / sum(df.all.pcoa.100$eig), 3) * 100
+  explainvar3 <- round(df.all.pcoa.100$eig[3] / sum(df.all.pcoa.100$eig), 3) * 100
+  sum.eig <- sum(explainvar1, explainvar2, explainvar3)
+  png(filename = paste(c("figs/pcoa/pcoa_D100_", strain, ".png"), collapse = ''),
+      width = 1200, height = 1200, res = 96*2)
+  # Define Plot Parameters
+  par(mar = c(5, 5, 1, 2) + 0.1)
+  # Initiate Plot
+  plot(df.all.pcoa.100$points[ ,1], df.all.pcoa.100$points[ ,2], xlim = c(-0.7, 0.7), ylim = c(-0.7, 0.7),
+       xlab = paste("PCoA 1 (", explainvar1, "%)", sep = ""),
+       ylab = paste("PCoA 2 (", explainvar2, "%)", sep = ""),
+       pch = 16, cex = 2.0, type = "n", cex.lab = 1.5, cex.axis = 1.2, axes = FALSE)
   
+  # Add Axes
+  axis(side = 1, labels = T, lwd.ticks = 2, cex.axis = 1.2, las = 1)
+  axis(side = 2, labels = T, lwd.ticks = 2, cex.axis = 1.2, las = 1)
+  abline(h = 0, v = 0, lty = 3)
+  box(lwd = 2)
+  
+  # Add Points & Labels
+  cols.D100 <- c()
+  treats.D100 <- c()
+  for (x in rownames(df.all.pcoa.100$points)){
+    if (grepl("frequency_L0", x)){
+      treats.D100 <- c(treats.D100, "1")
+      cols.D100 <- c(cols.D100, "#87CEEB")
+    } else if ( grepl("frequency_L1", x)) {
+      treats.D100 <- c(treats.D100, "10")
+      cols.D100 <- c(cols.D100, "#FFA500")
+    } else if (grepl("frequency_L2", x)) {
+      treats.D100 <- c(treats.D100, "100")
+      cols.D100 <- c(cols.D100, "#FF6347")
+    }
+  }
+  
+
+  #plot
+  points(df.all.pcoa.100$points[ ,1], df.all.pcoa.100$points[ ,2],
+         pch = 19, cex = 3, bg = "gray", col = cols.D100)
+  ordiellipse(df.all.pcoa.100, treats.D100, conf = 0.95)
+  dev.off()
   
   if(strain == 'S'){
     days <- c('D100')
@@ -112,7 +156,7 @@ for (strain in strains) {
   days <- c(100, 200)
   fileName <- paste("data/euclidean_distance/", strain, ".txt", sep = "")
   sink(fileName)
-  header <- paste(c("Line","Time1", "Time2", "Distance"), sep = "\t")
+  header <- paste("Line","Time1", "Time2", "Distance", sep = "\t")
   cat(header)
   cat("\n")
   for (transfer.time in transfer.times){

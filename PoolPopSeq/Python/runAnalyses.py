@@ -40,13 +40,14 @@ codon_dict = {
 
 bp_dict = {'A':'T', 'C':'G', 'G':'C', 'T':'A'}
 
-mut_bias_dict = {"B" : 1.2739, "C" : 0.5011, "D" : 0.5511, "J" : 2.9555}
+mut_bias_dict = {"B" : 1.2739, "C" : 0.5011, "D" : 0.5511, "J" : 2.9555, "S" : 1.2739}
 
 L_samples = {'C': 4042929, 'D': 3284156, 'F': 5836693, 'P':6592875, \
-    'B':4215606, 'J':6082545}
+    'B':4215606, 'J':6082545, 'S':4215606,}
 
 species_dict = {'B': 'Bacillus', 'C':'Caulobacter', 'D':'Deinococcus', \
-    'F': 'Pedobacter', 'J': 'Janthinobacterium', 'P':'Pseudomonas'}
+    'F': 'Pedobacter', 'J': 'Janthinobacterium', 'P':'Pseudomonas', \
+    'S': 'Bacillus_spoA'}
 
 
 
@@ -278,12 +279,12 @@ def dN_dS(day):
 
 
 def mut_bias():
-    mut_strains = ['B', 'C', 'D', 'J']
+    mut_strains = ['B', 'C', 'D', 'J', 'S']
     OUT =  mydir + 'pop_gen_stats/D100/mut_bias.txt'
     OUT = open(OUT, 'w')
     print>> OUT, 'strain', 'treatment', 'replicate', 'm_sample_ma'
     for strain in mut_strains:
-        IN_file = mydir + 'breseq_output_gbk_essentials_split_clean_merged_unique/D100/Strain_' + strain +  '.txt'
+        IN_file = mydir + 'breseq_output_gbk_essentials_split_clean_merged_unique/D100/Strain_' + strain +  '_D100_SNP.txt'
         IN = pd.read_csv(IN_file, sep = '\t')
         AT = {}
         GC = {}
@@ -297,7 +298,7 @@ def mut_bias():
         for index, row in IN.iterrows():
             sample_row = [x for x in sample_snp_list if pd.isnull(row[x]) == False][0].split('_')[2]
             ref = row['reference']
-            mut = row['mutation_' + sample_row]
+            mut = row['mutation_' + sample_row + '_D100']
             #print sample_row, ref, mut
             if (ref == 'A' and mut == 'C') or \
                 (ref == 'A' and mut == 'G') or \
@@ -326,33 +327,36 @@ def mut_bias():
     OUT.close()
 
 
-#strains = ['B', 'C', 'D', 'F', 'J', 'P', 'S']
-strains = ['S']
-days = ['D100', 'D200', 'D300']
-#days = ['D100']
-#strains = ['P']
-#variant_types = ['SNP', 'INS', 'DEL']
-variant_types = ['SNP']
-for strain in strains:
-    for variant_type in variant_types:
-        for day in days:
-            if strain == 'S' and day != 'D100':
-                continue
-            print day, strain, variant_type
-            cd.run_everything(day, strain, split = False, get_variants = False, \
-                merge_variants = False,  unique_mutations = False, \
-                split_unique = False, variant_type = variant_type)
-        #cd.merge_unique_mutations(days, strain, variant_type)
-        #if variant_type == 'SNP':
-        #    cd.get_sample_by_gene_matrix(strain)
-    #g_b_s_long(strain)
-    if strain != 'S':
-        cd.cleanGBK(strain)
-    cd.get_sample_by_gene_matrix_gscore(strain)
+def run_everything():
+    #strains = ['B', 'C', 'D', 'F', 'J', 'P', 'S']
+    strains = ['S']
+    days = ['D100', 'D200', 'D300']
+    #days = ['D100']
+    #strains = ['P']
+    #variant_types = ['SNP', 'INS', 'DEL']
+    variant_types = ['SNP']
+    for strain in strains:
+        for variant_type in variant_types:
+            for day in days:
+                if strain == 'S' and day != 'D100':
+                    continue
+                print day, strain, variant_type
+                cd.run_everything(day, strain, split = False, get_variants = False, \
+                    merge_variants = False,  unique_mutations = False, \
+                    split_unique = False, variant_type = variant_type)
+            #cd.merge_unique_mutations(days, strain, variant_type)
+            #if variant_type == 'SNP':
+            #    cd.get_sample_by_gene_matrix(strain)
+        #g_b_s_long(strain)
+        if strain != 'S':
+            cd.cleanGBK(strain)
+        cd.get_sample_by_gene_matrix_gscore(strain)
 
 #cd.cleanGBK(strain)
 #p_q('D100', strain)
 
 #cd.get_sample_by_gene_matrix('D100', strain)
 #dN_dS('D100')
-#mut_bias()
+mut_bias()
+
+#cd.merge_B_S_sample_by_gene_matrix_gscore()
