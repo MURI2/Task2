@@ -1,0 +1,36 @@
+## index of replication (iRep) - thresholds: min cov. = 5, min wins. = 0.98, min r^2 = 0.9, max fragments/Mbp = 175, GC correction min r^2 = 0.0
+# genome	/Users/WRShoemaker/GitHub/Task2/PoolPopSeq/data/bwa_fna/D300/Sample_L0B3-300_mapped_sort_NOdup_sort_merged_sort.sam
+/Users/WRShoemaker/GitHub/Task2/PoolPopSeq/data/reference_assemblies_task2/Bacillus_subtilis_NCIB_3610/GCA_002055965.1_ASM205596v1_genomic.fna	1.55353052383
+#
+## un-filtered index of replication (iRep)
+# genome	/Users/WRShoemaker/GitHub/Task2/PoolPopSeq/data/bwa_fna/D300/Sample_L0B3-300_mapped_sort_NOdup_sort_merged_sort.sam
+/Users/WRShoemaker/GitHub/Task2/PoolPopSeq/data/reference_assemblies_task2/Bacillus_subtilis_NCIB_3610/GCA_002055965.1_ASM205596v1_genomic.fna	1.55353052383
+#
+## raw index of replication (no GC bias correction)
+# genome	/Users/WRShoemaker/GitHub/Task2/PoolPopSeq/data/bwa_fna/D300/Sample_L0B3-300_mapped_sort_NOdup_sort_merged_sort.sam
+/Users/WRShoemaker/GitHub/Task2/PoolPopSeq/data/reference_assemblies_task2/Bacillus_subtilis_NCIB_3610/GCA_002055965.1_ASM205596v1_genomic.fna	1.67487662177
+#
+## r^2
+# genome	/Users/WRShoemaker/GitHub/Task2/PoolPopSeq/data/bwa_fna/D300/Sample_L0B3-300_mapped_sort_NOdup_sort_merged_sort.sam
+/Users/WRShoemaker/GitHub/Task2/PoolPopSeq/data/reference_assemblies_task2/Bacillus_subtilis_NCIB_3610/GCA_002055965.1_ASM205596v1_genomic.fna	0.986678377743
+#
+## coverage
+# genome	/Users/WRShoemaker/GitHub/Task2/PoolPopSeq/data/bwa_fna/D300/Sample_L0B3-300_mapped_sort_NOdup_sort_merged_sort.sam
+/Users/WRShoemaker/GitHub/Task2/PoolPopSeq/data/reference_assemblies_task2/Bacillus_subtilis_NCIB_3610/GCA_002055965.1_ASM205596v1_genomic.fna	204.229725298
+#
+## % windows passing filter
+# genome	/Users/WRShoemaker/GitHub/Task2/PoolPopSeq/data/bwa_fna/D300/Sample_L0B3-300_mapped_sort_NOdup_sort_merged_sort.sam
+/Users/WRShoemaker/GitHub/Task2/PoolPopSeq/data/reference_assemblies_task2/Bacillus_subtilis_NCIB_3610/GCA_002055965.1_ASM205596v1_genomic.fna	100.00
+#
+## fragments/Mbp
+# genome	/Users/WRShoemaker/GitHub/Task2/PoolPopSeq/data/bwa_fna/D300/Sample_L0B3-300_mapped_sort_NOdup_sort_merged_sort.sam
+/Users/WRShoemaker/GitHub/Task2/PoolPopSeq/data/reference_assemblies_task2/Bacillus_subtilis_NCIB_3610/GCA_002055965.1_ASM205596v1_genomic.fna	0
+#
+## GC bias
+# genome	/Users/WRShoemaker/GitHub/Task2/PoolPopSeq/data/bwa_fna/D300/Sample_L0B3-300_mapped_sort_NOdup_sort_merged_sort.sam
+/Users/WRShoemaker/GitHub/Task2/PoolPopSeq/data/reference_assemblies_task2/Bacillus_subtilis_NCIB_3610/GCA_002055965.1_ASM205596v1_genomic.fna	-177.346989772
+#
+## GC r^2
+# genome	/Users/WRShoemaker/GitHub/Task2/PoolPopSeq/data/bwa_fna/D300/Sample_L0B3-300_mapped_sort_NOdup_sort_merged_sort.sam
+/Users/WRShoemaker/GitHub/Task2/PoolPopSeq/data/reference_assemblies_task2/Bacillus_subtilis_NCIB_3610/GCA_002055965.1_ASM205596v1_genomic.fna	0.323794306832
+#

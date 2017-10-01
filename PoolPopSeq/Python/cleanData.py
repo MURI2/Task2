@@ -1,4 +1,3 @@
-
 from __future__ import division
 import os, math, numbers, itertools, re
 import pandas as pd
@@ -732,7 +731,21 @@ def get_sample_by_gene_matrix_gscore(strain):
     OUTname = mydir + 'gene_by_sample/' + strain + '/sample_by_gene_Gscore.txt'
     IN_gbp.to_csv(OUTname, sep = '\t', index = True)
 
-
+def merge_B_S_sample_by_gene_matrix_gscore():
+    B_path = mydir + 'gene_by_sample/B/sample_by_gene_Gscore.txt'
+    S_path = mydir + 'gene_by_sample/S/sample_by_gene_Gscore.txt'
+    B = pd.read_csv(B_path, sep = '\t', header = 'infer', index_col = 0)
+    S = pd.read_csv(S_path, sep = '\t', header = 'infer', index_col = 0)
+    #B_S_merged = pd.concat([B, S], axis = 1, join='outer')
+    B_S_merged = B.append(S)
+    B_S_merged = B_S_merged.fillna(0.0)
+    #B_names = B.columns.values
+    #S_names = S.columns.values
+    #print len(S_names)
+    #print len(B_names)
+    #print set(B_names + S_names)
+    OUTname = mydir + 'gene_by_sample/B_S/sample_by_gene_Gscore.txt'
+    B_S_merged.to_csv(OUTname, sep = '\t', index = True)
 
 def get_column_name(row, row_name):
     names = row.index.tolist()
