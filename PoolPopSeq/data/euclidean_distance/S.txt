@@ -1,1 +1,1 @@
-Line Time1 Time2 Distance
+Line	Time1	Time2	Distance

@@ -68,8 +68,9 @@ def cleanGBK(strain):
         print "Strain not recognized"
     IN_path = mydir + 'reference_assemblies_task2/' + file_name
     genome = SeqIO.parse(IN_path, "genbank")
+    # protein_id
     OUT = open(mydir + 'reference_assemblies_task2/reference_assemblies_task2_table/' + strain + '.txt', 'w')
-    print>> OUT, 'LocusTag', 'Gene', 'Type', 'Size', 'GC', 'Sequence', 'Fold_1', \
+    print>> OUT, 'LocusTag', 'protein_id' , 'Gene', 'Type', 'Size', 'GC', 'Sequence', 'Fold_1', \
             'Fold_2', 'Fold_2_S', 'Fold_2_V', 'Fold_3', 'Fold_4', 'N', 'S'
     types_keep = ['CDS', 'rRNA', 'tRNA', 'tmRNA']
     total = []
@@ -100,6 +101,10 @@ def cleanGBK(strain):
             else:
                 gene = 'nan'
             locus_tag = f.qualifiers["locus_tag"][0]
+            if 'protein_id' in f.qualifiers:
+                protein_id = f.qualifiers["protein_id"][0]
+            else:
+                protein_id = 'nan'
             size = f.location.end - f.location.start
             seq = str(f.extract(record.seq))
             if f.strand == -1:
@@ -159,10 +164,10 @@ def cleanGBK(strain):
                 N = round(N, 2)
                 S = round(S, 2)
                 # fold_2_S and fold_2_V calculated using Comeron, 1995
-                print>> OUT, locus_tag, gene, f.type, size, GC, chrom, fold_1, fold_2, \
+                print>> OUT, locus_tag, protein_id, gene, f.type, size, GC, chrom, fold_1, fold_2, \
                         fold_2_S, fold_2_V, fold_3, fold_4, N, S
             else:
-                print>> OUT, locus_tag, gene, f.type, size, GC, chrom, 'nan', 'nan', \
+                print>> OUT, locus_tag, protein_id, gene, f.type, size, GC, chrom, 'nan', 'nan', \
                         'nan', 'nan', 'nan', 'nan', 'nan', 'nan'
 
     #print set(types)

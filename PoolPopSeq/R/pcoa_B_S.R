@@ -3,7 +3,7 @@ getwd()
 setwd("~/GitHub/Task2/PoolPopSeq/")
 
 
-package.list <- c('vegan', 'dplyr', 'tidyr', 'BiodiversityR', 'indicspecies')
+package.list <- c('vegan', 'dplyr', 'tidyr', 'BiodiversityR', 'indicspecies', 'viridis')
 for (package in package.list) {
   if (!require(package, character.only=TRUE, quietly=TRUE)) {
     install.packages(package)
@@ -12,6 +12,7 @@ for (package in package.list) {
 }
 
 
+######
 # run PCoA for gene_by_pop containing G scores for all time points
 gene_by_pop <- c("data/gene_by_sample/B_S/sample_by_gene_Gscore.txt")
 df.all <- read.table(paste(gene_by_pop, collapse = ''), sep = "\t", header = TRUE, row.names = 1)
@@ -75,7 +76,18 @@ dev.off()
 
 
 
+# Define Order of Sites
+order <- rev(attr(df.all.db.100, "Labels"))  
 
+# Plot Heatmap
+levelplot(as.matrix(df.all.db.100)[, order], aspect = "iso", col.regions = inferno, 
+          xlab = "Doubs Site", ylab = "Doubs Site", scales = list(cex = 0.5), 
+          main = "Bray-Curtis Distance", type="lower")
+
+
+
+
+######
 # run PCoA for gene_by_pop containing G scores for just day 100
 df.all.no0.100 <- df.all.no0[grep('D100', rownames(df.all.no0)), ]
 df.all.db.100 <- vegdist(df.all.no0.100, method = "bray", upper = TRUE, diag = TRUE)
@@ -83,17 +95,24 @@ df.all.pcoa.100 <- cmdscale(df.all.db.100, eig = TRUE, k = 2)
 explainvar1 <- round(df.all.pcoa.100$eig[1] / sum(df.all.pcoa.100$eig), 3) * 100
 explainvar2 <- round(df.all.pcoa.100$eig[2] / sum(df.all.pcoa.100$eig), 3) * 100
 #explainvar3 <- round(df.all.pcoa.100$eig[3] / sum(df.all.pcoa.100$eig), 3) * 100
-#sum.eig <- sum(explainvar1, explainvar2, explainvar3)
 png(filename = paste(c("figs/pcoa/pcoa_D100_B_S.png"), collapse = ''),
     width = 1200, height = 1200, res = 96*2)
 # Define Plot Parameters
 #par(mar = c(5, 5, 1, 2) + 0.1)
+B_S.D100 <- c()
+for (x in rownames(df.all.pcoa.100$points)){
+  if (grepl("B", x)){
+    B_S.D100 <- c(B_S.D100, 19)
+  } else if ( grepl("S", x)) {
+    B_S.D100 <- c(B_S.D100, 1)
+  } 
+}
 par(mar = c(6.5, 6, 1.5, 2.5) + 0.1)
 # Initiate Plot
-plot(df.all.pcoa.100$points[ ,1], df.all.pcoa.100$points[ ,2], xlim = c(-0.7, 0.7), ylim = c(-0.7, 0.7),
+plot(df.all.pcoa.100$points[ ,1], df.all.pcoa.100$points[ ,2],  xlim = c(-0.7, 0.7), ylim = c(-0.7, 0.7),
      xlab = paste("PCoA 1 (", explainvar1, "%)", sep = ""),
      ylab = paste("PCoA 2 (", explainvar2, "%)", sep = ""),
-     pch = 16, cex = 2.0, type = "n", cex.lab = 1.5, cex.axis = 1.2, axes = FALSE)
+     pch = 19, cex = 2.0, type = "n", cex.lab = 1.5, cex.axis = 1.2, axes = FALSE)
 
 # Add Axes
 axis(side = 1, labels = T, lwd.ticks = 2, cex.axis = 1.2, las = 1)
@@ -116,31 +135,244 @@ for (x in rownames(df.all.pcoa.100$points)){
     cols.D100 <- c(cols.D100, "#FF6347")
   }
 }
-
-B_S.D100 <- c()
-for (x in rownames(df.all.pcoa.100$points)){
-  if (grepl("B", x)){
-    B_S.D100 <- c(B_S.D100, "W")
-  } else if ( grepl("S", x)) {
-    B_S.D100 <- c(B_S.D100, "S")
-  } 
-}
-
-
-#B_S.D100
-
 test <- cbind.data.frame(B_S.D100, treats.D100)
 test$merge <- paste(test$B_S.D100, test$treats.D100, sep="_")
 #plot
 points(df.all.pcoa.100$points[ ,1], df.all.pcoa.100$points[ ,2],
-       pch = 19, cex = 3, bg = "gray", col = cols.D100)
+       pch = B_S.D100, cex = 2.5, bg = "gray", col = cols.D100, lwd  = 3)
 ellipse.cols <- c("#87CEEB", "#FFA500", "#FF6347", "#87CEEB", "#FFA500", "#FF6347")
 ordiellipse(df.all.pcoa.100, test$merge, conf = 0.95, col = ellipse.cols, lwd=2)
-text(df.all.pcoa.100$points[ ,1], df.all.pcoa.100$points[ ,2], labels=B_S.D100, cex= 0.7)
 legend(x=-0.8,y = -1.01, xpd = TRUE, c("1-day","10-day","100-day"), 
        col=c('#87CEEB','#FFA500','#FF6347'), ncol=3, bty ="n", 
        pch = c(16,16,16), cex = 1.6, pt.cex = 3.0, text.font = 20)
 dev.off()
+
+
+
+########
+# Just the ellipses 
+png(filename = paste(c("figs/pcoa/pcoa_D100_B_S_ellipses.png"), collapse = ''),
+    width = 1200, height = 1200, res = 96*2)
+# Define Plot Parameters
+par(mar = c(6.5, 6, 1.5, 2.5) + 0.1)
+# Initiate Plot
+plot(df.all.pcoa.100$points[ ,1], df.all.pcoa.100$points[ ,2],  xlim = c(-0.7, 0.7), ylim = c(-0.7, 0.7),
+     xlab = paste("PCoA 1 (", explainvar1, "%)", sep = ""),
+     ylab = paste("PCoA 2 (", explainvar2, "%)", sep = ""),
+     pch = 19, cex = 2.0, type = "n", cex.lab = 1.5, cex.axis = 1.2, axes = FALSE)
+
+# Add Axes
+axis(side = 1, labels = T, lwd.ticks = 2, cex.axis = 1.2, las = 1)
+axis(side = 2, labels = T, lwd.ticks = 2, cex.axis = 1.2, las = 1)
+abline(h = 0, v = 0, lty = 3)
+box(lwd = 2)
+#plot
+ordiellipse(df.all.pcoa.100, test$merge, conf = 0.95, col = ellipse.cols, lwd=2)
+#text(df.all.pcoa.100$points[ ,1], df.all.pcoa.100$points[ ,2], labels=B_S.D100, cex= 0.7)
+legend(x=-0.8,y = -1.01, xpd = TRUE, c("1-day","10-day","100-day"), 
+       col=c('#87CEEB','#FFA500','#FF6347'), ncol=3, bty ="n", 
+       pch = c(16,16,16), cex = 1.6, pt.cex = 3.0, text.font = 20)
+dev.off()
+
+
+
+#######
+# plot for 1, 10, and 100 days lines
+df.all.no0.100.1day.points <- df.all.pcoa.100$points[grep('L0', rownames(df.all.pcoa.100$points)), ]
+png(filename = paste(c("figs/pcoa/pcoa_D100_B_S_1day.png"), collapse = ''),
+    width = 1200, height = 1200, res = 96*2)
+# Define Plot Parameters
+B_S.D100.1day <- c()
+for (x in rownames(df.all.no0.100.1day.points)){
+  if (grepl("B", x)){
+    B_S.D100.1day <- c(B_S.D100.1day, 19)
+  } else if ( grepl("S", x)) {
+    B_S.D100.1day <- c(B_S.D100.1day, 1)
+  } 
+}
+par(mar = c(6.5, 6, 1.5, 2.5) + 0.1)
+# Initiate Plot
+plot(df.all.no0.100.1day.points[ ,1], df.all.no0.100.1day.points[ ,2], xlim = c(-0.7, 0.7), ylim = c(-0.7, 0.7),
+     xlab = paste("PCoA 1 (", explainvar1, "%)", sep = ""),
+     ylab = paste("PCoA 2 (", explainvar2, "%)", sep = ""),
+     pch = 19, cex = 2.0, type = "n", cex.lab = 1.5, cex.axis = 1.2, axes = FALSE)
+
+# Add Axes
+axis(side = 1, labels = T, lwd.ticks = 2, cex.axis = 1.2, las = 1)
+axis(side = 2, labels = T, lwd.ticks = 2, cex.axis = 1.2, las = 1)
+abline(h = 0, v = 0, lty = 3)
+box(lwd = 2)
+
+# Add Points & Labels
+cols.D100.1day <- c()
+treats.D100.1day <- c()
+for (x in rownames(df.all.no0.100.1day.points)){
+  if (grepl("frequency_L0", x)){
+    treats.D100.1day <- c(treats.D100.1day, "1")
+    cols.D100.1day <- c(cols.D100.1day, "#87CEEB")
+  } else if ( grepl("frequency_L1", x)) {
+    treats.D100.1day <- c(treats.D100.1day, "10")
+    cols.D100.1day <- c(cols.D100.1day, "#FFA500")
+  } else if (grepl("frequency_L2", x)) {
+    treats.D100.1day <- c(treats.D100.1day, "100")
+    cols.D100.1day <- c(cols.D100.1day, "#FF6347")
+  }
+}
+#plot
+points(df.all.no0.100.1day.points[ ,1], df.all.no0.100.1day.points[ ,2],
+       pch = B_S.D100.1day, cex = 2.5, bg = "gray", col = cols.D100.1day, lwd  = 3)
+legend(x=-0.8,y = -1.01, xpd = TRUE, c("1-day","10-day","100-day"), 
+       col=c('#87CEEB','#FFA500','#FF6347'), ncol=3, bty ="n", 
+       pch = c(16,16,16), cex = 1.6, pt.cex = 3.0, text.font = 20)
+dev.off()
+#######
+####10 day
+######
+df.all.no0.100.10day.points <- df.all.pcoa.100$points[grep('L1', rownames(df.all.pcoa.100$points)), ]
+png(filename = paste(c("figs/pcoa/pcoa_D100_B_S_10day.png"), collapse = ''),
+    width = 1200, height = 1200, res = 96*2)
+# Define Plot Parameters
+B_S.D100.10day <- c()
+for (x in rownames(df.all.no0.100.10day.points)){
+  if (grepl("B", x)){
+    B_S.D100.10day <- c(B_S.D100.10day, 19)
+  } else if ( grepl("S", x)) {
+    B_S.D100.10day <- c(B_S.D100.10day, 1)
+  } 
+}
+par(mar = c(6.5, 6, 1.5, 2.5) + 0.1)
+# Initiate Plot
+plot(df.all.no0.100.10day.points[ ,1], df.all.no0.100.10day.points[ ,2], xlim = c(-0.7, 0.7), ylim = c(-0.7, 0.7),
+     xlab = paste("PCoA 1 (", explainvar1, "%)", sep = ""),
+     ylab = paste("PCoA 2 (", explainvar2, "%)", sep = ""),
+     pch = 19, cex = 2.0, type = "n", cex.lab = 1.5, cex.axis = 1.2, axes = FALSE)
+
+# Add Axes
+axis(side = 1, labels = T, lwd.ticks = 2, cex.axis = 1.2, las = 1)
+axis(side = 2, labels = T, lwd.ticks = 2, cex.axis = 1.2, las = 1)
+abline(h = 0, v = 0, lty = 3)
+box(lwd = 2)
+
+# Add Points & Labels
+cols.D100.10day <- c()
+treats.D100.10day <- c()
+for (x in rownames(df.all.no0.100.10day.points)){
+  if (grepl("frequency_L0", x)){
+    treats.D100.10day <- c(treats.D100.10day, "1")
+    cols.D100.10day <- c(cols.D100.10day, "#87CEEB")
+  } else if ( grepl("frequency_L1", x)) {
+    treats.D100.10day <- c(treats.D100.10day, "10")
+    cols.D100.10day <- c(cols.D100.10day, "#FFA500")
+  } else if (grepl("frequency_L2", x)) {
+    treats.D100.10day <- c(treats.D100.10day, "100")
+    cols.D100.10day <- c(cols.D100.10day, "#FF6347")
+  }
+}
+#plot
+points(df.all.no0.100.10day.points[ ,1], df.all.no0.100.10day.points[ ,2],
+       pch = B_S.D100.10day, cex = 2.5, bg = "gray", col = cols.D100.10day, lwd  = 3)
+legend(x=-0.8,y = -1.01, xpd = TRUE, c("1-day","10-day","100-day"), 
+       col=c('#87CEEB','#FFA500','#FF6347'), ncol=3, bty ="n", 
+       pch = c(16,16,16), cex = 1.6, pt.cex = 3.0, text.font = 20)
+dev.off()
+#######
+####100 day
+######
+df.all.no0.100.100day.points <- df.all.pcoa.100$points[grep('L2', rownames(df.all.pcoa.100$points)), ]
+png(filename = paste(c("figs/pcoa/pcoa_D100_B_S_100day.png"), collapse = ''),
+    width = 1200, height = 1200, res = 96*2)
+# Define Plot Parameters
+B_S.D100.100day <- c()
+for (x in rownames(df.all.no0.100.100day.points)){
+  if (grepl("B", x)){
+    B_S.D100.100day <- c(B_S.D100.100day, 19)
+  } else if ( grepl("S", x)) {
+    B_S.D100.100day <- c(B_S.D100.100day, 1)
+  } 
+}
+par(mar = c(6.5, 6, 1.5, 2.5) + 0.1)
+# Initiate Plot
+plot(df.all.no0.100.100day.points[ ,1], df.all.no0.100.100day.points[ ,2],  xlim = c(-0.7, 0.7), ylim = c(-0.7, 0.7),
+     xlab = paste("PCoA 1 (", explainvar1, "%)", sep = ""),
+     ylab = paste("PCoA 2 (", explainvar2, "%)", sep = ""),
+     pch = 19, cex = 2.0, type = "n", cex.lab = 1.5, cex.axis = 1.2, axes = FALSE)
+
+# Add Axes
+axis(side = 1, labels = T, lwd.ticks = 2, cex.axis = 1.2, las = 1)
+axis(side = 2, labels = T, lwd.ticks = 2, cex.axis = 1.2, las = 1)
+abline(h = 0, v = 0, lty = 3)
+box(lwd = 2)
+
+# Add Points & Labels
+cols.D100.100day <- c()
+treats.D100.100day <- c()
+for (x in rownames(df.all.no0.100.100day.points)){
+  if (grepl("frequency_L0", x)){
+    treats.D100.100day <- c(treats.D100.100day, "1")
+    cols.D100.100day <- c(cols.D100.100day, "#87CEEB")
+  } else if ( grepl("frequency_L1", x)) {
+    treats.D100.100day <- c(treats.D100.100day, "10")
+    cols.D100.100day <- c(cols.D100.100day, "#FFA500")
+  } else if (grepl("frequency_L2", x)) {
+    treats.D100.100day <- c(treats.D100.100day, "100")
+    cols.D100.100day <- c(cols.D100.100day, "#FF6347")
+  }
+}
+#plot
+points(df.all.no0.100.100day.points[ ,1], df.all.no0.100.100day.points[ ,2],
+       pch = B_S.D100.100day, cex = 2.5, bg = "gray", col = cols.D100.100day, lwd  = 3)
+legend(x=-0.8,y = -1.01, xpd = TRUE, c("1-day","10-day","100-day"), 
+       col=c('#87CEEB','#FFA500','#FF6347'), ncol=3, bty ="n", 
+       pch = c(16,16,16), cex = 1.6, pt.cex = 3.0, text.font = 20)
+#legend(x=-0.7,y = -1.01, xpd = TRUE, c("1-day","10-day","100-day"), 
+#       col=c('#87CEEB','#FFA500','#FF6347'), ncol=3, bty ="n", 
+#       pch = c(16,16,16), cex = 1.6, pt.cex = 3.0, text.font = 20)
+dev.off()
+
+
+
+
+
+
+
+#########
+#PERMANOVA
+#########
+B_S.D100.category <- c()
+for (x in rownames(df.all.no0.100)){
+  if (grepl("B", x)){
+    B_S.D100.category <- c(B_S.D100.category, 'B')
+  } else if ( grepl("S", x)) {
+    B_S.D100.category <- c(B_S.D100.category, 'S')
+  } 
+}
+
+treats.D100.perm <- c()
+for (x in rownames(df.all.no0.100)){
+  if (grepl("frequency_L0", x)){
+    treats.D100.perm <- c(treats.D100.perm, 0)
+  } else if ( grepl("frequency_L1", x)) {
+    treats.D100.perm <- c(treats.D100.perm, 1)
+  } else if (grepl("frequency_L2", x)) {
+    treats.D100.perm <- c(treats.D100.perm, 2)
+  }
+}
+
+
+perm <- adonis(df.all.no0.100 ~ B_S.D100.category * treats.D100.perm, method = "bray", permutations = 999)
+
+interact.beta <- perm$coef.sites[4,]
+dim(t(perm$coef.sites) *  perm$model.matrix)
+t(perm$coef.sites) *  perm$model.matrix
+perm$coef.sites * t(perm$model.matrix)
+write.table(t(perm$coef.sites) *  perm$model.matrix, "data/betas.txt", sep="\t")
+
+# plot coefficients 
+
+
+
+
+
 
 
 

@@ -14,6 +14,9 @@ import sklearn.metrics.pairwise as pairwise
 from matplotlib.patches import Polygon
 import matplotlib as mpl
 import pylab as P
+import seaborn as sns
+
+from statsmodels.graphics.factorplots import interaction_plot
 
 
 mydir = os.path.expanduser("~/GitHub/Task2/PoolPopSeq/")
@@ -1239,6 +1242,94 @@ def td_b_s(param = 'T_D'):
     plt.close()
 
 
+def beta_fig():
+    IN = pd.read_csv(mydir + 'data/betas.txt', sep = '\t', header = 'infer')
+    IN['Response'] = IN.sum(axis = 1).values
+    print IN
+
+    B0 = IN.index[IN.index.str.contains('L0B')].values
+    B1 = IN.index[IN.index.str.contains('L1B')].values
+    B2 = IN.index[IN.index.str.contains('L2B')].values
+    S0 = IN.index[IN.index.str.contains('L0S')].values
+    S1 = IN.index[IN.index.str.contains('L1S')].values
+    S2 = IN.index[IN.index.str.contains('L2S')].values
+    #betas = np.append(B0, B1, B2, S0, S1, S2)
+    #betas = np.hstack(( B0, B1, B2, S0, S1, S2 )).ravel()
+
+    strain = np.asarray((['B'] * (len(B0) + len(B1) + len(B2) ))  + (['S'] * (len(S0) + len(S1) + len(S2) )))
+    time = np.asarray( ([1] * len(B0))  + ([10] * len(B1)) + ([100] * len(B2)) + ([1] * len(S0))  + ([10] * len(S1)) + ([100] * len(S2)) )
+    IN['Strain'] = strain
+    IN['Time'] = time
+    #df = pd.DataFrame({'Betas':betas, 'Strain':strain, 'Time':time})
+
+    sns_plot = sns.factorplot(kind='box',        # Boxplot
+               y='Response',       # Y-axis - values for boxplot
+               x='Time',        # X-axis - first factor
+               hue='Strain',         # Second factor denoted by color
+               data=IN,        # Dataframe
+               size=8,            # Figure size (x100px)
+               aspect=1.5,        # Width = size * aspect
+               legend_out=False,
+               ci = "sd")
+    #sns_plot.set(xlabel='Time', ylabel=r'$\beta_{Time:Strain}$', font= 16)
+    sns_plot.savefig(mydir + "figs/betas.png")
+
+
+
+
+def beta_fig_inter():
+    IN = pd.read_csv(mydir + 'data/betas.txt', sep = '\t', header = 'infer')
+    IN['Response'] = IN.sum(axis = 1).values
+
+    B0 = IN.index[IN.index.str.contains('L0B')].values
+    B1 = IN.index[IN.index.str.contains('L1B')].values
+    B2 = IN.index[IN.index.str.contains('L2B')].values
+    S0 = IN.index[IN.index.str.contains('L0S')].values
+    S1 = IN.index[IN.index.str.contains('L1S')].values
+    S2 = IN.index[IN.index.str.contains('L2S')].values
+
+    strain = np.asarray((['B'] * (len(B0) + len(B1) + len(B2) ))  + (['S'] * (len(S0) + len(S1) + len(S2) )))
+    time = np.asarray( ([1] * len(B0))  + ([10] * len(B1)) + ([100] * len(B2)) + ([1] * len(S0))  + ([10] * len(S1)) + ([100] * len(S2)) )
+    IN['Strain'] = strain
+    IN['Time'] = time
+    #print response
+    response = IN['Response'].values
+
+
+    fig, ax = plt.subplots(figsize=(6, 6))
+    #fig = interaction_plot(x=time, trace=strain, response=response,
+    #                       colors=['#FF6347', '#87CEEB'], markers=['D', '^'], ms=10, ax=ax)
+    fig = int_plot( x=time, trace=strain, response=response, errorbars=True, errorbartyp='std',  ax=ax)
+    plt.title('Interaction plot for the influence of mid-parent \n \
+        height and gender on offspring height', fontsize = 20)
+    plt.xlabel('Mid-parent height (inches)', fontsize = 18)
+    plt.ylabel('Mean of response', fontsize = 18)
+    fig_name = mydir + 'figs/RegressInterPlot.png'
+    fig.savefig(fig_name, bbox_inches = "tight", pad_inches = 0.4, dpi = 600)
+    plt.close()
+
+    #x_M = IN.loc[IN['Gender'] == 'M'].Midparent
+    #x_F = IN.loc[IN['Gender'] == 'F'].Midparent
+    #y_M = IN.loc[IN['Gender'] == 'M'].Height
+    #y_F = IN.loc[IN['Gender'] == 'F'].Height
+
+    #fig = plt.figure()
+    #plt.scatter(x_M, y_M, c='#87CEEB', marker='o', label='Men')
+    #plt.scatter(x_F, y_F, c='#FF6347', marker='o', label='Women')
+    #y_pred_F = mod1.params[0] + mod1.params[1] * 0 + mod1.params[2] * midparent
+    #y_pred_M = mod1.params[0] + mod1.params[1] * 1 + mod1.params[2] * midparent
+    #plt.plot(midparent, y_pred_F, 'k-', lw = 5, c = 'black', label = '_nolegend_' )
+    #plt.plot(midparent, y_pred_F, 'k-', lw = 2, c = '#FF6347', label = '_nolegend_')
+    #plt.plot(midparent, y_pred_M, 'k-', lw = 5, c = 'black', label = '_nolegend_' )
+    #plt.plot(midparent, y_pred_M, 'k-', lw = 2, c = '#87CEEB', label = '_nolegend_')
+
+    #plt.plot(midparent, y_pred_F, c = '#FF6347')
+    #plt.plot(midparent, y_pred_M, c = '#87CEEB')
+
+    #fig_name = mydir + 'Figures/galtonRegressInter.png'
+    #fig.savefig(fig_name, bbox_inches = "tight", pad_inches = 0.4, dpi = 600)
+    #plt.close()
+
 
 
 #poly_fig()
@@ -1262,4 +1353,4 @@ def td_b_s(param = 'T_D'):
 #make_muller_plots('P').stacked_trajectory_plot()
 #euc_dist('B')
 #mut_B_S()
-pi_b_s()
+beta_fig()
