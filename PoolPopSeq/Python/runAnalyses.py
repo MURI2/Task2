@@ -328,35 +328,35 @@ def mut_bias():
 
 
 def run_everything():
-    #strains = ['B', 'C', 'D', 'F', 'J', 'P', 'S']
-    strains = ['S']
+    strains = ['B', 'C', 'D', 'F', 'J', 'P', 'S']
+    #strains = ['B']
     days = ['D100', 'D200', 'D300']
     #days = ['D100']
     #strains = ['P']
     #variant_types = ['SNP', 'INS', 'DEL']
     variant_types = ['SNP']
     for strain in strains:
-        for variant_type in variant_types:
-            for day in days:
-                if strain == 'S' and day != 'D100':
-                    continue
-                print day, strain, variant_type
-                cd.run_everything(day, strain, split = False, get_variants = False, \
-                    merge_variants = False,  unique_mutations = False, \
-                    split_unique = False, variant_type = variant_type)
-            #cd.merge_unique_mutations(days, strain, variant_type)
-            #if variant_type == 'SNP':
-            #    cd.get_sample_by_gene_matrix(strain)
-        #g_b_s_long(strain)
+    #    for variant_type in variant_types:
+    #        for day in days:
+    #            if strain == 'S' and day != 'D100':
+    #                continue
+    #            print day, strain, variant_type
+    #            cd.run_everything(day, strain, split = False, get_variants = False, \
+    #                merge_variants = False,  unique_mutations = False, \
+    #                split_unique = False, variant_type = variant_type)
+    #        #cd.merge_unique_mutations(days, strain, variant_type)
+    #        #if variant_type == 'SNP':
+    #        #    cd.get_sample_by_gene_matrix(strain)
+    #    #g_b_s_long(strain)
         if strain != 'S':
             cd.cleanGBK(strain)
-        cd.get_sample_by_gene_matrix_gscore(strain)
+    #    cd.get_sample_by_gene_matrix_gscore(strain)
 
 #cd.cleanGBK(strain)
 #p_q('D100', strain)
 
 #cd.get_sample_by_gene_matrix('D100', strain)
 #dN_dS('D100')
-mut_bias()
-
+#mut_bias()
+#run_everything()
 #cd.merge_B_S_sample_by_gene_matrix_gscore()

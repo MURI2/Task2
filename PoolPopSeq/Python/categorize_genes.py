@@ -126,13 +126,57 @@ def categorize_genes(strain):
 
 
 
-strains = ['B', 'C', 'D', 'F', 'J', 'P']
-for strain in strains:
-    print strain
-    module_to_KO(strain)
-    clean_kaas(strain)
-    categorize_genes(strain)
+def test_protein_id(strain = 'B'):
+    KO_M_protein_path = mydir + 'reference_assemblies_task2/MAPLE/MAPLE_modules/' + strain + '_MAPLE_modules/' + strain + '_KO_M_protein.txt'
+    KO_M_protein = pd.read_csv(KO_M_protein_path, sep = '\t')
+    KO_M_protein_no_nans = KO_M_protein[KO_M_protein.protein_id.notnull()]
+    KO_M_protein_no_nans = KO_M_protein_no_nans[KO_M_protein_no_nans.Small_category.notnull()]
+    ref_assemb_task2_table_path = mydir + 'reference_assemblies_task2/reference_assemblies_task2_table/' + strain + '.txt'
+    ref_assemb_task2_table = pd.read_csv(ref_assemb_task2_table_path, sep = ' ')
+    # merge the two
+    merged = pd.merge(KO_M_protein_no_nans, ref_assemb_task2_table, how='inner',
+        on=['protein_id'])
+    mrgd_grpd_pthwy = merged.groupby(by = 'Pathway_Name')
+    pthwy_protein_dict = {}
+    for key, item in mrgd_grpd_pthwy:
+        pthwy_protein_dict[key] = list(set(mrgd_grpd_pthwy.get_group(key)['protein_id'].values))
+    dict_size = len(pthwy_protein_dict.keys())
+    dict_keys = pthwy_protein_dict.keys()
+    matrix = np.zeros((dict_size, dict_size))
+    # counts start at zero, so start at + 1
+    for i in range(1, dict_size):
+        for j in range(0, i +1):
+            if i == j:
+                matrix[i,j] = 0
+            else:
+                genes_i =  set(pthwy_protein_dict[dict_keys[i]])
+                genes_j =  set(pthwy_protein_dict[dict_keys[j]])
+                union_i_j = genes_i | genes_j
+                inters_i_j = genes_i & genes_j
+                diss = 1 - (len(inters_i_j) / len(union_i_j))
+                matrix[i,j] = diss
+                matrix[j,i] = diss
+    df_matrix = pd.DataFrame(matrix)
+    df_matrix.columns = dict_keys
+    df_matrix.set_index([dict_keys], inplace=True)
+    df_matrix_path = mydir + 'pathway_dissimilarity/' + strain + '.txt'
+    df_matrix.to_csv(df_matrix_path, sep = '\t',  index = True)
+
+
+
+
+
+
+
+
+#strains = ['B', 'C', 'D', 'F', 'J', 'P']
+#for strain in strains:
+#    print strain
+#    module_to_KO(strain)
+#    clean_kaas(strain)
+#    categorize_genes(strain)
 
 #clean_kaas('P')
 #module_to_KO('P')
 #categorize_genes('P')
+test_protein_id()

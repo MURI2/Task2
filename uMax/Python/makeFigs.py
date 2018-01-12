@@ -63,12 +63,9 @@ umax_mean['Day'] = umax_mean['Sample'].apply(lambda x: x[-3:])
 
 umax_mean_100 = umax_mean.loc[umax_mean['Day'] == '100']
 
-
-
-
 #A_mean = IN['A'].groupby(IN['Sample']).mean().values
 #L_mean = IN['L'].groupby(IN['Sample']).mean().values
-print umax_mean_100
+#print umax_mean_100
 fig = plt.figure()
 
 plt.scatter(umax_mean_100.TransferTime.values, umax_mean_100.umax.values, c='#87CEEB', marker='o', label='_nolegend_', s = 60)
@@ -76,7 +73,7 @@ plt.title('100 day Pseudo', fontsize = 24)
 plt.xlabel('Transfer time', fontsize = 18)
 plt.ylabel('maximum growth rate', fontsize = 18)
 plt.xscale('log')
-fig_name = mydir + 'figs/P_umax.png'
+fig_name = mydir + 'figs/B_umax.png'
 fig.savefig(fig_name, bbox_inches = "tight", pad_inches = 0.4, dpi = 600)
 plt.close()
 
