@@ -1,0 +1,72 @@
+---
+title: "Bacillus dispersion"
+author: "William R. Shoemaker, Jay T. Lennon"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+header-includes:
+  - \usepackage{array}
+output: pdf_document
+geometry: margin=2.54cm
+editor_options: 
+  chunk_output_type: console
+---
+
+
+```{r}
+#rm(list=ls())
+getwd()
+setwd("~/GitHub/Task2/PoolPopSeq")
+
+# Load dependencies
+require("vegan")
+```
+
+
+
+randomize matrix function
+
+```{r}
+# pop-by-gene matrix
+pop_by_gene <- c("data/gene_by_sample/B_S/sample_by_gene.txt")
+df <- read.table(paste(pop_by_gene, collapse = ''), sep = "\t", header = TRUE, row.names = 1)
+# remove intergenic regions (if they're there)
+df.noInter <- df[,!grepl('.B', colnames(df))]
+
+# gene info dataframe
+gene_path <- c("data/reference_assemblies_task2/reference_assemblies_task2_table/B.txt")
+df.gene <- read.table(paste(gene_path, collapse = ''), sep = " ", header = TRUE, row.names = 1)
+L <- sum(df.gene$Size)
+df.gene$RelSize <- df.gene$Size / L
+# sort df.gene according to column order in df
+df.RelSize <- df.gene['RelSize']
+
+df.merge <- merge(df.RelSize, t(df.noInter), by=0, all=TRUE)
+rownames(df.merge) <- df.merge$Row.names
+pmf <- df.merge$RelSize
+df.merge <- subset(df.merge, select = -c(Row.names, RelSize) )
+df.merge <- t(df.merge)
+
+pop.muts <- rowSums(df.merge)
+
+# make an empty matrix using the dimensions of the pop_by_gene matrix
+df.null <- matrix(data = 0, nrow = nrow(dfs), ncol = ncol(dfs), byrow = FALSE,
+                  dimnames = list(rownames(dfs), colnames(dfs)))
+
+for (i in seq_along(pop.muts)){
+   muts <- pop.muts[i]
+   sample.muts <- sample(colnames(dfs), size = muts, replace = TRUE, prob = pmf)
+   for(j in sample.muts){
+      df.null[i,j] <- df.null[i,j] + 1
+  }
+}
+
+```
+
+
+Next, transform raw cound matrix into a matrix of G-scores
+
+```{r}
+
+# iterate row 
+#E <- # number mutations  * pmf
+
+```
