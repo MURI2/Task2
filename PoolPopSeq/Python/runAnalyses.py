@@ -40,7 +40,15 @@ codon_dict = {
 
 bp_dict = {'A':'T', 'C':'G', 'G':'C', 'T':'A'}
 
+mut_bp_dict = {"B" : 3.35 * (10**-10), "C" : 3.35 * (10**-10), \
+            "D" : 3.35 * (10**-10), "J" : 3.35 * (10**-10), "S" : 3.35 * (10**-10)}
+
+mut_id_dict = {"B" : 1.20 * (10**-10), "C" : 3.46 * (10**-10), \
+            "D" : 3.35 * (10**-10), "J" : 3.35 * (10**-10), "S" : 3.35 * (10**-10)}
+
 mut_bias_dict = {"B" : 1.2739, "C" : 0.5011, "D" : 0.5511, "J" : 2.9555, "S" : 1.2739}
+
+
 
 L_samples = {'C': 4042929, 'D': 3284156, 'F': 5836693, 'P':6592875, \
     'B':4215606, 'J':6082545, 'S':4215606,}
@@ -286,14 +294,14 @@ def mut_bias():
     for strain in mut_strains:
         IN_file = mydir + 'breseq_output_gbk_essentials_split_clean_merged_unique/D100/Strain_' + strain +  '_D100_SNP.txt'
         IN = pd.read_csv(IN_file, sep = '\t')
-        AT = {}
-        GC = {}
+        AT_GC = {}
+        GC_AT = {}
         mut_bias_sample_dict = {}
         sample_snp_list = [x for x in IN.columns if 'snp_type_' in x]
         sample_list = [x.split('_')[2] for x in sample_snp_list]
         for sample in sample_list:
-            AT[sample] = 0
-            GC[sample] = 0
+            AT_GC[sample] = 0
+            GC_AT[sample] = 0
             mut_bias_sample_dict[sample] = [0, 0]
         for index, row in IN.iterrows():
             sample_row = [x for x in sample_snp_list if pd.isnull(row[x]) == False][0].split('_')[2]
@@ -304,21 +312,21 @@ def mut_bias():
                 (ref == 'A' and mut == 'G') or \
                 (ref == 'T' and mut == 'C') or \
                 (ref == 'T' and mut == 'G'):
-                GC[sample_row] += 1
+                AT_GC[sample_row] += 1
             elif (ref == 'C' and mut == 'A') or \
                 (ref == 'C' and mut == 'T') or \
                 (ref == 'G' and mut == 'A') or \
                 (ref == 'G' and mut == 'T'):
-                AT[sample_row] += 1
+                GC_AT[sample_row] += 1
             else:
                 continue
-        AT_GC = list(common_entries(AT, GC))
+        AT_GC_list = list(common_entries(GC_AT, AT_GC))
         AT_GC_dict = {}
-        for x in AT_GC:
+        for x in AT_GC_list:
             if (x[1] == 0 and x[2] == 0):
                 continue
             else:
-                #print x
+                print x
                 AT_GC_dict[x[0]] = round(((x[1] + 1) / (x[2] + 1)) / mut_bias_dict[strain], 3)
                 #AT_GC_dict[x[0]] = round((x[1] + 1) / (x[2] + 1), 3)
         for key, value in AT_GC_dict.iteritems():
@@ -357,6 +365,6 @@ def run_everything():
 
 #cd.get_sample_by_gene_matrix('D100', strain)
 #dN_dS('D100')
-#mut_bias()
+mut_bias()
 #run_everything()
 #cd.merge_B_S_sample_by_gene_matrix_gscore()

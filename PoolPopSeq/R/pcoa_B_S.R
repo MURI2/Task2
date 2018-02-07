@@ -109,6 +109,9 @@ for (x in rownames(df.all.pcoa.100$points)){
 }
 par(mar = c(6.5, 6, 1.5, 2.5) + 0.1)
 # Initiate Plot
+print(df.all.pcoa.100$points[ ,1])
+print(df.all.pcoa.100$points[ ,2])
+
 plot(df.all.pcoa.100$points[ ,1], df.all.pcoa.100$points[ ,2],  xlim = c(-0.7, 0.7), ylim = c(-0.7, 0.7),
      xlab = paste("PCoA 1 (", explainvar1, "%)", sep = ""),
      ylab = paste("PCoA 2 (", explainvar2, "%)", sep = ""),

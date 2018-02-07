@@ -537,20 +537,21 @@ def mut_figsss():
         fig, ax = plt.subplots()
         ax.margins(0.05) # Optional, just adds 5% padding to the autoscaling
         for i, color in enumerate(colors):
-            ax.plot(treat_values[i], np.log10(W_theta_values[i]), marker='o', linestyle='', \
+            ax.plot(treat_values[i], W_theta_values[i], marker='o', linestyle='', \
                 ms=14, label=strain, color = color, alpha = 0.9)
 
         #ax.legend(numpoints=1, prop={'size':14},  loc='upper right', frameon=False)
         fig.canvas.draw()
         labels = [item.get_text() for item in ax.get_xticklabels()]
         labels[1] = '1-Day'
-        labels[3] = '10-Day'
-        labels[5] = '100-Day'
-        plt.axhline(y=0, color='grey', linestyle='--', lw = 4)
+        labels[5] = '10-Day'
+        labels[9] = '100-Day'
+        plt.axhline(y=1, color='grey', linestyle='--', lw = 4)
         plt.title(strain, fontsize = 22)
-        plt.ylim([-2,2])
+        plt.ylim([0,10])
         ax.set_xticklabels(labels, fontsize = 18)
-        ax.set_ylabel(r'$m_{pop} / m_{mut},\; log_{10}$', fontsize = 20)
+        #ax.set_ylabel(r'$m_{pop} / m_{mut},\; log_{10}$', fontsize = 20)
+        ax.set_ylabel(r'$m_{pop} / m_{mut}$', fontsize = 20)
         #plt.ticklabel_format(style='sci', axis='y')
         #ax.yaxis.set_major_formatter(mtick.FormatStrFormatter('%.2e'))
         fig.savefig(mydir + 'figs/mut_' + strain + '.png', bbox_inches='tight',  dpi = 600)
@@ -1342,7 +1343,7 @@ def beta_fig_inter():
 #poly_fig('W_T_L')
 #poly_fig('k_L')
 #mut()
-#mut_figsss()
+mut_figsss()
 
 
 #get_coverage_clean_figs()
@@ -1353,4 +1354,4 @@ def beta_fig_inter():
 #make_muller_plots('P').stacked_trajectory_plot()
 #euc_dist('B')
 #mut_B_S()
-beta_fig()
+#beta_fig()

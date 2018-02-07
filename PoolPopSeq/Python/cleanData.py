@@ -65,7 +65,7 @@ def cleanGBK(strain):
     elif strain == 'P':
         file_name = 'Pseudomonas_sp_KBS0710/G-Chr1.gbk'
     else:
-        print "Strain not recognized"
+        print("Strain not recognized")
     IN_path = mydir + 'reference_assemblies_task2/' + file_name
     genome = SeqIO.parse(IN_path, "genbank")
     # protein_id
@@ -687,17 +687,21 @@ def get_sample_by_gene_matrix(strain):
             else:
                 mut_dict[gene_name][sample_freq] += sample_freq_row
     mut_df = pd.DataFrame.from_dict(mut_dict, orient='index')
-    '''rename the sample names?'''
+    #'''rename the sample names?'''
     #rename_dict {}
     #for sample_freq in sample_freqs:
     #    sample_freq_new = sample_freq.split('_')
     #    rename_dict[sample_freq_new] = sample_freq_new[1]
     #mut_df = mut_df.rename(columns = {'two':'new_name'})
     mut_df = mut_df.T
+    # add columns of zero for genes with no observed mutations
+    gene_path = mydir + 'data/reference_assemblies_task2/reference_assemblies_task2_table/B.txt'
+    IN_gene = pd.read_csv(gene_path, sep = ' ', header = 'infer')
+    print(IN_gene)
+
     OUTpath = mydir + 'gene_by_sample/' + strain
     if not os.path.exists(OUTpath):
         os.makedirs(OUTpath)
-    # remove singletons
     OUTname1 = OUTpath + '/sample_by_gene.txt'
     mut_df.to_csv(OUTname1, sep = '\t', index = True)
     # remove singletons
@@ -735,6 +739,8 @@ def get_sample_by_gene_matrix_gscore(strain):
 
     OUTname = mydir + 'gene_by_sample/' + strain + '/sample_by_gene_Gscore.txt'
     IN_gbp.to_csv(OUTname, sep = '\t', index = True)
+
+
 
 def merge_B_S_sample_by_gene_matrix_gscore():
     B_path = mydir + 'gene_by_sample/B/sample_by_gene_Gscore.txt'
@@ -842,3 +848,5 @@ def run_everything(day, strain, split = False, get_variants = False, \
     if unique_mutations == True:
         #print "unique_mutations"
         get_unique_mutations(day, strain, variant_type)
+
+get_sample_by_gene_matrix('B')
