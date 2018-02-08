@@ -12,22 +12,26 @@ editor_options:
 
 
 ```{r}
-#rm(list=ls())
+rm(list=ls())
 getwd()
 setwd("~/GitHub/Task2/PoolPopSeq")
 
 # Load dependencies
 require("vegan")
+
+# Source code functions
+source("R/ParEvol.R")
 ```
 
 
-
-randomize matrix function
+import data
 
 ```{r}
 # pop-by-gene matrix
 pop_by_gene <- c("data/gene_by_sample/B_S/sample_by_gene.txt")
 df <- read.table(paste(pop_by_gene, collapse = ''), sep = "\t", header = TRUE, row.names = 1)
+# select samples only from day 100
+df <- df[grep('D100', rownames(df)), ]
 # remove intergenic regions (if they're there)
 df.noInter <- df[,!grepl('.B', colnames(df))]
 
@@ -44,29 +48,40 @@ rownames(df.merge) <- df.merge$Row.names
 pmf <- df.merge$RelSize
 df.merge <- subset(df.merge, select = -c(Row.names, RelSize) )
 df.merge <- t(df.merge)
-
 pop.muts <- rowSums(df.merge)
+```
 
-# make an empty matrix using the dimensions of the pop_by_gene matrix
-df.null <- matrix(data = 0, nrow = nrow(dfs), ncol = ncol(dfs), byrow = FALSE,
-                  dimnames = list(rownames(dfs), colnames(dfs)))
 
-for (i in seq_along(pop.muts)){
-   muts <- pop.muts[i]
-   sample.muts <- sample(colnames(dfs), size = muts, replace = TRUE, prob = pmf)
-   for(j in sample.muts){
-      df.null[i,j] <- df.null[i,j] + 1
-  }
-}
+Get mean centroid distance using G-score matrix
+
+```{r}
+df.G <- make.G.matrix(df.merge, pmf)
+df.G <- df.G[rowSums(df.G[,-1]) != 0,]
+df.G <- df.G[, colSums(df.G != 0) > 0]
+df.G.db <- vegdist(df.G, method = "bray", upper = TRUE, diag = TRUE)
+df.G.groups <- substr(c(sapply(strsplit(rownames(df.G),"_"), `[`, 2)), 1, 3)
+beta.disp <- betadisper(d = df.G.db, group = df.G.groups)
+euc.mat <- get.euc.dist.2D(beta.disp)
+euc.mean <- aggregate(eucs ~ treat.strain.names, euc.mat, FUN = function(x) mean(as.numeric(as.character(x))))
+euc.var <- aggregate(eucs ~ treat.strain.names, euc.mat, FUN = function(x) var(as.numeric(as.character(x))))
 
 ```
 
 
-Next, transform raw cound matrix into a matrix of G-scores
+
+
+Get mean centroid distance values from random G-score matrices
+
+```{r}
+# call function with 100 iterations
+df.null.euc <- sim.euc.dist(df.merge, pop.muts, pmf, df.G.groups, 100)
+
+```
+
+
+Plot data
 
 ```{r}
 
-# iterate row 
-#E <- # number mutations  * pmf
-
 ```
+
