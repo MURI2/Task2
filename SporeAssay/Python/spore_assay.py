@@ -55,6 +55,37 @@ def make_fig():
 
 
 
+def make_fig_army():
+    path_IN = mydir + 'data/Sporulation_170912_long.txt'
+    IN = pd.read_csv(path_IN, sep = '\t')
+    # Day 500
+    IN_0B1_500 = IN.loc[(IN['Pop'] == '0B1') & (IN['Day'] == 500)]
+    IN_2B1_500 = IN.loc[(IN['Pop'] == '2B1') & (IN['Day'] == 500)]
+    IN_mean_0B1_500 = IN_0B1_500['Vegetative_percent'].groupby(IN_0B1_500['Time_hours']).mean().reset_index()
+    IN_mean_2B1_500 = IN_2B1_500['Vegetative_percent'].groupby(IN_2B1_500['Time_hours']).mean().reset_index()
+    IN_std_0B1_500 = IN_0B1_500['Vegetative_percent'].groupby(IN_0B1_500['Time_hours']).std().reset_index()
+    IN_std_2B1_500 = IN_2B1_500['Vegetative_percent'].groupby(IN_2B1_500['Time_hours']).std().reset_index()
+
+    fig = plt.figure()
+    plt.plot(IN_mean_0B1_500.Time_hours.values, 1.001- IN_mean_0B1_500.Vegetative_percent.values, \
+        'b-',  c='#87CEEB')
+    plt.plot(IN_mean_2B1_500.Time_hours.values, 1.001- IN_mean_2B1_500.Vegetative_percent.values, \
+        'b-',  c = '#FF6347')
+
+    plt.errorbar(IN_mean_0B1_500.Time_hours.values, 1.001- IN_mean_0B1_500.Vegetative_percent.values, \
+        IN_std_0B1_500.Vegetative_percent.values,  linestyle='None', marker='v', c='#87CEEB', elinewidth=1.5, label="1-day transfers",)
+    plt.errorbar(IN_mean_2B1_500.Time_hours.values, 1.001- IN_mean_2B1_500.Vegetative_percent.values, \
+        IN_std_2B1_500.Vegetative_percent.values, linestyle='None', marker='o', c = '#FF6347', elinewidth=1.5, label="100-day transfers",)
+    plt.title('Spore accumulation curves, day 500', fontsize = 20)
+    plt.xlabel('Time (hrs)', fontsize = 18)
+    plt.ylabel('Percent spores, '+ r'$log_{10}$', fontsize = 18)
+    plt.ylim(0.0008, 1.1)
+    plt.xlim(0, 400)
+    plt.yscale('log', basey = 10)
+    plt.legend(numpoints=1, prop={'size':12},  loc='upper left', frameon=False)
+    fig_name = mydir + 'figs/army_update_spore.png'
+    fig.savefig(fig_name, bbox_inches = "tight", pad_inches = 0.4, dpi = 600)
+    plt.close()
 
 
-make_fig()
+make_fig_army()

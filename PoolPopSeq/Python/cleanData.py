@@ -698,6 +698,8 @@ def get_sample_by_gene_matrix(strain):
     gene_path = mydir + 'data/reference_assemblies_task2/reference_assemblies_task2_table/B.txt'
     IN_gene = pd.read_csv(gene_path, sep = ' ', header = 'infer')
     print(IN_gene)
+    # use set theory to get genes that aren't listed in matrix
+    # add those genes as empty columns
 
     OUTpath = mydir + 'gene_by_sample/' + strain
     if not os.path.exists(OUTpath):
