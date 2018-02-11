@@ -52,6 +52,30 @@ make.G.matrix <- function(df, pmf){
 }
 
 
+# multiplicity score
+make.m.matrix <- function(df, sizes){
+  df.m <- matrix(data = 0, nrow = nrow(df), ncol = ncol(df), byrow = FALSE,
+                 dimnames = list(rownames(df), colnames(df)))
+  # iterate row 
+  mean.size <- mean(sizes)
+  mean.over.size <- mean.size / sizes
+  for(i in 1:nrow(df)) {
+    row <- df[i,]
+    m_i <- mean.over.size * row
+    mean.m <- sum(row) / length(row)
+    #print(m_i/mean.m)
+    #print(length(mean.m))
+    #print(row * log(m_i/mean.m))
+    M_i <- row * log(m_i/mean.m)
+    M_i <- replace(M_i, which(M_i < 0), 0)
+    M_i <- replace(M_i, is.na(M_i), 0)
+    #df.m[i,] <- m_i
+    df.m[i,] <- M_i
+  }
+  return(df.m)
+}
+
+
 get.euc.dist.2D <- function(beta.disp){
   centroids.2 <- beta.disp$centroids[,1:2]
   posistions.2 <- beta.disp$vectors[,1:2]
@@ -77,7 +101,7 @@ get.euc.dist.2D <- function(beta.disp){
 }
 
 
-sim.euc.dist <- function(df, pop.muts, pmf, df.G.groups, iter){
+sim.euc.dist.G <- function(df, pop.muts, pmf, df.G.groups, iter){
   mat <- data.frame(matrix(NA, nrow=0, ncol=length(unique(df.G.groups))))
   for(i in 1:iter) {
     df.null <- make.null.matrix(df.merge, pop.muts, pmf)
@@ -99,6 +123,26 @@ sim.euc.dist <- function(df, pop.muts, pmf, df.G.groups, iter){
 }
 
 
+sim.euc.dist.m <- function(df, pop.muts, sizes, df.m.groups, iter){
+  mat <- data.frame(matrix(NA, nrow=0, ncol=length(unique(df.m.groups))))
+  for(i in 1:iter) {
+    df.null <- make.null.matrix(df.merge, pop.muts, pmf)
+    df.null.m <- make.m.matrix(df.null, sizes)
+    df.null.m.no0 <- df.null.m[rowSums(df.null.m[,-1]) != 0,]
+    df.null.m.no0.db <- vegdist(df.null.m.no0, method = "bray", upper = TRUE, diag = TRUE)
+    # get groups, we can use the same group labels
+    #df.G.null.groups <- substr(c(sapply(strsplit(rownames(df.null.G.no0),"_"), `[`, 2)), 1, 3)
+    beta.disp.null <- betadisper(d = df.null.m.no0.db, group = df.m.groups)
+    euc.mat.null <- get.euc.dist.2D(beta.disp.null)
+    euc.mean.null <- aggregate(eucs ~ treat.strain.names, euc.mat.null, FUN = function(x) mean(as.numeric(as.character(x))))
+    colnames(mat) <- euc.mean.null$treat.strain.names
+    if(i==1) {
+      names(mat) <- euc.mean.null$treat.strain.names
+    }
+    mat <- rbind(mat, euc.mean.null$eucs)
+  }
+  return(mat)
+}
 
 
 #make.M.matrix
