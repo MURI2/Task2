@@ -1,7 +1,0 @@
-Scaffold	Pos	Ref	Gene	Alt_A	Coding_A	Fourfold_A	Qual_A	Alt_B	Coding_B	Fourfold_B	Qual_B	Alt_C	Coding_C	Fourfold_C	Qual_C	Alt_D	Coding_D	Fourfold_D	Qual_D
-gnl|I|G_contig000001	82679	C	nudF:A18.0S					A	N	N	53.77								
-gnl|I|G_contig000002	186570	C	metX:S60.3333333333C					G	N	N	68.77								
-gnl|I|G_contig000001	191985	T	ilvD:D88.3333333333G									C	N	N	44.77				
-gnl|I|G_contig000001	192005	A	ilvD:D81.6666666667D									G	S	N	36.77				
-gnl|I|G_contig000001	294967	G	tatC:G187.0C									T	N	N	33.77				
-gnl|I|G_contig000003	21327	C	nadE:R81.0S													A	N	N	165.77
