@@ -1,5 +1,0 @@
-Scaffold	Pos	Ref	Gene	Alt_A	Coding_A	Fourfold_A	Qual_A	Alt_B	Coding_B	Fourfold_B	Qual_B	Alt_C	Coding_C	Fourfold_C	Qual_C	Alt_D	Coding_D	Fourfold_D	Qual_D
-gnl|I|G_contig000004	1974358	T	dnaE2_3:Q386.666666667Q	C	S	N	301.77	C	S	N	326.77	C	S	N	85.9	C	S	N	219.77
-gnl|I|G_contig000004	1974385	C	dnaE2_3:S377.666666667S	G	S	N	287.77	G	S	N	232.77	G	S	N	86.9	G	S	N	223.77
-gnl|I|G_contig000004	1974388	A	dnaE2_3:R376.666666667R	G	S	Y	316.77	G	S	Y	230.77	G	S	Y	89.9	G	S	Y	227.77
-gnl|I|G_contig000004	1974394	A	dnaE2_3:L374.666666667L	G	S	Y	290.77	G	S	Y	228.77	G	S	Y	70.03	G	S	Y	204.77
